@@ -10,6 +10,10 @@ module MemoryRepository
     def new
       OpenStruct.new title: 'A title'
     end
+
+    def all
+      @records.values.to_a
+    end
     
     def save(listing)
       listing.id = @id

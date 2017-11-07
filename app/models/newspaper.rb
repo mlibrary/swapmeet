@@ -1,9 +1,6 @@
 class Newspaper
-  attr_reader :listings
-  attr_writer :listing_repo
-
-  def initialize(listings = [])
-    @listings = listings
+  def initialize(listing_repo: Repository.for(:listing))
+    @listing_repo = listing_repo
   end
 
   def new_listing
@@ -12,8 +9,14 @@ class Newspaper
     end
   end
 
-  private
-  def listing_repo
-    @listing_repo ||= Repository.for(:listing)
+  def add_listing(listing)
+    listing_repo.save(listing)
   end
+
+  def listings
+    listing_repo.all
+  end
+
+  private
+  attr_reader :listing_repo
 end

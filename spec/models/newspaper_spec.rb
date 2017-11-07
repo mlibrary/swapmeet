@@ -11,22 +11,10 @@ RSpec.describe Newspaper do
     end
   end
 
-  context "when supplied listings" do
-    subject(:newspaper) { Newspaper.new(listings) }
-    let(:listings)      { [{title: 'Foo'}, {title: 'Bar'}] }
-
-    it "retains them" do
-      expect(newspaper.listings).to eq(listings)
-    end
-  end
-
   describe "#new_listing" do
     let(:listing) { OpenStruct.new }
-    subject(:newspaper) {
-      Newspaper.new.tap do |np|
-        np.listing_repo = OpenStruct.new(new: listing)
-      end
-    }
+    let(:repo)    { double('Listing Repo', new: listing) }
+    subject(:newspaper) { Newspaper.new(listing_repo: repo) }
 
     it "returns a new post" do
       expect(newspaper.new_listing).to eq(listing)
@@ -34,6 +22,15 @@ RSpec.describe Newspaper do
 
     it "sets the listing's newspaper reference to itself" do
       expect(newspaper.new_listing.newspaper).to eq(newspaper)
+    end
+  end
+
+  describe "#add_listing" do
+    let(:listing) { OpenStruct.new }
+
+    it "adds a listing" do
+      newspaper.add_listing(listing)
+      expect(newspaper.listings).to include(listing)
     end
   end
 end
