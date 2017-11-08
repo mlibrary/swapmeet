@@ -1,18 +1,23 @@
 require 'listing'
 
 RSpec.describe Listing do
+  subject(:listing) { Listing.new }
 
   describe "#new" do
-    it "does not set an ID" do
-      expect(subject.id).to be_nil
+    it "starts with blank attributes" do
+      expect(listing.id)   .to be_nil
+      expect(listing.title).to be_nil
+      expect(listing.body) .to be_nil
     end
   end
 
-  it "has a title" do
-    expect(subject.title).to eq 'Onyx Chop Sticks'
+  it "supports setting and reading the title" do
+    listing.title = 'Onyx Chop Sticks'
+    expect(listing.title).to eq('Onyx Chop Sticks')
   end
 
   it "has a body" do
-    expect(subject.body).to eq 'A fine pair of chop sticks, made of pure onyx.'
+    listing.body = 'A fine pair of chop sticks, made of pure onyx.'
+    expect(listing.body).to eq('A fine pair of chop sticks, made of pure onyx.')
   end
 end
