@@ -3,25 +3,34 @@ require 'ostruct'
 
 RSpec.describe Newspaper do
   subject(:newspaper) { Newspaper.new }
-  let(:listings)      { [] }
 
-  context "when not supplied listings" do
-    it "has no listings" do
-      expect(newspaper.listings).to match_array([])
+  describe "#listings" do
+    let(:listing_one) { OpenStruct.new }
+    let(:listing_two) { OpenStruct.new }
+
+    it "starts empty" do
+      expect(newspaper.listings).to eq([])
+    end
+
+    it "keeps listings in order" do
+      newspaper.add_listing(listing_one)
+      newspaper.add_listing(listing_two)
+      expect(newspaper.listings).to eq([listing_one, listing_two])
     end
   end
 
   describe "#new_listing" do
     let(:listing) { OpenStruct.new }
     let(:repo)    { double('Listing Repo', new: listing) }
-    subject(:newspaper) { Newspaper.new(listing_repo: repo) }
+    let(:newspaper)       { Newspaper.new(listing_repo: repo) }
+    subject(:new_listing) { newspaper.new_listing }
 
     it "returns a new post" do
-      expect(newspaper.new_listing).to eq(listing)
+      expect(new_listing).to eq(listing)
     end
 
     it "sets the listing's newspaper reference to itself" do
-      expect(newspaper.new_listing.newspaper).to eq(newspaper)
+      expect(new_listing.newspaper).to eq(newspaper)
     end
   end
 
