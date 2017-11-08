@@ -1,7 +1,7 @@
 require 'repository'
 require 'memory'
 
-MemoryRepository.repositories.each do |type, repo_class|
-  Repository.register(type, repo_class.new)
+MemoryRepository.repositories.each do |type, repo|
+  Repository.register(type, repo)
 end
 

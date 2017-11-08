@@ -1,7 +1,7 @@
-require 'memory/listing_mr'
+require 'memory/listing_repository'
 
-RSpec.describe MemoryRepository::Listing do
-  subject(:repo) { MemoryRepository::Listing.new }
+RSpec.describe MemoryRepository::ListingRepository do
+  subject(:repo) { MemoryRepository::ListingRepository.new }
 
   it "returns a new Listing" do
     expect(repo.new).to_not be_nil

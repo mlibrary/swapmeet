@@ -13,4 +13,4 @@ module MemoryRepository
   end
 end
 
-require_relative 'memory/listing_mr'
+require_relative 'memory/listing_repository'

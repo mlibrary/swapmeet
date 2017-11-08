@@ -1,14 +1,14 @@
-require 'ostruct'
 require_relative '../memory'
+require 'listing'
 module MemoryRepository
-  class Listing
+  class ListingRepository
     def initialize
       @records = {}
       @id = 1
     end
 
     def new
-      OpenStruct.new title: 'A title'
+      Listing.new
     end
 
     def all
@@ -24,4 +24,4 @@ module MemoryRepository
   end
 end
 
-MemoryRepository.register(:listing, MemoryRepository::Listing)
+MemoryRepository.register(:listing, MemoryRepository::ListingRepository.new)

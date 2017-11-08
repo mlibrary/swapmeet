@@ -3,6 +3,12 @@ class Repository
     registry[type] = repo
   end
 
+  def self.register_all(repositories)
+    repositories.each do |type, repo|
+      register type, repo
+    end
+  end
+
   def self.for(type)
     registry[type] or raise RepositoryNotFoundError
   end
