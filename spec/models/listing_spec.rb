@@ -20,4 +20,14 @@ RSpec.describe Listing do
     listing.body = 'A fine pair of chop sticks, made of pure onyx.'
     expect(listing.body).to eq('A fine pair of chop sticks, made of pure onyx.')
   end
+
+  describe "#publish" do
+    let(:newspaper) { instance_double('Newspaper') }
+
+    it "can be published" do
+      listing.newspaper = newspaper
+      expect(newspaper).to receive(:add_listing).with(listing)
+      listing.publish
+    end
+  end
 end
