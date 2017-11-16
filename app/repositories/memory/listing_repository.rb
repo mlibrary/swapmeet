@@ -1,4 +1,4 @@
-require_relative '../memory'
+require_relative '../memory_repository'
 require 'listing'
 module MemoryRepository
   class ListingRepository

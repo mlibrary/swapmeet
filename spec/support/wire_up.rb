@@ -1,5 +1,5 @@
 require 'repository'
-require 'memory'
+require 'memory_repository'
 
 Repository.register_all(MemoryRepository.repositories)
 
