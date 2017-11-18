@@ -6,8 +6,18 @@ RSpec.describe Listing do
   describe "#new" do
     it "starts with blank attributes" do
       expect(listing.id)   .to be_nil
-      expect(listing.title).to be_nil
-      expect(listing.body) .to be_nil
+      expect(listing.title).to eq('')
+      expect(listing.body) .to eq('')
+    end
+  end
+
+  describe "#to_h" do
+    subject(:hash) { listing.to_h }
+
+    it "has all attributes" do
+      expect(hash[:id]).to eq(nil)
+      expect(hash[:title]).to eq('')
+      expect(hash[:body]).to eq('')
     end
   end
 

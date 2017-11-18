@@ -11,15 +11,33 @@ module MemoryRepository
       Listing.new
     end
 
+    def find(id)
+      @records[id]
+    end
+
     def all
       @records.values.to_a
     end
     
     def save(listing)
+      if listing.id.nil?
+        create(listing)
+      else
+        update(listing)
+      end
+    end
+
+    private
+
+    def create(listing)
       listing.id = @id
       @records[@id] = listing
       @id += 1
       listing
+    end
+
+    def update(listing)
+      @records[listing.id] = listing
     end
   end
 end
