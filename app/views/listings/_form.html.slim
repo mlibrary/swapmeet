@@ -1,0 +1,22 @@
+= form_with(model: listing, local: true) do |form|
+  - if listing.errors.any?
+    #error_explanation
+      h2
+        = pluralize(listing.errors.count, 'error')
+        | prohibited this listing from being saved:
+
+      ul
+        - listing.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = form.label :title
+    = form.text_field :title, id: :listing_title
+
+  .field
+    = form.label :body
+    = form.text_field :body, id: :listing_body
+
+  .actions
+    = form.submit
+

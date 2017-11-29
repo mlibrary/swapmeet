@@ -1,0 +1,11 @@
+h1 Office Gear Swap Meet!
+
+- if listings.empty?
+  h2 No listings yet. :(
+- else
+  ul
+    - listings.each do |listing|
+      li
+        | (#{listing.id}) #{listing.title} - #{listing.body}
+
+= link_to 'Make a new listing', new_listing_path

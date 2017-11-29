@@ -1,9 +1,0 @@
-<%= form_tag({controller: 'listings', action: 'create'}, method: 'post') do %>
-    <%= label_tag(:title, 'Title') %>
-    <%= text_field_tag(:title, listing.title) %>
-    <br>
-    <%= label_tag(:title, 'Body') %>
-    <%= text_field_tag(:body, listing.body) %>
-    <br>
-    <%= submit_tag('Create') %>
-<% end %>
