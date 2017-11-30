@@ -1,44 +1,50 @@
 class ListingsController < ApplicationController
   def index
-    render locals: { listings: Listing.all }
+    render with(listings: Listing.all)
   end
 
   def show
-    listing = find_listing
-    render locals: { listing: listing }
+    render with_listing
   end
 
   def new
-    render locals: { listing: Listing.new }
+    @listing = Listing.new
+    render with_listing
   end
 
   def edit
-    listing = find_listing
-    render locals: { listing: listing }
+    render with_listing
   end
 
   def create
-    listing = Listing.new(listing_params)
+    @listing = Listing.new(listing_params)
     if listing.save
       redirect_to listings_path
     else
-      render :new, locals: { listing: listing }
+      render :new, with_listing
     end
   end
 
   def update
-    listing = find_listing
     if listing.update(listing_params)
       redirect_to listing
     else
-      render :edit, locals: { listing: listing }
+      render :edit, with_listing
     end
   end
 
   private
 
-  def find_listing
-    Listing.find(params[:id])
+  def with(locals = {})
+    { locals: locals }
+  end
+
+  def with_listing
+    { locals: { listing: listing } }
+  end
+
+  def listing
+    @listing ||= Listing.find(params[:id])
   end
 
   def listing_params
