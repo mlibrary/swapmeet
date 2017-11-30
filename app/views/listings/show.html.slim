@@ -1,0 +1,12 @@
+h1 Listing Details
+
+.listing
+  h2 = listing.title
+  .listing-body = listing.body
+
+hr
+
+.actions
+  => link_to 'Edit', edit_listing_path(listing)
+  | | 
+  = link_to 'Back', listings_path

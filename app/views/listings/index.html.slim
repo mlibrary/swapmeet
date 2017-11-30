@@ -6,6 +6,6 @@ h1 Office Gear Swap Meet!
   ul
     - listings.each do |listing|
       li
-        | (#{listing.id}) #{listing.title} - #{listing.body}
+        = link_to listing.title, listing
 
 = link_to 'Make a new listing', new_listing_path
