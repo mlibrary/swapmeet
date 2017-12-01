@@ -9,6 +9,10 @@ class ListingPolicy
     true
   end
 
+  def destroy?
+    true
+  end
+
   def authorize!(action, message = nil)
     raise NotAuthorizedError.new(message) unless send(action)
   end

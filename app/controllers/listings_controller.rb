@@ -34,6 +34,12 @@ class ListingsController < ApplicationController
     end
   end
 
+  def destroy
+    policy(listing).authorize! :destroy?
+    listing.destroy
+    redirect_to listings_url
+  end
+
   private
 
   def policy(listing = nil)
