@@ -1,5 +1,7 @@
 # Sample resource-oriented, multi-rule policy
 class ListingPolicy
+  attr_reader :user, :listing
+
   def initialize(user, listing)
     @user = user
     @listing = listing
@@ -10,7 +12,8 @@ class ListingPolicy
   end
 
   def destroy?
-    true
+    # Rely on owner returning Nobody rather than nil
+    listing.owner == user
   end
 
   def authorize!(action, message = nil)

@@ -1,7 +1,7 @@
-h1 Listing Details
-
 .listing
-  h2 = listing.title
+  h1 = listing.title
+  .listing-owner = "Listed by: #{listing.owner.display_name}"
+  | Description:
   .listing-body = listing.body
 
 hr
