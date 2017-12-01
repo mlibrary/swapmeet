@@ -4,6 +4,7 @@ class ListingsController < ApplicationController
   end
 
   def show
+    policy(listing).authorize! :show?
     render with_listing
   end
 
@@ -34,6 +35,10 @@ class ListingsController < ApplicationController
   end
 
   private
+
+  def policy(listing = nil)
+    ListingPolicy.new(current_user, listing)
+  end
 
   def with(locals = {})
     { locals: locals }
