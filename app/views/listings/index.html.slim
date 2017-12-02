@@ -1,10 +1,10 @@
 h1 Office Gear Swap Meet!
 
-- if listings.empty?
+- if @listings.empty?
   h2 No listings yet. :(
 - else
   ul
-    - listings.each do |listing|
+    - @listings.each do |listing|
       li
         = link_to listing.title, listing
 

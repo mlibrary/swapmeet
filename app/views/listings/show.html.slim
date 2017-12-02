@@ -1,14 +1,15 @@
 .listing
-  h1 = listing.title
-  .listing-owner = "Listed by: #{listing.owner.display_name}"
+  h1 = @listing.title
+  .listing-owner = "Listed by: #{@listing.owner.display_name}"
   | Description:
-  .listing-body = listing.body
+  .listing-body = @listing.body
 
 hr
 
 .actions
   =<> link_to 'Back', listings_path
   | |
-  =<> link_to 'Edit', edit_listing_path(listing)
-  | |
-  =<> link_to 'Delete', listing, data: { confirm: 'Are you sure?' }, method: :delete
+  =<> link_to 'Edit', edit_listing_path(@listing)
+  - if @policy.destroy?
+    | |
+    =<> link_to 'Delete', @listing, data: { confirm: 'Are you sure?' }, method: :delete
