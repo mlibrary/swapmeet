@@ -1,0 +1,9 @@
+= form_with(model: user, local: true) do |form|
+  .field
+    = form.label :display_name
+    = form.text_field :display_name, id: :user_display_name
+  .field
+    = form.label :email
+    = form.text_field :email, id: :user_email
+  .actions
+    = form.submit

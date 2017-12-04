@@ -14,16 +14,16 @@ RSpec.describe ListingsController do
       end
     end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
+    describe '#destroy' do
+      subject { delete :destroy, params: { id: listing.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
       end
     end
 
-    describe '#destroy' do
-      subject { delete :destroy, params: { id: listing.id } }
+    describe '#edit' do
+      subject { get :edit, params: { id: listing.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -79,19 +79,19 @@ RSpec.describe ListingsController do
       end
     end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
     describe '#destroy' do
       subject { delete :destroy, params: { id: listing.id } }
       it 'authorized' do
         subject
         expect(response).to redirect_to listings_path
+      end
+    end
+
+    describe '#edit' do
+      subject { get :edit, params: { id: listing.id } }
+      it 'authorized' do
+        subject
+        expect(response).to be_success
       end
     end
 
@@ -145,16 +145,16 @@ RSpec.describe ListingsController do
       end
     end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
+    describe '#destroy' do
+      subject { delete :destroy, params: { id: listing.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
       end
     end
 
-    describe '#destroy' do
-      subject { delete :destroy, params: { id: listing.id } }
+    describe '#edit' do
+      subject { get :edit, params: { id: listing.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
