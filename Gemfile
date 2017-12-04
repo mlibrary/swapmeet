@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -23,6 +25,9 @@ group :development, :test do
   gem 'factory_bot_rails', '~>4.8', '>=4.8.2'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.7'
+  gem 'rubocop', '~> 0.49', '>= 0.49.1', require: false
+  gem 'rubocop-rails', '~> 1.1', '>= 1.1.1', require: false
+  gem 'rubocop-rspec', '~> 1.16', '>= 1.16.0', require: false
 end
 
 group :development do

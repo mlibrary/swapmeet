@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sample resource-oriented, multi-rule policy
 class ListingPolicy
   attr_reader :user, :listing

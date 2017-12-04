@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
   before_action :set_policy, only: [:index, :show, :new, :edit, :create, :update, :destroy]
@@ -48,15 +50,15 @@ class ListingsController < ApplicationController
 
   private
 
-  def set_listing
-    @listing ||= Listing.find(params[:id])
-  end
+    def set_listing
+      @listing ||= Listing.find(params[:id])
+    end
 
-  def set_policy
-    @policy = ListingPolicy.new(current_user, @listing)
-  end
+    def set_policy
+      @policy = ListingPolicy.new(current_user, @listing)
+    end
 
-  def listing_params
-    params.require(:listing).permit(:title, :body)
-  end
+    def listing_params
+      params.require(:listing).permit(:title, :body)
+    end
 end
