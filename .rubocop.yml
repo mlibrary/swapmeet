@@ -1,0 +1,15 @@
+Rails:
+  Enabled: true
+
+inherit_gem:
+  rubocop-rails:
+    - config/rails.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.4
+  Exclude:
+    - 'bin/**/*'
+
+Style/StringLiterals:
+  Enabled: false
