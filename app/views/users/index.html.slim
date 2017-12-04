@@ -1,0 +1,18 @@
+h1 Users#index
+
+table.table-striped.table-bordered#users
+  thead
+    tr
+      th Name
+      th Email
+      th Login
+  tbody
+    - @users.each do |user|
+      tr
+        td = user.display_name
+        td = link_to user.email, user
+        td = link_to 'login', login_path(user), method: :post
+
+div = link_to 'Logout', logout_path, method: :post
+div = link_to 'Add', new_user_path
+div = link_to 'Listings', listings_path
