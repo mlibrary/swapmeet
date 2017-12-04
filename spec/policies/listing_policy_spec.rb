@@ -7,7 +7,8 @@ RSpec.describe ListingPolicy do
   let(:nobody)     { Nobody.new }
 
   context "when user owns the listing" do
-    let(:listing)    { Listing.new(owner: user) }
+    let(:user) { create(:user) }
+    let(:listing) { create(:listing, owner: user) }
 
     it "allows show" do
       expect(policy.show?).to be true

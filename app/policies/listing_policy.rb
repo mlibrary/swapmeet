@@ -7,16 +7,36 @@ class ListingPolicy
     @listing = listing
   end
 
+  def create?
+    user.id.present?
+  end
+
+  def edit?
+    user.id.present? && listing.owner == user
+  end
+
+  def destroy?
+    user.id.present? && listing.owner == user
+  end
+
+  def index?
+    true
+  end
+
+  def new?
+    user.id.present?
+  end
+
   def show?
     true
   end
 
-  def destroy?
-    # Rely on owner returning Nobody rather than nil
-    listing.owner == user
+  def update?
+    user.id.present? && listing.owner == user
   end
 
   def authorize!(action, message = nil)
     raise NotAuthorizedError.new(message) unless send(action)
+    true
   end
 end
