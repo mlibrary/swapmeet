@@ -9,6 +9,8 @@
   </head>
 
   <body>
+    Hello, <%= current_user.display_name %>!
+    <% if logged_in? %>(<%= link_to 'Logout', logout_path %>)<% end %>
     <%= yield %>
   </body>
 </html>

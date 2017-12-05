@@ -10,15 +10,15 @@ class ListingPolicy
   end
 
   def create?
-    user.id.present?
+    user.known?
   end
 
   def edit?
-    user.id.present? && listing.owner == user
+    listing.owner == user
   end
 
   def destroy?
-    user.id.present? && listing.owner == user
+    listing.owner == user
   end
 
   def index?
@@ -26,7 +26,7 @@ class ListingPolicy
   end
 
   def new?
-    user.id.present?
+    user.known?
   end
 
   def show?
@@ -34,7 +34,7 @@ class ListingPolicy
   end
 
   def update?
-    user.id.present? && listing.owner == user
+    listing.owner == user
   end
 
   def authorize!(action, message = nil)

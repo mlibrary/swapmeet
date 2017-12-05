@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   resources :listings
   resources :users
   post 'users/:id/login', controller: :users, action: :login, as: :login
-  post 'users/logout', controller: :users, action: :logout, as: :logout
+  match '/logout', to: 'users#logout', as: :logout, via: [:get, :post]
 end
