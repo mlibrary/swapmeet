@@ -28,7 +28,7 @@ class PublishersController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :create?
+    @policy.authorize! :edit?
   end
 
   def index
