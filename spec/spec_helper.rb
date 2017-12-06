@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+def coverage_needed?
+  ENV['COVERAGE'] || ENV['TRAVIS']
+end
+
+if coverage_needed?
+  require 'coveralls'
+  Coveralls.wear!('rails') do
+    add_filter 'config'
+    add_filter 'spec'
+  end
+end
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

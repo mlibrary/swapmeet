@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg)](https://coveralls.io/github/gkostin1966/swapmeet)
+
 # README
 
 This README would normally document whatever steps are necessary to get the

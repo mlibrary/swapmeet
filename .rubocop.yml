@@ -10,6 +10,8 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude:
     - 'bin/**/*'
+    - 'vendor/**/*'
+
 
 Style/StringLiterals:
   Enabled: false
