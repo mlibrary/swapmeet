@@ -1,0 +1,25 @@
+h1 Listing newspapers
+
+table
+  thead
+    tr
+      th Name
+      th Display name
+      th Publisher
+      th
+      th
+      th
+
+  tbody
+    - @newspapers.each do |newspaper|
+      tr
+        td = newspaper.name
+        td = newspaper.display_name
+        td = newspaper.publisher
+        td = link_to 'Show', newspaper
+        td = link_to 'Edit', edit_newspaper_path(newspaper)
+        td = link_to 'Destroy', newspaper, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Newspaper', new_newspaper_path

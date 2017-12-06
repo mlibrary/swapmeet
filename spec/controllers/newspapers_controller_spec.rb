@@ -2,12 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe PublishersController, type: :controller do
-  let(:target) { create(:publisher) }
+RSpec.describe NewspapersController, type: :controller do
+  let(:publisher) { create(:publisher) }
+  let(:target) { create(:newspaper, publisher: publisher) }
 
   context 'anonymous user' do
     describe '#create' do
-      subject { post :create, params: { publisher: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :create, params: { newspaper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end
@@ -43,7 +44,7 @@ RSpec.describe PublishersController, type: :controller do
     end
 
     describe '#update' do
-      subject { post :update, params: { id: target.id, publisher: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :update, params: { id: target.id, newspaper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end
@@ -57,7 +58,7 @@ RSpec.describe PublishersController, type: :controller do
     end
 
     describe '#create' do
-      subject { post :create, params: { publisher: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :create, params: { newspaper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end
@@ -93,7 +94,7 @@ RSpec.describe PublishersController, type: :controller do
     end
 
     describe '#update' do
-      subject { post :update, params: { id: target.id, publisher: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :update, params: { id: target.id, newspaper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end

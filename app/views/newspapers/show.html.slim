@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @newspaper.name
+p
+  strong Display name:
+  = @newspaper.display_name
+p
+  strong Publisher:
+  = @newspaper.publisher
+
+=> link_to 'Edit', edit_newspaper_path(@newspaper)
+'|
+=< link_to 'Back', newspapers_path
