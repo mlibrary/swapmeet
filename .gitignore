@@ -21,3 +21,6 @@
 .byebug_history
 spec/examples.txt
 
+# Ignore coverall's files
+/coverage
+
