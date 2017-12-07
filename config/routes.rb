@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   resources :users
   post 'users/:id/login', controller: :users, action: :login, as: :login
   match '/logout', to: 'users#logout', as: :logout, via: [:get, :post]
+  get 'indexes', controller: :application, action: :indexes, as: :indexes
 end
