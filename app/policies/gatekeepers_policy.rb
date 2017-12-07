@@ -10,31 +10,31 @@ class GatekeepersPolicy
   end
 
   def create?
-    false
+    subject.known?
   end
 
   def edit?
-    false
+    subject.known?
   end
 
   def destroy?
-    false
+    subject.known?
   end
 
   def index?
-    false
+    subject.known?
   end
 
   def new?
-    false
+    subject.known?
   end
 
   def show?
-    false
+    subject.known?
   end
 
   def update?
-    false
+    subject.known?
   end
 
   def authorize!(action, message = nil)

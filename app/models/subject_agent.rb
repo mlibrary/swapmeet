@@ -7,5 +7,5 @@ class SubjectAgent
     @subject = subject
   end
 
-  delegate :id, to: :@subject
+  delegate :id, :known?, to: :@subject
 end
