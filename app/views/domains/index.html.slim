@@ -1,0 +1,25 @@
+h1 Listing domains
+
+table
+  thead
+    tr
+      th Name
+      th Display name
+      th Parent
+      th
+      th
+      th
+
+  tbody
+    - @domains.each do |domain|
+      tr
+        td = domain.name
+        td = domain.display_name
+        td = domain.parent
+        td = link_to 'Show', domain
+        td = link_to 'Edit', edit_domain_path(domain)
+        td = link_to 'Destroy', domain, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Domain', new_domain_path
