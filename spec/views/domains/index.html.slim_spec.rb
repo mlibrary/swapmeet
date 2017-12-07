@@ -5,12 +5,14 @@ require 'rails_helper'
 RSpec.describe "domains/index", type: :view do
   before(:each) do
     assign(:domains, [
-      Domain.create!(
+      build(:domain,
+        id: 1,
         name: "Name",
         display_name: "Display Name",
         parent: nil
       ),
-      Domain.create!(
+      build(:domain,
+        id: 2,
         name: "Name",
         display_name: "Display Name",
         parent: nil

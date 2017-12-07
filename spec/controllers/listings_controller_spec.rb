@@ -3,8 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe ListingsController do
+  let(:user) { build(:user, id: 1) }
+  let(:owner) { build(:user, id: 2) }
+  let(:target) { build(:listing, id: 1, owner: owner) }
+
+  before do
+    allow(controller).to receive(:current_user).and_return(current_user)
+    allow(user).to receive(:persisted?).and_return(true)
+    allow(owner).to receive(:persisted?).and_return(true)
+    allow(Listing).to receive(:find).with('1').and_return(target)
+  end
+
   context 'anonymous user' do
-    let(:listing) { create(:listing) }
+    let(:current_user) { User.guest }
 
     describe '#create' do
       subject { post :create, params: { listing: { title: 'title', body: 'body' } } }
@@ -15,7 +26,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#destroy' do
-      subject { delete :destroy, params: { id: listing.id } }
+      subject { delete :destroy, params: { id: target.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -23,7 +34,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
+      subject { get :edit, params: { id: target.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -47,7 +58,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#show' do
-      subject { get :show, params: { id: listing.id } }
+      subject { get :show, params: { id: target.id } }
       it 'authorized' do
         subject
         expect(response).to be_success
@@ -55,7 +66,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#update' do
-      subject { put :update, params: { id: listing.id, listing: { title: 'title', body: 'body' } } }
+      subject { put :update, params: { id: target.id, listing: { title: 'title', body: 'body' } } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -64,12 +75,7 @@ RSpec.describe ListingsController do
   end
 
   context 'owner user' do
-    let(:user) { create(:user) }
-    let(:listing) { create(:listing, owner: user) }
-
-    before do
-      allow(controller).to receive(:current_user).and_return(user)
-    end
+    let(:current_user) { owner }
 
     describe '#create' do
       subject { post :create, params: { listing: { title: 'title', body: 'body' } } }
@@ -80,7 +86,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#destroy' do
-      subject { delete :destroy, params: { id: listing.id } }
+      subject { delete :destroy, params: { id: target.id } }
       it 'authorized' do
         subject
         expect(response).to redirect_to listings_path
@@ -88,7 +94,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
+      subject { get :edit, params: { id: target.id } }
       it 'authorized' do
         subject
         expect(response).to be_success
@@ -112,7 +118,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#show' do
-      subject { get :show, params: { id: listing.id } }
+      subject { get :show, params: { id: target.id } }
       it 'authorized' do
         subject
         expect(response).to be_success
@@ -120,7 +126,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#update' do
-      subject { put :update, params: { id: listing.id, listing: { title: 'title', body: 'body' } } }
+      subject { put :update, params: { id: target.id, listing: { title: 'title', body: 'body' } } }
       it 'authorized' do
         subject
         expect(response).to redirect_to listing_path
@@ -129,13 +135,7 @@ RSpec.describe ListingsController do
   end
 
   context 'non-owner user' do
-    let(:user) { create(:user) }
-    let(:listing) { create(:listing, owner: user) }
-    let(:current_user) { create(:user) }
-
-    before do
-      allow(controller).to receive(:current_user).and_return(current_user)
-    end
+    let(:current_user) { user }
 
     describe '#create' do
       subject { post :create, params: { listing: { title: 'title', body: 'body' } } }
@@ -146,7 +146,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#destroy' do
-      subject { delete :destroy, params: { id: listing.id } }
+      subject { delete :destroy, params: { id: target.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -154,7 +154,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#edit' do
-      subject { get :edit, params: { id: listing.id } }
+      subject { get :edit, params: { id: target.id } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized
@@ -178,7 +178,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#show' do
-      subject { get :show, params: { id: listing.id } }
+      subject { get :show, params: { id: target.id } }
       it 'authorized' do
         subject
         expect(response).to be_success
@@ -186,7 +186,7 @@ RSpec.describe ListingsController do
     end
 
     describe '#update' do
-      subject { put :update, params: { id: listing.id, listing: { title: 'title', body: 'body' } } }
+      subject { put :update, params: { id: target.id, listing: { title: 'title', body: 'body' } } }
       it 'unauthorized' do
         subject
         expect(response).to be_unauthorized

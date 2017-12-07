@@ -4,11 +4,13 @@ require 'rails_helper'
 
 RSpec.describe "domains/edit", type: :view do
   before(:each) do
-    @domain = assign(:domain, Domain.create!(
+    @domain = assign(:domain, build(:domain,
+                                id: 1,
                                 name: "Name",
                                 display_name: "MyString",
                                 parent: nil
                               ))
+    allow(@domain).to receive(:persisted?).and_return(true)
   end
 
   it "renders the edit domain form" do
