@@ -39,6 +39,5 @@ class PublishersPolicy
 
   def authorize!(action, message = nil)
     raise NotAuthorizedError.new(message) unless send(action)
-    true
   end
 end

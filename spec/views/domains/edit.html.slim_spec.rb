@@ -7,7 +7,7 @@ RSpec.describe "domains/edit", type: :view do
     @domain = assign(:domain, build(:domain,
                                 id: 1,
                                 name: "Name",
-                                display_name: "MyString",
+                                display_name: "Display Name",
                                 parent: nil
                               ))
     allow(@domain).to receive(:persisted?).and_return(true)
@@ -15,13 +15,9 @@ RSpec.describe "domains/edit", type: :view do
 
   it "renders the edit domain form" do
     render
-
     assert_select "form[action=?][method=?]", domain_path(@domain), "post" do
-
       assert_select "input[name=?]", "domain[name]"
-
       assert_select "input[name=?]", "domain[display_name]"
-
       assert_select "input[name=?]", "domain[parent]"
     end
   end
