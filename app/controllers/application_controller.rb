@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from NotAuthorizedError, with: :render_unauthorized
 
+  def indexes
+
+  end
+
   protected
 
     def auto_login(user)
