@@ -1,0 +1,30 @@
+= form_for @gatekeeper do |f|
+  - if @gatekeeper.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@gatekeeper.errors.count, "error")} prohibited this gatekeeper from being saved:"
+      ul
+        - @gatekeeper.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :role
+    = f.text_field :role
+  .field
+    = f.label :domain
+    = f.text_field :domain
+  .field
+    = f.label :group
+    = f.text_field :group
+  .field
+    = f.label :listing
+    = f.text_field :listing
+  .field
+    = f.label :newspaper
+    = f.text_field :newspaper
+  .field
+    = f.label :publisher
+    = f.text_field :publisher
+  .field
+    = f.label :user
+    = f.text_field :user
+  .actions = f.submit
