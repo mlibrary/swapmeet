@@ -16,7 +16,7 @@ RSpec.describe GatekeepersController, type: :controller do
     let(:current_user) { User.guest }
 
     describe '#create' do
-      subject { post :create, params: { domain: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :create, params: { gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end
@@ -52,7 +52,7 @@ RSpec.describe GatekeepersController, type: :controller do
     end
 
     describe '#update' do
-      subject { post :update, params: { id: target.id, domain: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :update, params: { id: target.id, gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
       it { expect(response).to be_unauthorized }
     end
@@ -62,45 +62,45 @@ RSpec.describe GatekeepersController, type: :controller do
     let(:current_user) { user }
 
     describe '#create' do
-      subject { post :create, params: { domain: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :create, params: { gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
 
     describe '#destory' do
       subject { delete :destroy, params: { id: target.id } }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to redirect_to gatekeepers_path }
     end
 
     describe '#edit' do
       subject { get :edit, params: { id: target.id } }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
 
     describe '#index' do
       subject { get :index }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
 
     describe '#new' do
       subject { get :new }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
 
     describe '#show' do
       subject { get :show, params: { id: target.id } }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
 
     describe '#update' do
-      subject { post :update, params: { id: target.id, domain: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :update, params: { id: target.id, gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
-      it { expect(response).to be_unauthorized }
+      it { expect(response).to be_success }
     end
   end
 end
