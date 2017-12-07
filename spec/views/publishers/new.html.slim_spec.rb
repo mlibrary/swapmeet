@@ -12,11 +12,8 @@ RSpec.describe "publishers/new", type: :view do
 
   it "renders new publisher form" do
     render
-
     assert_select "form[action=?][method=?]", publishers_path, "post" do
-
       assert_select "input[name=?]", "publisher[name]"
-
       assert_select "input[name=?]", "publisher[display_name]"
     end
   end

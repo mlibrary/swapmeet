@@ -1,40 +1,40 @@
 # frozen_string_literal: true
 
 # Sample resource-oriented, multi-rule policy
-class ListingPolicy
-  attr_reader :user, :listing
+class GroupsPolicy
+  attr_reader :subject, :object
 
-  def initialize(user, listing)
-    @user = user
-    @listing = listing
+  def initialize(subject, object)
+    @subject = subject
+    @object = object
   end
 
   def create?
-    user.known?
+    false
   end
 
   def edit?
-    listing.owner == user
+    false
   end
 
   def destroy?
-    listing.owner == user
+    false
   end
 
   def index?
-    true
+    false
   end
 
   def new?
-    user.known?
+    false
   end
 
   def show?
-    true
+    false
   end
 
   def update?
-    listing.owner == user
+    false
   end
 
   def authorize!(action, message = nil)

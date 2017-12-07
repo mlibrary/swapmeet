@@ -2,28 +2,28 @@
 
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  before_action :set_policy #, only: [:index, :show, :new, :edit, :create, :update, :destroy]
 
   def index
-    return render_unauthorized unless @policy.authorize! :index?
+    @policy.authorize! :index?
     @listings = Listing.all
   end
 
   def show
-    return render_unauthorized unless @policy.authorize! :show?
+    @policy.authorize! :show?
   end
 
   def new
-    return render_unauthorized unless @policy.authorize! :new?
+    @policy.authorize! :new?
     @listing = Listing.new
   end
 
   def edit
-    return render_unauthorized unless @policy.authorize! :edit?
+    @policy.authorize! :edit?
   end
 
   def create
-    return render_unauthorized unless @policy.authorize! :create?
+    @policy.authorize! :create?
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
     if @listing.save
@@ -34,7 +34,7 @@ class ListingsController < ApplicationController
   end
 
   def update
-    return render_unauthorized unless @policy.authorize! :update?
+    @policy.authorize! :update?
     if @listing.update(listing_params)
       redirect_to @listing
     else
@@ -43,7 +43,7 @@ class ListingsController < ApplicationController
   end
 
   def destroy
-    return render_unauthorized unless @policy.authorize! :destroy?
+    @policy.authorize! :destroy?
     @listing.destroy
     redirect_to listings_path
   end
