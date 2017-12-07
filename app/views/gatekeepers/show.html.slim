@@ -1,0 +1,27 @@
+p#notice = notice
+
+p
+  strong Role:
+  = @gatekeeper.role
+p
+  strong Domain:
+  = @gatekeeper.domain
+p
+  strong Group:
+  = @gatekeeper.group
+p
+  strong Listing:
+  = @gatekeeper.listing
+p
+  strong Newspaper:
+  = @gatekeeper.newspaper
+p
+  strong Publisher:
+  = @gatekeeper.publisher
+p
+  strong User:
+  = @gatekeeper.user
+
+=> link_to 'Edit', edit_gatekeeper_path(@gatekeeper)
+'|
+=< link_to 'Back', gatekeepers_path

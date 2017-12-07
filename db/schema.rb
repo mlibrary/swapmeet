@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207201241) do
+ActiveRecord::Schema.define(version: 20171207212406) do
 
   create_table "domains", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -19,6 +19,24 @@ ActiveRecord::Schema.define(version: 20171207201241) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_domains_on_parent_id"
+  end
+
+  create_table "gatekeepers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "role"
+    t.bigint "domain_id"
+    t.bigint "group_id"
+    t.bigint "listing_id"
+    t.bigint "newspaper_id"
+    t.bigint "publisher_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_gatekeepers_on_domain_id"
+    t.index ["group_id"], name: "index_gatekeepers_on_group_id"
+    t.index ["listing_id"], name: "index_gatekeepers_on_listing_id"
+    t.index ["newspaper_id"], name: "index_gatekeepers_on_newspaper_id"
+    t.index ["publisher_id"], name: "index_gatekeepers_on_publisher_id"
+    t.index ["user_id"], name: "index_gatekeepers_on_user_id"
   end
 
   create_table "groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -70,6 +88,12 @@ ActiveRecord::Schema.define(version: 20171207201241) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "gatekeepers", "domains"
+  add_foreign_key "gatekeepers", "groups"
+  add_foreign_key "gatekeepers", "listings"
+  add_foreign_key "gatekeepers", "newspapers"
+  add_foreign_key "gatekeepers", "publishers"
+  add_foreign_key "gatekeepers", "users"
   add_foreign_key "listings", "users", column: "owner_id"
   add_foreign_key "newspapers", "publishers"
 end
