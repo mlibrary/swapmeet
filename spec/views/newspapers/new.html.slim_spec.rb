@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe "newspapers/new", type: :view do
-  let(:publisher) { create(:publisher) }
+  let(:publisher) { build(:publisher) }
   before(:each) do
-    assign(:newspaper, Newspaper.new(
+    assign(:newspaper, build(:newspaper,
                          name: "Name",
                          display_name: "Display Name",
                          publisher: publisher

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "publishers/new", type: :view do
   before(:each) do
-    assign(:publisher, Publisher.new(
+    assign(:publisher, build(:publisher,
                          name: "Name",
                          display_name: "Display Name"
                        ))

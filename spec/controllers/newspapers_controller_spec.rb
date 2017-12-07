@@ -3,10 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe NewspapersController, type: :controller do
-  let(:publisher) { create(:publisher) }
-  let(:target) { create(:newspaper, publisher: publisher) }
+  let(:user) { build(:user, id: 1) }
+  let(:target) { build(:newspaper, id: 1, publisher: build(:publisher)) }
+
+  before do
+    allow(controller).to receive(:current_user).and_return(current_user)
+    allow(user).to receive(:persisted?).and_return(true)
+    allow(Newspaper).to receive(:find).with('1').and_return(target)
+  end
 
   context 'anonymous user' do
+    let(:current_user) { User.guest }
+
     describe '#create' do
       subject { post :create, params: { newspaper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
@@ -51,11 +59,7 @@ RSpec.describe NewspapersController, type: :controller do
   end
 
   context 'authenticated user' do
-    let(:user) { create(:user) }
-
-    before do
-      allow(controller).to receive(:current_user).and_return(user)
-    end
+    let(:current_user) { user }
 
     describe '#create' do
       subject { post :create, params: { newspaper: { name: 'Name', display_name: 'Display Name' } } }

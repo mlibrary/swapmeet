@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "domains/new", type: :view do
   before(:each) do
-    assign(:domain, Domain.new(
+    assign(:domain, build(:domain,
                       name: "Name",
                       display_name: "Display Name",
                       parent: nil

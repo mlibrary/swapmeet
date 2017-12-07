@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe "newspapers/show", type: :view do
-  let(:publisher) { create(:publisher) }
+  let(:publisher) { build(:publisher) }
   before(:each) do
-    @newspaper = assign(:newspaper, Newspaper.create!(
+    @newspaper = assign(:newspaper, build(:newspaper,
+                                      id: 1,
                                       name: "Name",
                                       display_name: "Display Name",
                                       publisher: publisher

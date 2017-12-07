@@ -4,10 +4,12 @@ require 'rails_helper'
 
 RSpec.describe "publishers/edit", type: :view do
   before(:each) do
-    @publisher = assign(:publisher, Publisher.create!(
+    @publisher = assign(:publisher, build(:publisher,
+                                      id: 1,
                                       name: "Name",
                                       display_name: "Display Name"
                                     ))
+    allow(@publisher).to receive(:persisted?).and_return(true)
   end
 
   it "renders the edit publisher form" do

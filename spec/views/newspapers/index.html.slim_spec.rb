@@ -7,12 +7,14 @@ RSpec.describe "newspapers/index", type: :view do
 
   before(:each) do
     assign(:newspapers, [
-      Newspaper.create!(
+      build(:newspaper,
+        id: 1,
         name: "Name",
         display_name: "Display Name",
         publisher: publisher
       ),
-      Newspaper.create!(
+      build(:newspaper,
+        id: 2,
         name: "Name",
         display_name: "Display Name",
         publisher: publisher

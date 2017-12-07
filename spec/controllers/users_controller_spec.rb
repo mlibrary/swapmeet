@@ -3,9 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:target) { create(:user) }
+  let(:user) { build(:user, id: 1) }
+  let(:target) { build(:user, id: 2) }
+
+  before do
+    allow(controller).to receive(:current_user).and_return(current_user)
+    allow(user).to receive(:persisted?).and_return(true)
+    allow(target).to receive(:persisted?).and_return(true)
+    allow(User).to receive(:find).with('2').and_return(target)
+  end
 
   context 'anonymous user' do
+    let(:current_user) { User.guest }
+
     describe '#create' do
       subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
       it 'authorized' do
@@ -80,9 +90,7 @@ RSpec.describe UsersController, type: :controller do
   end
 
   context 'owner user' do
-    before do
-      allow(controller).to receive(:current_user).and_return(target)
-    end
+    let(:current_user) { target }
 
     describe '#create' do
       subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
@@ -158,11 +166,7 @@ RSpec.describe UsersController, type: :controller do
   end
 
   context 'non-owner user' do
-    let(:user) { create(:user) }
-
-    before do
-      allow(controller).to receive(:current_user).and_return(user)
-    end
+    let(:current_user) { user }
 
     describe '#create' do
       subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
