@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @domain.name
+p
+  strong Display name:
+  = @domain.display_name
+p
+  strong Parent:
+  = @domain.parent
+
+=> link_to 'Edit', edit_domain_path(@domain)
+'|
+=< link_to 'Back', domains_path
