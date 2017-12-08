@@ -7,7 +7,6 @@ class GatekeepersController < ApplicationController
   def create
     @policy.authorize! :create?
     @gatekeeper = Gatekeeper.new(gatekeeper_params)
-
     respond_to do |format|
       if @gatekeeper.save
         format.html { redirect_to @gatekeeper, notice: 'Gatekeeper was successfully created.' }
@@ -35,12 +34,14 @@ class GatekeepersController < ApplicationController
   def index
     @policy.authorize! :index?
     @gatekeepers = Gatekeeper.all
+    @presenters = ObjectPresenter.for_objects(@gatekeepers)
   end
 
 
   def new
     @policy.authorize! :new?
     @gatekeeper = Gatekeeper.new
+    @presenter = ObjectPresenter.for_object(@gatekeeper)
   end
 
   def show

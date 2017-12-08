@@ -1,26 +1,26 @@
 p#notice = notice
 
 p
-  strong Role:
+  strong Role:&nbsp
   = @gatekeeper.role
 p
-  strong Domain:
-  = @gatekeeper.domain
+  strong Domain:&nbsp
+  = @gatekeeper.domain&.display_name
 p
-  strong Group:
-  = @gatekeeper.group
+  strong Group:&nbsp
+  = @gatekeeper.group&.display_name
 p
-  strong Listing:
-  = @gatekeeper.listing
+  strong Listing:&nbsp
+  = @gatekeeper.listing&.display_name
 p
-  strong Newspaper:
-  = @gatekeeper.newspaper
+  strong Newspaper:&nbsp
+  = @gatekeeper.newspaper&.display_name
 p
-  strong Publisher:
-  = @gatekeeper.publisher
+  strong Publisher:&nbsp
+  = @gatekeeper.publisher&.display_name
 p
-  strong User:
-  = @gatekeeper.user
+  strong User:&nbsp
+  = @gatekeeper.user&.display_name
 
 => link_to 'Edit', edit_gatekeeper_path(@gatekeeper)
 '|

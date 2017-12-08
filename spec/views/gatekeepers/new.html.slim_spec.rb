@@ -4,6 +4,13 @@ require 'rails_helper'
 
 RSpec.describe "gatekeepers/new", type: :view do
   before(:each) do
+    controller.singleton_class.class_eval do
+      protected
+        def current_user
+          User.guest
+        end
+        helper_method :current_user
+    end
     assign(:gatekeeper, build(:gatekeeper,
                           role: "Role",
                           domain: nil,

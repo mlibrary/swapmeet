@@ -64,7 +64,7 @@ RSpec.describe GatekeepersController, type: :controller do
     describe '#create' do
       subject { post :create, params: { gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
       before { subject }
-      it { expect(response).to be_success }
+      it { expect(response).to redirect_to gatekeeper_path(Gatekeeper.last) }
     end
 
     describe '#destory' do
@@ -98,9 +98,9 @@ RSpec.describe GatekeepersController, type: :controller do
     end
 
     describe '#update' do
-      subject { post :update, params: { id: target.id, gatekeeper: { name: 'Name', display_name: 'Display Name' } } }
+      subject { post :update, params: { id: target.id, gatekeeper: { role: 'Role' } } }
       before { subject }
-      it { expect(response).to be_success }
+      it { expect(response).to redirect_to gatekeeper_path(target) }
     end
   end
 end

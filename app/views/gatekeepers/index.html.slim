@@ -18,12 +18,12 @@ table
     - @gatekeepers.each do |gatekeeper|
       tr
         td = gatekeeper.role
-        td = gatekeeper.domain
-        td = gatekeeper.group
-        td = gatekeeper.listing
-        td = gatekeeper.newspaper
-        td = gatekeeper.publisher
-        td = gatekeeper.user
+        td = gatekeeper.domain&.display_name
+        td = gatekeeper.group&.display_name
+        td = gatekeeper.listing&.display_name
+        td = gatekeeper.newspaper&.display_name
+        td = gatekeeper.publisher&.display_name
+        td = gatekeeper.user&.display_name
         td = link_to 'Show', gatekeeper
         td = link_to 'Edit', edit_gatekeeper_path(gatekeeper)
         td = link_to 'Destroy', gatekeeper, data: { confirm: 'Are you sure?' }, method: :delete
