@@ -12,6 +12,26 @@ RSpec.describe PublishersController, type: :controller do
     allow(Publisher).to receive(:find).with('1').and_return(target)
   end
 
+  context 'unauthorized' do
+    describe '#index' do
+      it_should_behave_like 'unauthorized#index', :publisher do
+        let(:response_check) do
+          expect(response).to be_unauthorized
+        end
+      end
+    end
+  end
+
+  context 'authorized' do
+    describe '#index' do
+      it_should_behave_like 'authorized#index', :publisher do
+        let(:response_check) do
+          expect(response).to be_success
+        end
+      end
+    end
+  end
+
   context 'anonymous user' do
     let(:current_user) { User.guest }
 
