@@ -11,6 +11,13 @@ RSpec.describe "gatekeepers/edit", type: :view do
   let(:user) { build(:user) }
 
   before(:each) do
+    controller.singleton_class.class_eval do
+      protected
+        def current_user
+          User.guest
+        end
+        helper_method :current_user
+    end
     @gatekeeper = assign(:gatekeeper, build(:gatekeeper,
                                         id: 1,
                                         role: "Role",
