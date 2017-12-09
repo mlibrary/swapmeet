@@ -18,7 +18,6 @@ end
 
 RSpec.shared_examples 'unauthorized#create' do |model, klass|
   subject { post :create, params: { model => attributes_for(model) } }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::UnauthorizePolicy.new
@@ -33,7 +32,6 @@ end
 
 RSpec.shared_examples 'unauthorized#destroy' do |model, klass|
   subject { delete :destroy, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -52,7 +50,6 @@ end
 
 RSpec.shared_examples 'unauthorized#edit' do |model, klass|
   subject { get :edit, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -71,7 +68,6 @@ end
 
 RSpec.shared_examples 'unauthorized#index' do |model|
   subject { get :index }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::UnauthorizePolicy.new
@@ -86,7 +82,6 @@ end
 
 RSpec.shared_examples 'unauthorized#new' do |model|
   subject { get :new }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::UnauthorizePolicy.new
@@ -101,7 +96,6 @@ end
 
 RSpec.shared_examples 'unauthorized#show' do |model, klass|
   subject { get :show, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -120,7 +114,6 @@ end
 
 RSpec.shared_examples 'unauthorized#update' do |model, klass|
   subject { post :update, params: { id: target.id, model => attributes_for(model) } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -143,7 +136,6 @@ end
 
 RSpec.shared_examples 'authorized#create' do |model, klass|
   subject { post :create, params: { model => attributes_for(model) } }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::AuthorizePolicy.new
@@ -159,7 +151,6 @@ end
 
 RSpec.shared_examples 'authorized#destroy' do |model, klass|
   subject { delete :destroy, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -179,7 +170,6 @@ end
 
 RSpec.shared_examples 'authorized#edit' do |model, klass|
   subject { get :edit, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -198,7 +188,6 @@ end
 
 RSpec.shared_examples 'authorized#index' do |model|
   subject { get :index }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::AuthorizePolicy.new
@@ -213,7 +202,6 @@ end
 
 RSpec.shared_examples 'authorized#new' do |model|
   subject { get :new }
-  let(:current_user) { double('current_user') }
   controller do
     def set_policy
       @policy = ControllersHelper::AuthorizePolicy.new
@@ -228,7 +216,6 @@ end
 
 RSpec.shared_examples 'authorized#show' do |model, klass|
   subject { get :show, params: { id: target.id } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy
@@ -247,7 +234,6 @@ end
 
 RSpec.shared_examples 'authorized#update' do |model, klass|
   subject { post :update, params: { id: target.id, model => attributes_for(model) } }
-  let(:current_user) { double('current_user') }
   let(:target) { build(model, id: 1) }
   controller do
     def set_policy

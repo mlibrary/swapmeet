@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :domain do
-    name "Name"
-    display_name "Display Name"
-    parent ""
+    name "domain"
+    display_name "Domain"
+    parent_id nil
   end
 end

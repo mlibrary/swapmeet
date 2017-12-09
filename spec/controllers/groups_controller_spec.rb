@@ -3,104 +3,65 @@
 require 'rails_helper'
 
 RSpec.describe GroupsController, type: :controller do
-  let(:user) { build(:user, id: 1) }
-  let(:target) { build(:group, id: 1) }
+  context 'policy' do
+    context 'unauthorized' do
+      describe '#create' do
+        it_should_behave_like 'unauthorized#create', :group, :Group
+      end
 
-  before do
-    allow(controller).to receive(:current_user).and_return(current_user)
-    allow(user).to receive(:persisted?).and_return(true)
-    allow(Group).to receive(:find).with('1').and_return(target)
-  end
+      describe '#destory' do
+        it_should_behave_like 'unauthorized#destroy', :group, :Group
+      end
 
-  context 'anonymous user' do
-    let(:current_user) { User.guest }
+      describe '#edit' do
+        it_should_behave_like 'unauthorized#edit', :group, :Group
+      end
 
-    describe '#create' do
-      subject { post :create, params: { group: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
+      describe '#index' do
+        it_should_behave_like 'unauthorized#index', :group
+      end
+
+      describe '#new' do
+        it_should_behave_like 'unauthorized#new', :group
+      end
+
+      describe '#show' do
+        it_should_behave_like 'unauthorized#show', :group, :Group
+      end
+
+      describe '#update' do
+        it_should_behave_like 'unauthorized#update', :group, :Group
+      end
     end
 
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+    context 'authorized' do
+      describe '#create' do
+        it_should_behave_like 'authorized#create', :group, :Group
+      end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#destory' do
+        it_should_behave_like 'authorized#destroy', :group, :Group
+      end
 
-    describe '#index' do
-      subject { get :index }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#edit' do
+        it_should_behave_like 'authorized#edit', :group, :Group
+      end
 
-    describe '#new' do
-      subject { get :new }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#index' do
+        it_should_behave_like 'authorized#index', :group
+      end
 
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#new' do
+        it_should_behave_like 'authorized#new', :group
+      end
 
-    describe '#update' do
-      subject { post :update, params: { id: target.id, group: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-  end
+      describe '#show' do
+        it_should_behave_like 'authorized#show', :group, :Group
+      end
 
-  context 'authenticated user' do
-    let(:current_user) { user }
-
-    describe '#create' do
-      subject { post :create, params: { group: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#index' do
-      subject { get :index }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#new' do
-      subject { get :new }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, group: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
+      describe '#update' do
+        it_should_behave_like 'authorized#update', :group, :Group
+      end
     end
   end
 end

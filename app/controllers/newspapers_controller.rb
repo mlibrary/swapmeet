@@ -7,7 +7,6 @@ class NewspapersController < ApplicationController
   def create
     @policy.authorize! :create?
     @newspaper = Newspaper.new(newspaper_params)
-
     respond_to do |format|
       if @newspaper.save
         format.html { redirect_to @newspaper, notice: 'Newspaper was successfully created.' }

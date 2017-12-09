@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :gatekeeper do
-    role "Role"
+    role "role"
     domain nil
     group nil
     listing nil

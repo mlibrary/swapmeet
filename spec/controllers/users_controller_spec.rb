@@ -3,240 +3,88 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:user) { build(:user, id: 1) }
-  let(:target) { build(:user, id: 2) }
-
-  before do
-    allow(controller).to receive(:current_user).and_return(current_user)
-    allow(user).to receive(:persisted?).and_return(true)
-    allow(target).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('2').and_return(target)
-  end
-
-  context 'anonymous user' do
-    let(:current_user) { User.guest }
-
-    describe '#create' do
-      subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to users_path
-      end
-    end
-
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#index' do
-      subject { get :index }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
+  context 'authenticate' do
     describe '#login' do
-      subject { post :login, params: { id: target.id } }
-      it 'authorized' do
+      subject { post :login, params: { id: user.id } }
+      let(:user) { build(:user, id: 1) }
+      before do
+        allow(User).to receive(:find).with('1').and_return(user)
         subject
+      end
+      it 'signs in' do
+        expect(session[:user_id]).to be user.id
         expect(response).to redirect_to root_path
       end
     end
 
     describe '#logout' do
       subject { post :logout }
-      it 'authorized' do
-        subject
+      before { subject }
+      it 'signs off' do
+        expect(session[:user_id]).to be nil
         expect(response).to redirect_to root_path
-      end
-    end
-
-    describe '#new' do
-      subject { get :new }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
       end
     end
   end
 
-  context 'owner user' do
-    let(:current_user) { target }
+  context 'policy' do
+    context 'unauthorized' do
+      describe '#create' do
+        it_should_behave_like 'unauthorized#create', :user, :User
+      end
 
-    describe '#create' do
-      subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to users_path
+      describe '#destory' do
+        it_should_behave_like 'unauthorized#destroy', :user, :User
+      end
+
+      describe '#edit' do
+        it_should_behave_like 'unauthorized#edit', :user, :User
+      end
+
+      describe '#index' do
+        it_should_behave_like 'unauthorized#index', :user
+      end
+
+      describe '#new' do
+        it_should_behave_like 'unauthorized#new', :user
+      end
+
+      describe '#show' do
+        it_should_behave_like 'unauthorized#show', :user, :User
+      end
+
+      describe '#update' do
+        it_should_behave_like 'unauthorized#update', :user, :User
       end
     end
 
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to users_path
+    context 'authorized' do
+      describe '#create' do
+        it_should_behave_like 'authorized#create', :user, :User
       end
-    end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
+      describe '#destory' do
+        it_should_behave_like 'authorized#destroy', :user, :User
       end
-    end
 
-    describe '#index' do
-      subject { get :index }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
+      describe '#edit' do
+        it_should_behave_like 'authorized#edit', :user, :User
       end
-    end
 
-    describe '#login' do
-      subject { post :login, params: { id: target.id } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to root_path
+      describe '#index' do
+        it_should_behave_like 'authorized#index', :user
       end
-    end
 
-    describe '#logout' do
-      subject { post :logout }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to root_path
+      describe '#new' do
+        it_should_behave_like 'authorized#new', :user
       end
-    end
 
-    describe '#new' do
-      subject { get :new }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
+      describe '#show' do
+        it_should_behave_like 'authorized#show', :user, :User
       end
-    end
 
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to users_path
-      end
-    end
-  end
-
-  context 'non-owner user' do
-    let(:current_user) { user }
-
-    describe '#create' do
-      subject { post :create, params: { user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to users_path
-      end
-    end
-
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#index' do
-      subject { get :index }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
-    describe '#login' do
-      subject { post :login, params: { id: target.id } }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to root_path
-      end
-    end
-
-    describe '#logout' do
-      subject { post :logout }
-      it 'authorized' do
-        subject
-        expect(response).to redirect_to root_path
-      end
-    end
-
-    describe '#new' do
-      subject { get :new }
-      it 'authorized' do
-        subject
-        expect(response).to be_success
-      end
-    end
-
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
-      end
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, user: { display_name: 'name', email: 'name@example.com' } } }
-      it 'unauthorized' do
-        subject
-        expect(response).to be_unauthorized
+      describe '#update' do
+        it_should_behave_like 'authorized#update', :user, :User
       end
     end
   end

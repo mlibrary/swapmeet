@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :listing do
-
+    title "title"
+    body "body"
   end
 end

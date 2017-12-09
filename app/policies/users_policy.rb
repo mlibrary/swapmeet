@@ -2,32 +2,23 @@
 
 # Sample resource-oriented, multi-rule policy
 class UsersPolicy
-  attr_reader :agent, :user
+  attr_reader :subject, :object
 
-  def initialize(agent, user)
-    @agent = agent
-    @user = user
+  def initialize(subject, object)
+    @subject = subject
+    @object = object
   end
 
   def create?
-    # agent.id.present?
     true
   end
 
   def edit?
-    agent.id.present? && agent.owner == user
+    subject.id.present? && subject.owner == object
   end
 
   def destroy?
-    agent.id.present? && agent.owner == user
-  end
-
-  def login?
-    true
-  end
-
-  def logout?
-    true
+    subject.id.present? && subject.owner == object
   end
 
   def index?
@@ -35,16 +26,15 @@ class UsersPolicy
   end
 
   def new?
-    # agent.id.present?
     true
   end
 
   def show?
-    agent.id.present? && agent.owner == user
+    subject.id.present? && subject.owner == object
   end
 
   def update?
-    agent.id.present? && agent.owner == user
+    subject.id.present? && subject.owner == user
   end
 
   def authorize!(action, message = nil)

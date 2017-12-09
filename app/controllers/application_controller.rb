@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
     def render_unauthorized(_exception = nil)
       respond_to do |format|
         format.html { render 'unauthorized', status: :unauthorized }
-        format.any { head :unauthorized, content_type: 'text/plain' }
+        format.json { head :unauthorized }
       end
     end
 end

@@ -7,16 +7,24 @@ class UsersController < ApplicationController
   def create
     @policy.authorize! :create?
     @user = User.new(user_params)
-    if @user.save
-      redirect_to users_path
-    else
-      render :new
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        format.json { render :show, status: :created, location: @user }
+      else
+        format.html { render :new }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @policy.authorize! :destroy?
-    redirect_to users_path
+    @user.destroy
+    respond_to do |format|
+      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+      format.json { head :no_content }
+    end
   end
 
   def edit
@@ -29,7 +37,6 @@ class UsersController < ApplicationController
   end
 
   def login
-    @policy.authorize! :login?
     auto_login(@user)
     redirect_to root_path
   end
@@ -50,7 +57,15 @@ class UsersController < ApplicationController
 
   def update
     @policy.authorize! :update?
-    redirect_to users_path
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   private

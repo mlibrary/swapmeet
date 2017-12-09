@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :publisher do
-    name "MyString"
-    display_name "MyString"
+    name "publisher"
+    display_name "Publisher"
   end
 end
