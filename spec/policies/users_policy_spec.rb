@@ -21,16 +21,6 @@ RSpec.describe UsersPolicy do
   context 'current user is guest' do
     let(:current_user) { guest }
 
-    describe '#create?' do
-      subject { policy.create? }
-      it { is_expected.to be false }
-    end
-
-    describe '#destroy?' do
-      subject { policy.destroy? }
-      it { is_expected.to be false }
-    end
-
     describe '#edit?' do
       subject { policy.edit? }
       it { is_expected.to be false }
@@ -38,11 +28,6 @@ RSpec.describe UsersPolicy do
 
     describe '#index?' do
       subject { policy.index? }
-      it { is_expected.to be false }
-    end
-
-    describe '#new?' do
-      subject { policy.new? }
       it { is_expected.to be false }
     end
 
@@ -60,16 +45,6 @@ RSpec.describe UsersPolicy do
   context 'current user is root' do
     let(:current_user) { root }
 
-    describe '#create?' do
-      subject { policy.create? }
-      it { is_expected.to be true }
-    end
-
-    describe '#destroy?' do
-      subject { policy.destroy? }
-      it { is_expected.to be true }
-    end
-
     describe '#edit?' do
       subject { policy.edit? }
       it { is_expected.to be true }
@@ -77,11 +52,6 @@ RSpec.describe UsersPolicy do
 
     describe '#index?' do
       subject { policy.index? }
-      it { is_expected.to be true }
-    end
-
-    describe '#new?' do
-      subject { policy.new? }
       it { is_expected.to be true }
     end
 
@@ -99,16 +69,6 @@ RSpec.describe UsersPolicy do
   context 'current user is not target user' do
     let(:current_user) { user }
 
-    describe '#create?' do
-      subject { policy.create? }
-      it { is_expected.to be false }
-    end
-
-    describe '#destroy?' do
-      subject { policy.destroy? }
-      it { is_expected.to be false }
-    end
-
     describe '#edit?' do
       subject { policy.edit? }
       it { is_expected.to be false }
@@ -117,11 +77,6 @@ RSpec.describe UsersPolicy do
     describe '#index?' do
       subject { policy.index? }
       it { is_expected.to be true }
-    end
-
-    describe '#new?' do
-      subject { policy.new? }
-      it { is_expected.to be false }
     end
 
     describe '#show?' do
@@ -138,16 +93,6 @@ RSpec.describe UsersPolicy do
   context 'current user is target user' do
     let(:current_user) { target_user }
 
-    describe '#create?' do
-      subject { policy.create? }
-      it { is_expected.to be false }
-    end
-
-    describe '#destroy?' do
-      subject { policy.destroy? }
-      it { is_expected.to be false }
-    end
-
     describe '#edit?' do
       subject { policy.edit? }
       it { is_expected.to be true }
@@ -156,11 +101,6 @@ RSpec.describe UsersPolicy do
     describe '#index?' do
       subject { policy.index? }
       it { is_expected.to be true }
-    end
-
-    describe '#new?' do
-      subject { policy.new? }
-      it { is_expected.to be false }
     end
 
     describe '#show?' do
