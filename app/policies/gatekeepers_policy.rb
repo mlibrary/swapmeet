@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-# Sample resource-oriented, multi-rule policy
-class GatekeepersPolicy
-  attr_reader :subject, :object
-
-  def initialize(subject, object)
-    @subject = subject
-    @object = object
-  end
-
+class GatekeepersPolicy < ApplicationPolicy
   def create?
     subject.known?
   end
@@ -35,9 +27,5 @@ class GatekeepersPolicy
 
   def update?
     subject.known?
-  end
-
-  def authorize!(action, message = nil)
-    raise NotAuthorizedError.new(message) unless send(action)
   end
 end
