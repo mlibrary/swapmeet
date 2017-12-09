@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     end
 
     def set_policy
-      @policy ||= UsersPolicy.new(Agent.new(current_user), @user)
+      @policy ||= UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, @user))
     end
 
     def user_params
