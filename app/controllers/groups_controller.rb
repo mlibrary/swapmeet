@@ -62,7 +62,7 @@ class GroupsController < ApplicationController
   private
     # Authorization Policy
     def set_policy
-      @policy = GroupsPolicy.new(SubjectAgent.new(current_user), ObjectAgent.new(@group))
+      @policy = GroupsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Group, @group))
     end
 
     # Use callbacks to share common setup or constraints between actions.
