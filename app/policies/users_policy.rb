@@ -10,31 +10,38 @@ class UsersPolicy
   end
 
   def create?
-    true
-  end
-
-  def edit?
-    subject.id.present? && subject.owner == object
+    return true if subject.root?
+    false
   end
 
   def destroy?
-    subject.id.present? && subject.owner == object
+    return true if subject.root?
+    false
+  end
+
+  def edit?
+    return true if subject.root?
+    subject.known? && subject.client == object.client
   end
 
   def index?
-    true
+    return true if subject.root?
+    subject.known?
   end
 
   def new?
-    true
+    return true if subject.root?
+    false
   end
 
   def show?
-    subject.id.present? && subject.owner == object
+    return true if subject.root?
+    subject.known?
   end
 
   def update?
-    subject.id.present? && subject.owner == user
+    return true if subject.root?
+    subject.known? && subject.client == object.client
   end
 
   def authorize!(action, message = nil)
