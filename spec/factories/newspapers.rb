@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :newspaper do
-    name "MyString"
-    display_name "MyString"
-    publisher nil
+    name "newspaper"
+    display_name "Newspaper"
+    publisher_id { create(:publisher).id }
   end
 end

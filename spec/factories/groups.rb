@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :group do
-    name "Name"
-    display_name "Display Name"
+    name "group"
+    display_name "Group"
   end
 end

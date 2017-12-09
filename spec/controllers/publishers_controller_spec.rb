@@ -3,124 +3,65 @@
 require 'rails_helper'
 
 RSpec.describe PublishersController, type: :controller do
-  let(:user) { build(:user, id: 1) }
-  let(:target) { build(:publisher, id: 1) }
+  context 'policy' do
+    context 'unauthorized' do
+      describe '#create' do
+        it_should_behave_like 'unauthorized#create', :publisher, :Publisher
+      end
 
-  before do
-    allow(controller).to receive(:current_user).and_return(current_user)
-    allow(user).to receive(:persisted?).and_return(true)
-    allow(Publisher).to receive(:find).with('1').and_return(target)
-  end
+      describe '#destory' do
+        it_should_behave_like 'unauthorized#destroy', :publisher, :Publisher
+      end
 
-  context 'unauthorized' do
-    describe '#index' do
-      it_should_behave_like 'unauthorized#index', :publisher do
-        let(:response_check) do
-          expect(response).to be_unauthorized
-        end
+      describe '#edit' do
+        it_should_behave_like 'unauthorized#edit', :publisher, :Publisher
+      end
+
+      describe '#index' do
+        it_should_behave_like 'unauthorized#index', :publisher
+      end
+
+      describe '#new' do
+        it_should_behave_like 'unauthorized#new', :publisher
+      end
+
+      describe '#show' do
+        it_should_behave_like 'unauthorized#show', :publisher, :Publisher
+      end
+
+      describe '#update' do
+        it_should_behave_like 'unauthorized#update', :publisher, :Publisher
       end
     end
-  end
 
-  context 'authorized' do
-    describe '#index' do
-      it_should_behave_like 'authorized#index', :publisher do
-        let(:response_check) do
-          expect(response).to be_success
-        end
+    context 'authorized' do
+      describe '#create' do
+        it_should_behave_like 'authorized#create', :publisher, :Publisher
       end
-    end
-  end
 
-  context 'anonymous user' do
-    let(:current_user) { User.guest }
+      describe '#destory' do
+        it_should_behave_like 'authorized#destroy', :publisher, :Publisher
+      end
 
-    describe '#create' do
-      subject { post :create, params: { publisher: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#edit' do
+        it_should_behave_like 'authorized#edit', :publisher, :Publisher
+      end
 
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#index' do
+        it_should_behave_like 'authorized#index', :publisher
+      end
 
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#new' do
+        it_should_behave_like 'authorized#new', :publisher
+      end
 
-    describe '#index' do
-      subject { get :index }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
+      describe '#show' do
+        it_should_behave_like 'authorized#show', :publisher, :Publisher
+      end
 
-    describe '#new' do
-      subject { get :new }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, publisher: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-  end
-
-  context 'authenticated user' do
-    let(:current_user) { user }
-
-    describe '#create' do
-      subject { post :create, params: { publisher: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#destory' do
-      subject { delete :destroy, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#edit' do
-      subject { get :edit, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#index' do
-      subject { get :index }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#new' do
-      subject { get :new }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#show' do
-      subject { get :show, params: { id: target.id } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
-    end
-
-    describe '#update' do
-      subject { post :update, params: { id: target.id, publisher: { name: 'Name', display_name: 'Display Name' } } }
-      before { subject }
-      it { expect(response).to be_unauthorized }
+      describe '#update' do
+        it_should_behave_like 'authorized#update', :publisher, :Publisher
+      end
     end
   end
 end
