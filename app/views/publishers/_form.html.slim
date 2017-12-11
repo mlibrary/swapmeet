@@ -13,6 +13,6 @@
     = f.label :display_name
     = f.text_field :display_name
   .field
-    = f.label :parent
+    = f.label :domain
     = f.collection_select :domain_id, Domain.all, :id, :name, prompt: "Select a Domain"
   .actions = f.submit

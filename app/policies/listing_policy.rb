@@ -14,11 +14,11 @@ class ListingPolicy
   end
 
   def edit?
-    listing.owner == user
+    listing&.owner == user
   end
 
   def destroy?
-    listing.owner == user
+    listing&.owner == user
   end
 
   def index?
@@ -34,7 +34,7 @@ class ListingPolicy
   end
 
   def update?
-    listing.owner == user
+    listing&.owner == user
   end
 
   def authorize!(action, message = nil)

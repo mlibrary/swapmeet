@@ -17,5 +17,9 @@
     = form.label :body
     = form.text_field :body, id: :listing_body
 
+  .field
+    = form.label :newspaper
+    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+
   .actions
     = form.submit

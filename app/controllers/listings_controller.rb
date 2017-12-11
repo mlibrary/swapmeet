@@ -70,6 +70,6 @@ class ListingsController < ApplicationController
     end
 
     def listing_params
-      params.require(:listing).permit(:title, :body)
+      params.require(:listing).permit(:title, :body, :newspaper_id)
     end
 end
