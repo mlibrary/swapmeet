@@ -8,7 +8,7 @@ class UsersPolicy < ApplicationPolicy
 
   def index?
     return true if subject.root?
-    subject.known?
+    true
   end
 
   def show?

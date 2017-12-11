@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg)](https://coveralls.io/github/gkostin1966/swapmeet)
+[![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg?branch=master)](https://coveralls.io/github/gkostin1966/swapmeet?branch=master)
 
 # README
 
