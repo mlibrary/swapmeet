@@ -1,3 +1,5 @@
+h1 Newspaper
+
 p#notice = notice
 
 p
@@ -13,3 +15,11 @@ p
 => link_to 'Edit', edit_newspaper_path(@newspaper)
 '|
 =< link_to 'Back', newspapers_path
+
+- if @newspaper.listings.count > 0
+  hr
+  h2 Listings
+  ul
+    - @newspaper.listings.each do |listing|
+      li
+        = link_to listing.title, listing_path(listing)
