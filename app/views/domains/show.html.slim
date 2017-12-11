@@ -1,14 +1,14 @@
 p#notice = notice
 
 p
-  strong Name:
+  strong Name:&nbsp
   = @domain.name
 p
-  strong Display name:
+  strong Display name:&nbsp
   = @domain.display_name
 p
-  strong Parent:
-  = @domain.parent
+  strong Parent:&nbsp
+  = @domain.parent&.display_name
 
 => link_to 'Edit', edit_domain_path(@domain)
 '|

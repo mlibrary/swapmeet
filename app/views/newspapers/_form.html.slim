@@ -14,7 +14,5 @@
     = f.text_field :display_name
   .field
     = f.label :publisher
-    = f.text_field :publisher, value: "", disabled: true
-  .field
-    = f.hidden_field :publisher_id, value: '1'
+    = f.collection_select :publisher_id, Publisher.all, :id, :name, prompt: "Select a Publisher"
   .actions = f.submit

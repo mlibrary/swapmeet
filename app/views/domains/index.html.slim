@@ -15,7 +15,7 @@ table
       tr
         td = domain.name
         td = domain.display_name
-        td = domain.parent
+        td = domain.parent&.display_name
         td = link_to 'Show', domain
         td = link_to 'Edit', edit_domain_path(domain)
         td = link_to 'Destroy', domain, data: { confirm: 'Are you sure?' }, method: :delete

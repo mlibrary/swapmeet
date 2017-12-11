@@ -16,7 +16,7 @@ RSpec.describe "domains/new", type: :view do
     assert_select "form[action=?][method=?]", domains_path, "post" do
       assert_select "input[name=?]", "domain[name]"
       assert_select "input[name=?]", "domain[display_name]"
-      assert_select "input[name=?]", "domain[parent]"
+      assert_select "select[name=?]", "domain[parent_id]"
     end
   end
 end

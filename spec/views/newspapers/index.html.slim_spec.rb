@@ -26,6 +26,6 @@ RSpec.describe "newspapers/index", type: :view do
     render
     assert_select "tr>td", text: "Name".to_s, count: 2
     assert_select "tr>td", text: "Display Name".to_s, count: 2
-    assert_select "tr>td", text: publisher.to_s, count: 2
+    assert_select "tr>td", text: publisher.display_name.to_s, count: 2
   end
 end

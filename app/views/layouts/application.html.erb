@@ -9,12 +9,21 @@
   </head>
 
   <body>
-    Hello, <%= current_user.display_name %>!
-    <% if logged_in? %>
-      (<%= link_to 'Logout', logout_path %>)
-    <% else %>
-      (<%= link_to 'Login', users_path %>)
-    <% end %>
-    <%= yield %>
+    <div id="header">
+      Hello, <%= current_user.display_name %>!
+      <% if logged_in? %>
+        (<%= link_to 'Logout', logout_path %>)
+      <% else %>
+        (<%= link_to 'Login', users_path %>)
+      <% end %>
+    </div>
+    <div id="content">
+      <%= yield %>
+    </div>
+    <div id="footer">
+      <br />
+      <span><%= link_to 'Home', root_path %></span>
+      <span><%= link_to 'Indices', indexes_path %></span>
+    </div>
   </body>
 </html>

@@ -12,4 +12,7 @@
   .field
     = f.label :display_name
     = f.text_field :display_name
+  .field
+    = f.label :parent
+    = f.collection_select :parent_id, Group.all, :id, :name, prompt: "Select a Parent"
   .actions = f.submit
