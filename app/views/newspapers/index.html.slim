@@ -15,7 +15,7 @@ table
       tr
         td = newspaper.name
         td = newspaper.display_name
-        td = newspaper.publisher&.display_name
+        td = link_to newspaper.publisher&.display_name, publisher_path(newspaper.publisher) if newspaper.publisher
         td = link_to 'Show', newspaper
         td = link_to 'Edit', edit_newspaper_path(newspaper)
         td = link_to 'Destroy', newspaper, data: { confirm: 'Are you sure?' }, method: :delete

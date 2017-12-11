@@ -10,7 +10,7 @@ p
   = @domain.display_name
 p
   strong Parent:&nbsp
-  = @domain.parent&.display_name
+  = link_to @domain.parent&.display_name, domain_path(@domain.parent) if @domain.parent
 
 => link_to 'Edit', edit_domain_path(@domain)
 '|

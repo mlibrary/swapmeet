@@ -15,7 +15,7 @@ table
       tr
         td = group.name
         td = group.display_name
-        td = group.parent&.display_name
+        td = link_to group.parent&.display_name, group_path(group.parent) if group.parent
         td = link_to 'Show', group
         td = link_to 'Edit', edit_group_path(group)
         td = link_to 'Destroy', group, data: { confirm: 'Are you sure?' }, method: :delete

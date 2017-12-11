@@ -15,7 +15,7 @@ table
       tr
         td = publisher.name
         td = publisher.display_name
-        td = publisher.domain&.display_name
+        td = link_to publisher.domain&.display_name, domain_path(publisher.domain) if publisher.domain
         td = link_to 'Show', publisher
         td = link_to 'Edit', edit_publisher_path(publisher)
         td = link_to 'Destroy', publisher, data: { confirm: 'Are you sure?' }, method: :delete

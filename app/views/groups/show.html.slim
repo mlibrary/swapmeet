@@ -10,7 +10,7 @@ p
   = @group.display_name
 p
   strong Parent:&nbsp
-  = @group.parent&.display_name
+  = link_to @group.parent&.display_name, group_path(@group.parent) if @group.parent
 
 => link_to 'Edit', edit_group_path(@group)
 '|
