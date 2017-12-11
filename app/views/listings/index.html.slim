@@ -3,10 +3,30 @@ h1 Office Gear Swap Meet!
 - if @listings.empty?
   h2 No listings yet. :(
 - else
-  ul
-    - @listings.each do |listing|
-      li
-        = link_to listing.title, listing
+  table
+    thead
+      tr
+        th Title
+        th Newspaper
+        th Owner
+        th
+        - if @policy.edit?
+          th
+        th
+        - if @policy.destroy?
+          th
+
+    tbody
+      - @listings.each do |listing|
+        tr
+          td = listing.title
+          td = listing.newspaper&.display_name
+          td = listing.owner&.display_name
+          td = link_to 'Show', listing
+          - if @policy.edit?
+          td = link_to 'Edit', edit_listing_path(listing)
+          - if @policy.destroy?
+            td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete
 
 - if logged_in?
-  div = link_to 'Make a new listing', new_listing_path
+  = link_to 'Make a new listing', new_listing_path

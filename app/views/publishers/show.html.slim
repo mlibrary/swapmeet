@@ -6,9 +6,9 @@ p
 p
   strong Display name:&nbsp
   = @publisher.display_name
-  p
-  strong Parent:&nbsp
-  = @publisher.domain&.display_name
+p
+strong Parent:&nbsp
+= @publisher.domain&.display_name
 
 => link_to 'Edit', edit_publisher_path(@publisher)
 '|

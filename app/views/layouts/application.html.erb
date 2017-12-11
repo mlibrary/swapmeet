@@ -16,12 +16,13 @@
       <% else %>
         (<%= link_to 'Login', users_path %>)
       <% end %>
+      <hr>
     </div>
     <div id="content">
       <%= yield %>
     </div>
     <div id="footer">
-      <br />
+      <hr>
       <span><%= link_to 'Home', root_path %></span>
       <span><%= link_to 'Indices', indexes_path %></span>
     </div>

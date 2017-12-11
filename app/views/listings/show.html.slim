@@ -1,15 +1,21 @@
-.listing
-  h1 = @listing.title
-  .listing-owner = "Listed by: #{@listing.owner.display_name}"
-  | Description:
-  .listing-body = @listing.body
+p#notice = notice
 
-hr
+p
+  strong Title:&nbsp
+  = @listing.title
+p
+  strong Body name:&nbsp
+  = @listing.body
+p
+  strong Owner:&nbsp
+  = @listing&.owner&.display_name
+p
+  strong Newspaper:&nbsp
+  = @listing&.newspaper&.display_name
 
-.actions
-  =<> link_to 'Back', listings_path
-  | |
-  =<> link_to 'Edit', edit_listing_path(@listing)
-  - if @policy.destroy?
-    | |
-    =<> link_to 'Delete', @listing, data: { confirm: 'Are you sure?' }, method: :delete
+=<> link_to 'Edit', edit_listing_path(@listing)
+- if @policy.destroy?
+  '|
+  =<> link_to 'Delete', @listing, data: { confirm: 'Are you sure?' }, method: :delete
+'|
+=<> link_to 'Back', listings_path
