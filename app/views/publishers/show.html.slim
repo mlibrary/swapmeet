@@ -1,3 +1,5 @@
+h1 Publisher
+
 p#notice = notice
 
 p
@@ -7,9 +9,18 @@ p
   strong Display name:&nbsp
   = @publisher.display_name
 p
-strong Parent:&nbsp
-= @publisher.domain&.display_name
+  strong Domain:&nbsp
+  = @publisher.domain&.display_name
 
 => link_to 'Edit', edit_publisher_path(@publisher)
 '|
 =< link_to 'Back', publishers_path
+
+- if @publisher.newspapers.count > 0
+  hr
+  h2 Newspapers
+  ul
+    - @publisher.newspapers.each do |newspaper|
+      li
+        = link_to newspaper.display_name, newspaper_path(newspaper)
+
