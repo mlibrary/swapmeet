@@ -1,14 +1,14 @@
 p#notice = notice
 
 p
-  strong Name:
+  strong Name:&nbsp
   = @newspaper.name
 p
-  strong Display name:
+  strong Display name:&nbsp
   = @newspaper.display_name
 p
-  strong Publisher:
-  = @newspaper.publisher
+  strong Publisher:&nbsp
+  = @newspaper.publisher&.display_name
 
 => link_to 'Edit', edit_newspaper_path(@newspaper)
 '|

@@ -35,12 +35,12 @@ RSpec.describe "gatekeepers/edit", type: :view do
     render
     assert_select "form[action=?][method=?]", gatekeeper_path(@gatekeeper), "post" do
       assert_select "input[name=?]", "gatekeeper[role]"
-      assert_select "input[name=?]", "gatekeeper[domain]"
-      assert_select "input[name=?]", "gatekeeper[group]"
-      assert_select "input[name=?]", "gatekeeper[listing]"
-      assert_select "input[name=?]", "gatekeeper[newspaper]"
-      assert_select "input[name=?]", "gatekeeper[publisher]"
-      assert_select "input[name=?]", "gatekeeper[user]"
+      assert_select "select[name=?]", "gatekeeper[domain_id]"
+      assert_select "select[name=?]", "gatekeeper[group_id]"
+      assert_select "select[name=?]", "gatekeeper[listing_id]"
+      assert_select "select[name=?]", "gatekeeper[newspaper_id]"
+      assert_select "select[name=?]", "gatekeeper[publisher_id]"
+      assert_select "select[name=?]", "gatekeeper[user_id]"
     end
   end
 end

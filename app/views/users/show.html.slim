@@ -1,2 +1,12 @@
-h1 Users#show
-p Find me in app/views/users/show.html.slim
+p#notice = notice
+
+p
+  strong Email:&nbsp
+  = @user.email
+p
+  strong Display name:&nbsp
+  = @user.display_name
+
+=> link_to 'Edit', edit_user_path(@user)
+'|
+=< link_to 'Back', users_path

@@ -1,11 +1,14 @@
 p#notice = notice
 
 p
-  strong Name:
+  strong Name:&nbsp
   = @group.name
 p
-  strong Display name:
+  strong Display name:&nbsp
   = @group.display_name
+p
+  strong Parent:&nbsp
+  = @group.parent&.display_name
 
 => link_to 'Edit', edit_group_path(@group)
 '|

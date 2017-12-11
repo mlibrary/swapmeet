@@ -1,16 +1,24 @@
-h1 Users#index
+h1 Listing users
 
-table.table-striped.table-bordered#users
+table
   thead
     tr
       th Name
       th Email
       th Login
+      th
+      th
+      th
   tbody
     - @users.each do |user|
       tr
         td = user.display_name
         td = link_to user.email, user
-        td = link_to 'login', login_path(user), method: :post
+        td = link_to 'Login', login_path(user), method: :post
+        td = link_to 'Show', user
+        td = link_to 'Edit', edit_user_path(user)
+        td = link_to 'Destroy', user, data: { confirm: 'Are you sure?' }, method: :delete
 
-div = link_to 'Add', new_user_path
+br
+
+div = link_to 'New User', new_user_path

@@ -20,7 +20,7 @@ RSpec.describe "newspapers/edit", type: :view do
     assert_select "form[action=?][method=?]", newspaper_path(@newspaper), "post" do
       assert_select "input[name=?]", "newspaper[name]"
       assert_select "input[name=?]", "newspaper[display_name]"
-      assert_select "input[name=?]", "newspaper[publisher_id]"
+      assert_select "select[name=?]", "newspaper[publisher_id]"
     end
   end
 end

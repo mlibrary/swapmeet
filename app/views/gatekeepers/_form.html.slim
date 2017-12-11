@@ -12,22 +12,20 @@
     = f.text_field :role
   .field
     = f.label :domain
-    = f.text_field :domain
+    = f.collection_select :domain_id, Domain.all, :id, :name, prompt: "Select a Domain"
   .field
     = f.label :group
-    = f.text_field :group
+    = f.collection_select :group_id, Group.all, :id, :name, prompt: "Select a Group"
   .field
     = f.label :listing
-    = f.text_field :listing
+    = f.collection_select :listing_id, Listing.all, :id, :title, prompt: "Select a Listing"
   .field
     = f.label :newspaper
-    = f.text_field :newspaper
+    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
   .field
     = f.label :publisher
-    = f.text_field :publisher
+    = f.collection_select :publisher_id, Publisher.all, :id, :name, prompt: "Select a Publisher"
   .field
     = f.label :user
-    = f.text_field :user, value: current_user.display_name, disabled: true
-  .field
-    = f.hidden_field :user_id, value: current_user.id
+    = f.collection_select :user_id, User.all, :id, :email, prompt: "Select a User"
   .actions = f.submit
