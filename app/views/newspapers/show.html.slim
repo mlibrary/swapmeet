@@ -10,7 +10,7 @@ p
   = @newspaper.display_name
 p
   strong Publisher:&nbsp
-  = @newspaper.publisher&.display_name
+  = link_to @newspaper.publisher&.display_name, publisher_path(@newspaper.publisher) if @newspaper.publisher
 
 => link_to 'Edit', edit_newspaper_path(@newspaper)
 '|

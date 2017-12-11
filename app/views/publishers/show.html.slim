@@ -10,7 +10,7 @@ p
   = @publisher.display_name
 p
   strong Domain:&nbsp
-  = @publisher.domain&.display_name
+  = link_to @publisher.domain&.display_name, domain_path(@publisher.domain) if @publisher.domain
 
 => link_to 'Edit', edit_publisher_path(@publisher)
 '|
