@@ -28,7 +28,7 @@ RSpec.describe UsersPolicy do
 
     describe '#index?' do
       subject { policy.index? }
-      it { is_expected.to be false }
+      it { is_expected.to be true }
     end
 
     describe '#show?' do

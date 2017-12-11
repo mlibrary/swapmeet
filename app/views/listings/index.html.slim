@@ -8,5 +8,7 @@ h1 Office Gear Swap Meet!
       li
         = link_to listing.title, listing
 
-div = link_to 'Make a new listing', new_listing_path
-div = link_to 'Users', users_path
+- if logged_in?
+  div = link_to 'Make a new listing', new_listing_path
+  <br>
+  div = link_to 'Indices', indexes_path
