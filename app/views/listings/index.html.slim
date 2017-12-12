@@ -20,8 +20,8 @@ h1 Office Gear Swap Meet!
       - @listings.each do |listing|
         tr
           td = listing.title
-          td = listing.newspaper&.display_name
-          td = listing.owner&.display_name
+          td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
+          td = link_to listing.owner&.display_name, user_path(listing.owner) if listing.owner
           td = link_to 'Show', listing
           - if @policy.edit?
           td = link_to 'Edit', edit_listing_path(listing)
