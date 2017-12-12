@@ -9,12 +9,13 @@ h1 Office Gear Swap Meet!
         th Title
         th Newspaper
         th Owner
-        th
+        - if @policy.show?
+            th
         - if @policy.edit?
-          th
+            th
         th
         - if @policy.destroy?
-          th
+            th
 
     tbody
       - @listings.each do |listing|
@@ -22,11 +23,12 @@ h1 Office Gear Swap Meet!
           td = listing.title
           td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
           td = link_to listing.owner&.display_name, user_path(listing.owner) if listing.owner
-          td = link_to 'Show', listing
+          - if @policy.show?
+              td = link_to 'Show', listing
           - if @policy.edit?
-          td = link_to 'Edit', edit_listing_path(listing)
+              td = link_to 'Edit', edit_listing_path(listing)
           - if @policy.destroy?
-            td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete
+              td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete
 
 - if logged_in?
   = link_to 'Make a new listing', new_listing_path
