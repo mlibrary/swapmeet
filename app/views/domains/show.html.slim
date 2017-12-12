@@ -16,7 +16,7 @@ p
 '|
 =< link_to 'Back', domains_path
 
-- if @domain.children.count  > 0
+- unless @domain.children.empty?
   hr
   h2 Children
   ul
@@ -24,7 +24,7 @@ p
       li
         = link_to child.display_name, domain_path(child)
 
-- if @domain.publishers.count > 0
+- unless @domain.publishers.empty?
   hr
   h2 Publishers
   ul

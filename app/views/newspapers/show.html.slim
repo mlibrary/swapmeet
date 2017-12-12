@@ -16,7 +16,7 @@ p
 '|
 =< link_to 'Back', newspapers_path
 
-- if @newspaper.listings.count > 0
+- unless @newspaper.listings.empty?
   hr
   h2 Listings
   ul

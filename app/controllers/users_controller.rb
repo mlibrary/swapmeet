@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :show, :update, :destroy, :login]
+  before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave]
   before_action :set_policy
 
   def create
@@ -34,6 +34,28 @@ class UsersController < ApplicationController
   def index
     @policy.authorize! :index?
     @users = User.all
+  end
+
+  def join
+    @policy.authorize! :join?
+    group_id = params[:group_id]
+    group = Group.find(group_id)
+    group.users << @user
+    respond_to do |format|
+      format.html { redirect_to groups_path, notice: 'User was successfully added to group.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def leave
+    @policy.authorize! :leave?
+    group_id = params[:group_id]
+    group = Group.find(group_id)
+    group.users.delete(@user)
+    respond_to do |format|
+      format.html { redirect_to groups_path, notice: 'User was successfully removed from group.' }
+      format.json { head :no_content }
+    end
   end
 
   def login
