@@ -31,6 +31,16 @@ RSpec.describe UsersPolicy do
       it { is_expected.to be true }
     end
 
+    describe '#join?' do
+      subject { policy.join? }
+      it { is_expected.to be false }
+    end
+
+    describe '#leave?' do
+      subject { policy.leave? }
+      it { is_expected.to be false }
+    end
+
     describe '#show?' do
       subject { policy.show? }
       it { is_expected.to be false }
@@ -52,6 +62,16 @@ RSpec.describe UsersPolicy do
 
     describe '#index?' do
       subject { policy.index? }
+      it { is_expected.to be true }
+    end
+
+    describe '#join?' do
+      subject { policy.join? }
+      it { is_expected.to be true }
+    end
+
+    describe '#leave?' do
+      subject { policy.leave? }
       it { is_expected.to be true }
     end
 
@@ -79,6 +99,16 @@ RSpec.describe UsersPolicy do
       it { is_expected.to be true }
     end
 
+    describe '#join?' do
+      subject { policy.join? }
+      it { is_expected.to be false }
+    end
+
+    describe '#leave?' do
+      subject { policy.leave? }
+      it { is_expected.to be false }
+    end
+
     describe '#show?' do
       subject { policy.show? }
       it { is_expected.to be true }
@@ -100,6 +130,16 @@ RSpec.describe UsersPolicy do
 
     describe '#index?' do
       subject { policy.index? }
+      it { is_expected.to be true }
+    end
+
+    describe '#join?' do
+      subject { policy.join? }
+      it { is_expected.to be true }
+    end
+
+    describe '#leave?' do
+      subject { policy.leave? }
       it { is_expected.to be true }
     end
 
