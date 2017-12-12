@@ -22,3 +22,12 @@ p
         = link_to group.display_name, group_path(group)
         = ' '
         = link_to 'Leave', leave_group_user_path(group, @user), method: :delete
+
+- unless @user.listings.empty?
+  hr
+  h2 Listings
+  ul
+    - @user.listings.first(@user.listings.count).each do |listing|
+      li
+        = link_to listing.title, listing_path(listing)
+

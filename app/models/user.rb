@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   has_and_belongs_to_many :groups
+  has_many :listings, foreign_key: :owner
 
   def self.nobody
     new(username: '<nobody>', display_name: '(No one)', email: '').tap(&:readonly!)

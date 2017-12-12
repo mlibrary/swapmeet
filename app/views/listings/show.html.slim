@@ -10,10 +10,10 @@ p
   = @listing.body
 p
   strong Owner:&nbsp
-  = @listing&.owner&.display_name
+  = link_to @listing.owner&.display_name, user_path(@listing.owner) if @listing.owner
 p
   strong Newspaper:&nbsp
-  = @listing&.newspaper&.display_name
+  = link_to @listing.newspaper&.display_name, newspaper_path(@listing.newspaper) if @listing.newspaper
 
 =<> link_to 'Edit', edit_listing_path(@listing)
 - if @policy.destroy?
