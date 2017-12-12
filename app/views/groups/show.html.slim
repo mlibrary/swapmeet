@@ -16,7 +16,7 @@ p
 '|
 =< link_to 'Back', groups_path
 
-- if @group.children.count  > 0
+- unless @group.children.empty?
   hr
   h2 Children
   ul
@@ -24,7 +24,7 @@ p
       li
         = link_to child.display_name, group_path(child)
 
-- if @group.users.count > 0
+- unless @group.users.empty?
   hr
   h2 Users
   ul

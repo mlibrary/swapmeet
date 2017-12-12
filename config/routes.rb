@@ -2,7 +2,14 @@
 
 Rails.application.routes.draw do
   resources :gatekeepers
-  resources :groups
+  resources :groups do
+    resources :users, only: [] do
+      member do
+        patch :join
+        delete :leave
+      end
+    end
+  end
   resources :domains
   resources :newspapers
   resources :publishers

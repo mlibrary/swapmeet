@@ -6,7 +6,7 @@ RSpec.describe "gatekeepers/show", type: :view do
   before(:each) do
     @gatekeeper = assign(:gatekeeper, build(:gatekeeper,
                                         id: 1,
-                                        role: "Role",
+                                        role: "role",
                                         domain: nil,
                                         group: nil,
                                         listing: nil,
@@ -18,7 +18,7 @@ RSpec.describe "gatekeepers/show", type: :view do
 
   it "renders attributes in <p>" do
     render
-    expect(rendered).to match(/Role/)
+    expect(rendered).to match(/role/)
     expect(rendered).to match(//)
     expect(rendered).to match(//)
     expect(rendered).to match(//)

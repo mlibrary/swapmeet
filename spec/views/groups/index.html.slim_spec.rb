@@ -4,6 +4,20 @@ require 'rails_helper'
 
 RSpec.describe "groups/index", type: :view do
   before(:each) do
+    controller.singleton_class.class_eval do
+      def the_user
+        @the_user ||= User.new
+      end
+
+      protected
+
+        def current_user
+          the_user
+        end
+
+        helper_method :current_user
+    end
+    allow(controller.the_user).to receive(:id).and_return(1)
     assign(:groups, [
       build(:group,
         id: 1,
