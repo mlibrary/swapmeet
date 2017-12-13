@@ -1,47 +1,114 @@
 require 'grant_resolver'
 
+class FakeRepository
+  def grants_for(subjects, credentials, resources)
+    if credentials.include?('permission:edit') && subjects.include?('user:anna')
+      [['user:anna', 'permission:edit', 'listing:17']]
+    elsif credentials.include?('permission:read') && subjects.include?('account-type:umich')
+      [[subjects.first, 'permission:read', 'listing:17']]
+    else
+      []
+    end
+  end
+end
+
 RSpec.describe GrantResolver do
 
   let(:anna)    { double('User', username: 'anna', known?: true) }
   let(:katy)    { double('User', username: 'katy', known?: true) }
   let(:guest)   { double('User', username: '<guest>', known?: false) }
-  let(:edit)    { :edit }
-  let(:read)    { :read }
   let(:listing) { double('Listing', id: 17, entity_type: 'listing') }
+  let(:action)  { :read }
+  let(:target)  { listing }
 
-  context "for Anna (known user 1)" do
-    it "finds a grant to edit listing 17" do
-      resolver = GrantResolver.new(anna, edit, listing)
-      expect(resolver.any?).to be true
+  let(:subject_resolver)    { double('SubjectResolver', resolve: []) }
+  let(:anna_resolver)       { double('SubjectResolver', resolve: ['user:anna', 'account-type:umich', 'affiliation:lib-staff']) }
+  let(:katy_resolver)       { double('SubjectResolver', resolve: ['user:katy', 'account-type:umich', 'affiliation:faculty']) }
+  let(:guest_resolver)      { double('SubjectResolver', resolve: ['account-type:guest']) }
+
+  let(:credential_resolver) { double('CredentialResolver', resolve: []) }
+  let(:read_resolver)       { double('CredentialResolver', resolve: ['permission:read']) }
+  let(:edit_resolver)       { double('CredentialResolver', resolve: ['permission:edit']) }
+
+  let(:resource_resolver)   { double('ResourceResolver', resolve: []) }
+  let(:listing_resolver)    { double('ResourceResolver', resolve: ['listing:17', 'type:listing']) }
+
+  subject(:resolver) {
+    GrantResolver.new(user, action, target).tap do |resolver|
+      resolver.subject_resolver = subject_resolver
+      resolver.credential_resolver = credential_resolver
+      resolver.resource_resolver = resource_resolver
+      resolver.repository = FakeRepository.new
+    end
+  }
+
+  context "for Anna (Library user)" do
+    let(:user) { anna }
+    let(:subject_resolver)  { anna_resolver }
+    let(:resource_resolver) { listing_resolver }
+
+    context "when reading listing 17" do
+      let(:action) { :read }
+      let(:credential_resolver) { read_resolver }
+
+      it "finds a grant" do
+        expect(resolver.any?).to be true
+      end
     end
 
-    it "finds a grant to read listing 17" do
-      resolver = GrantResolver.new(anna, read, listing)
-      expect(resolver.any?).to be true
+    context "when editing listing 17" do
+      let(:action) { :edit }
+      let(:credential_resolver) { edit_resolver }
+
+      it "finds a grant" do
+        expect(resolver.any?).to be true
+      end
     end
   end
 
-  context "for Katy (known user 2)" do
-    it "does not find a grant to edit listing 17" do
-      resolver = GrantResolver.new(katy, edit, listing)
-      expect(resolver.any?).to be false
+  context "for Katy (Faculty member)" do
+    let(:user) { katy }
+    let(:subject_resolver) { katy_resolver }
+
+    context "when reading listing 17" do
+      let(:action) { :read }
+      let(:credential_resolver) { read_resolver }
+
+      it "finds a grant" do
+        expect(resolver.any?).to be true
+      end
     end
 
-    it "finds a grant to read listing 17" do
-      resolver = GrantResolver.new(katy, read, listing)
-      expect(resolver.any?).to be true
+    context "when editing listing 17" do
+      let(:action) { :edit }
+      let(:credential_resolver) { edit_resolver }
+
+      it "does not find a grant" do
+        expect(resolver.any?).to be false
+      end
     end
   end
 
   context "for a guest user" do
-    it "does not find any grants to read listing 17" do
-      resolver = GrantResolver.new(guest, read, listing)
-      expect(resolver.any?).to eq false
+    let(:user) { guest }
+    let(:subject_resolver) { guest_resolver }
+
+    context "when reading listing 17" do
+      let(:action) { :read }
+      let(:credential_resolver) { read_resolver }
+
+      it "does not find any grants" do
+        expect(resolver.any?).to eq false
+      end
     end
 
-    it "does not find any grants to edit listing 17" do
-      resolver = GrantResolver.new(guest, read, listing)
-      expect(resolver.any?).to eq false
+    context "when editing listing 17" do
+      let(:action) { :edit }
+      let(:credential_resolver) { edit_resolver }
+
+      it "does not find any grants" do
+        expect(resolver.any?).to eq false
+      end
     end
   end
 

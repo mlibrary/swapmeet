@@ -1,27 +1,24 @@
 require 'subject_resolver'
 require 'credential_resolver'
 require 'resource_resolver'
+require 'grant_repository'
 
 class GrantResolver
   attr_reader :user, :action, :target, :grants
-  attr_writer :subject_resolver, :credential_resolver, :resource_resolver
+  attr_writer :subject_resolver, :credential_resolver, :resource_resolver, :repository
 
   def initialize(user, action, target)
     @user = user
     @action = action
     @target = target
-    # @grants = [
-    #   ['user:gkostin', 'permission:edit', 'listing:2777'],
-    #   ['role:editor', 'permission:edit', 'type:listing']
-    # ]
   end
 
   def any?
     # Grant.where(subject: subjects, credential: credentials, resource: resources)
     # SELECT * FROM grants
-    # WHERE subject IN('user:gkostin')
+    # WHERE subject IN('user:gkostin', 'account-type:umich', 'affiliation:lib-staff')
     # AND credential IN('permission:edit')
-    # AND resource IN('listing:12', 'type:listing')
+    # AND resource IN('listing:17', 'type:listing')
 
     grants.any?
   end
@@ -29,27 +26,18 @@ class GrantResolver
   private
 
     def grants
-      if action == :edit && user.username == 'anna'
-        [['user:anna', 'permission:edit', 'listing:12']]
-      elsif action == :read && user.known?
-        [[subjects.first, 'permission:read', 'listing:12']]
-      else
-        []
-      end
+      repository.grants_for(subjects, credentials, resources)
     end
 
     def subjects
-      # ['user:gkostin', 'affiliation:lib-staff']
       subject_resolver.resolve
     end
 
     def credentials
-      # ['permission:destroy']
       credential_resolver.resolve
     end
 
     def resources
-      # ['listing:12', 'type:listing']
       resource_resolver.resolve
     end
 
@@ -63,5 +51,9 @@ class GrantResolver
 
     def resource_resolver
       @resource_resolver ||= ResourceResolver.new(target)
+    end
+
+    def repository
+      @repository ||= GrantRepository.new
     end
 end
