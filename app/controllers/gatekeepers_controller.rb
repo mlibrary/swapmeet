@@ -34,14 +34,12 @@ class GatekeepersController < ApplicationController
   def index
     @policy.authorize! :index?
     @gatekeepers = Gatekeeper.all
-    @presenters = ObjectPresenter.for_objects(@gatekeepers)
   end
 
 
   def new
     @policy.authorize! :new?
     @gatekeeper = Gatekeeper.new
-    @presenter = ObjectPresenter.for_object(@gatekeeper)
   end
 
   def show
