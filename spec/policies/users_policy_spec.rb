@@ -111,7 +111,7 @@ RSpec.describe UsersPolicy do
 
     describe '#show?' do
       subject { policy.show? }
-      it { is_expected.to be true }
+      it { is_expected.to be false }
     end
 
     describe '#update?' do

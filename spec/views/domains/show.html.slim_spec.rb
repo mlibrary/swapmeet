@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "domains/show", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     @domain = assign(:domain, build(:domain,
                                 id: 1,
                                 name: "Name",

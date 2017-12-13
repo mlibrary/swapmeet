@@ -6,9 +6,12 @@ table
       th Name
       th Display name
       th Publisher
-      th
-      th
-      th
+      - if @policy.show?
+        th
+      - if @policy.edit?
+        th
+      - if @policy.destroy?
+        th
 
   tbody
     - @newspapers.each do |newspaper|
@@ -16,8 +19,12 @@ table
         td = newspaper.name
         td = newspaper.display_name
         td = link_to newspaper.publisher&.display_name, publisher_path(newspaper.publisher) if newspaper.publisher
-        td = link_to 'Show', newspaper
-        td = link_to 'Edit', edit_newspaper_path(newspaper)
-        td = link_to 'Destroy', newspaper, data: { confirm: 'Are you sure?' }, method: :delete
+        - if @policy.show?
+          td = link_to 'Show', newspaper
+        - if @policy.edit?
+          td = link_to 'Edit', edit_newspaper_path(newspaper)
+        - if @policy.destroy?
+          td = link_to 'Destroy', newspaper, data: { confirm: 'Are you sure?' }, method: :delete
 
+- if @policy.new?
 = link_to 'New Newspaper', new_newspaper_path

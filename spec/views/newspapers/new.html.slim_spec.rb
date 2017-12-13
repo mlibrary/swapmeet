@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe "newspapers/new", type: :view do
   let(:publisher) { build(:publisher) }
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     assign(:newspaper, build(:newspaper,
                          name: "Name",
                          display_name: "Display Name",

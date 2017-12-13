@@ -24,7 +24,10 @@
     <div id="footer">
       <hr>
       <span><%= link_to 'Home', root_path %></span>
-      <span><%= link_to 'Indices', indexes_path %></span>
+      <% if logged_in? %>
+        <span> | </span>
+        <span><%= link_to 'Indices', indexes_path %></span>
+      <% end %>
     </div>
   </body>
 </html>

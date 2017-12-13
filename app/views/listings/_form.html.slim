@@ -7,12 +7,13 @@
           li = message
 
   .field
-      = f.label :title
-      = f.text_field :title, id: :listing_title
+    = f.label :title
+    = f.text_field :title, id: :listing_title
   .field
-      = f.label :body
-      = f.text_field :body, id: :listing_body
+    = f.label :body
+    = f.text_field :body, id: :listing_body
   .field
-      = f.label :newspaper
-      = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
-  .actions = f.submit
+    = f.label :newspaper
+    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+  .actions
+    = f.submit

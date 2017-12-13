@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "gatekeepers/show", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     @gatekeeper = assign(:gatekeeper, build(:gatekeeper,
                                         id: 1,
                                         role: "role",
