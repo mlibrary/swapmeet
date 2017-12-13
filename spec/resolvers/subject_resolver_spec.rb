@@ -3,9 +3,10 @@ require 'subject_resolver'
 RSpec.describe SubjectResolver do
 
   context "with a known user" do
-    let(:bill) { double('User', username: 'bill', known?: true) }
-    let(:bob)  { double('User', username: 'bob', known?: true) }
-    let(:jane) { double('User', username: 'jane', known?: true) }
+    let(:bill)  { double('User', username: 'bill',    known?: true) }
+    let(:bob)   { double('User', username: 'bob',     known?: true) }
+    let(:jane)  { double('User', username: 'jane',    known?: true) }
+    let(:guest) { double('User', username: '<guest>', known?: false) }
 
     it "resolves User `bill`'s token" do
       resolver = SubjectResolver.new(bill)
@@ -20,6 +21,11 @@ RSpec.describe SubjectResolver do
     it "resolves User `jane`'s token" do
       resolver = SubjectResolver.new(jane)
       expect(resolver.resolve).to eq ['user:jane', 'affiliation:lib-staff', 'affiliation:faculty']
+    end
+
+    it "resolves guest user's tokens" do
+      resolver = SubjectResolver.new(guest)
+      expect(resolver.resolve).to eq ['user:<guest>']
     end
   end
 end

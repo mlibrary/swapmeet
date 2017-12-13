@@ -23,6 +23,8 @@ class SubjectResolver
       ['affiliation:faculty']
     when 'user:jane'
       ['affiliation:lib-staff', 'affiliation:faculty']
+    else
+      []
     end
   end
 
