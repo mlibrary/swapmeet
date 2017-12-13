@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   root to: 'listings#index'
   resources :listings
   resources :users
-  post 'users/:id/login', controller: :users, action: :login, as: :login
+  match '/login/:id', to: 'users#login', as: :login, via: [:get, :post]
   match '/logout', to: 'users#logout', as: :logout, via: [:get, :post]
   get 'indexes', controller: :application, action: :indexes, as: :indexes
 end
