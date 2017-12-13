@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "publishers/edit", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     @publisher = assign(:publisher, build(:publisher,
                                       id: 1,
                                       name: "Name",

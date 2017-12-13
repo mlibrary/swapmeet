@@ -11,6 +11,7 @@ RSpec.describe "gatekeepers/new", type: :view do
         end
         helper_method :current_user
     end
+    @policy = ControllersHelper::AuthorizePolicy.new
     assign(:gatekeeper, build(:gatekeeper,
                           role: "Role",
                           domain: nil,

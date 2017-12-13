@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "gatekeepers/index", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     assign(:gatekeepers, [
       build(:gatekeeper,
         id: 1,

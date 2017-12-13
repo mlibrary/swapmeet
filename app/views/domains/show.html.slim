@@ -12,22 +12,23 @@ p
   strong Parent:&nbsp
   = link_to @domain.parent&.display_name, domain_path(@domain.parent) if @domain.parent
 
-=> link_to 'Edit', edit_domain_path(@domain)
-'|
+- if @policy.edit?
+  => link_to 'Edit', edit_domain_path(@domain)
+  '|
 =< link_to 'Back', domains_path
 
 - unless @domain.children.empty?
   hr
   h2 Children
   ul
-    - @domain.children.each do |child|
-      li
-        = link_to child.display_name, domain_path(child)
+  - @domain.children.each do |child|
+    li
+      = link_to child.display_name, domain_path(child)
 
 - unless @domain.publishers.empty?
   hr
   h2 Publishers
   ul
-    - @domain.publishers.each do |publisher|
-      li
-        = link_to publisher.display_name, publisher_path(publisher)
+  - @domain.publishers.each do |publisher|
+    li
+      = link_to publisher.display_name, publisher_path(publisher)

@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "groups/edit", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     @group = assign(:group, build(:group,
                               id: 1,
                               name: "Name",

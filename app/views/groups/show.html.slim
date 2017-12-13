@@ -12,15 +12,19 @@ p
   strong Parent:&nbsp
   = link_to @group.parent&.display_name, group_path(@group.parent) if @group.parent
 
-=> link_to 'Edit', edit_group_path(@group)
-'|
+- if @policy.edit?
+  => link_to 'Edit', edit_group_path(@group)
+  '|
+- if @policy.destroy?
+  =<> link_to 'Delete', @group, data: { confirm: 'Are you sure?' }, method: :delete
+  '|
 =< link_to 'Back', groups_path
 
 - unless @group.children.empty?
   hr
   h2 Children
   ul
-    - @group.children.each do |child|
+  - @group.children.each do |child|
       li
         = link_to child.display_name, group_path(child)
 
@@ -28,6 +32,6 @@ p
   hr
   h2 Users
   ul
-    - @group.users.each do |user|
+  - @group.users.each do |user|
       li
         = link_to user.display_name, user_path(user)

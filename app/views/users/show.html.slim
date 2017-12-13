@@ -9,25 +9,29 @@ p
   strong Display name:&nbsp
   = @user.display_name
 
-=> link_to 'Edit', edit_user_path(@user)
-'|
+- if @policy.edit?
+  => link_to 'Edit', edit_user_path(@user)
+  '|
+- if @policy.destroy?
+  =<> link_to 'Delete', @user, data: { confirm: 'Are you sure?' }, method: :delete
+  '|
 =< link_to 'Back', users_path
 
 - unless @user.groups.empty?
   hr
   h2 Groups
   ul
-    - @user.groups.each do |group|
-      li
-        = link_to group.display_name, group_path(group)
-        = ' '
-        = link_to 'Leave', leave_group_user_path(group, @user), method: :delete
+  - @user.groups.each do |group|
+    li
+      => link_to group.display_name, group_path(group)
+      - if @policy.leave?
+      =<> ' '
+      =< link_to 'Leave', leave_group_user_path(group, @user), method: :delete
 
 - unless @user.listings.empty?
   hr
   h2 Listings
   ul
-    - @user.listings.first(@user.listings.count).each do |listing|
-      li
-        = link_to listing.title, listing_path(listing)
+  - @user.listings.first(@user.listings.count).each do |listing|
+    li = link_to listing.title, listing_path(listing)
 

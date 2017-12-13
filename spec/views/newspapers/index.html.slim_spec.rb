@@ -6,6 +6,7 @@ RSpec.describe "newspapers/index", type: :view do
   let(:publisher) { create(:publisher) }
 
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     assign(:newspapers, [
       build(:newspaper,
         id: 1,

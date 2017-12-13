@@ -2,13 +2,24 @@
 
 module ControllersHelper
   class AuthorizePolicy
-    def authorize!(action, message = nil)
-    end
+    def create?; true; end
+    def edit?; true; end
+    def destroy?; true; end
+    def index?; true; end
+    def new?; true; end
+    def show?; true; end
+    def update?; true; end
+    def authorize!(action, message = nil); end
   end
   class UnauthorizePolicy
-    def authorize!(action, message = nil)
-      raise NotAuthorizedError.new(message)
-    end
+    def create?; false; end
+    def edit?; false; end
+    def destroy?; false; end
+    def index?; false; end
+    def new?; false; end
+    def show?; false; end
+    def update?; false; end
+    def authorize!(action, message = nil); raise NotAuthorizedError.new(message); end
   end
 end
 

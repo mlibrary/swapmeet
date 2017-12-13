@@ -6,7 +6,8 @@ table
       th Name
       th Display name
       th Parent
-      th Member
+      th
+      th
       th
       th
       th
@@ -18,11 +19,15 @@ table
         td = group.display_name
         td = link_to group.parent&.display_name, group_path(group.parent) if group.parent
         - if group.users.exists?(current_user.id)
-            td = link_to 'Leave', leave_group_user_path(group, current_user), method: :delete
+          td = link_to 'Leave', leave_group_user_path(group, current_user), method: :delete
         - else
-            td = link_to 'Join', join_group_user_path(group, current_user), method: :patch
-        td = link_to 'Show', group
-        td = link_to 'Edit', edit_group_path(group)
-        td = link_to 'Destroy', group, data: { confirm: 'Are you sure?' }, method: :delete
+          td = link_to 'Join', join_group_user_path(group, current_user), method: :patch
+        - if @policy.show?
+          td = link_to 'Show', group
+        - if @policy.edit?
+          td = link_to 'Edit', edit_group_path(group)
+        - if @policy.destroy?
+          td = link_to 'Destroy', group, data: { confirm: 'Are you sure?' }, method: :delete
 
-= link_to 'New Group', new_group_path
+- if @policy.new?
+  = link_to 'New Group', new_group_path

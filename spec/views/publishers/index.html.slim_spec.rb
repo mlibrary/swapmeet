@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "publishers/index", type: :view do
   before(:each) do
+    @policy = ControllersHelper::AuthorizePolicy.new
     assign(:publishers, [
       build(:publisher,
         id: 1,

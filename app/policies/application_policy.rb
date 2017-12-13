@@ -13,12 +13,12 @@ class ApplicationPolicy
     false
   end
 
-  def edit?
+  def edit?(obj = nil)
     return true if subject.root?
     false
   end
 
-  def destroy?
+  def destroy?(obj = nil)
     return true if subject.root?
     false
   end
@@ -33,12 +33,12 @@ class ApplicationPolicy
     false
   end
 
-  def show?
+  def show?(obj = nil)
     return true if subject.root?
     false
   end
 
-  def update?
+  def update?(obj = nil)
     return true if subject.root?
     false
   end

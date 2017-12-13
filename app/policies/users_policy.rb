@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class UsersPolicy < ApplicationPolicy
-  def edit?
+  def edit?(user = nil)
     return true if subject.root?
-    subject.known? && subject.client == object.client
+    return true if subject.client == object.client
+    return true if subject.client == user
+    false
   end
 
   def index?
@@ -13,21 +15,27 @@ class UsersPolicy < ApplicationPolicy
 
   def join?
     return true if subject.root?
-    subject.known? && subject.client == object.client
+    return true if subject.client == object.client
+    false
   end
 
   def leave?
     return true if subject.root?
-    subject.known? && subject.client == object.client
+    return true if subject.client == object.client
+    false
   end
 
-  def show?
+  def show?(user = nil)
     return true if subject.root?
-    subject.known?
+    return true if subject.client == object.client
+    return true if subject.client == user
+    false
   end
 
-  def update?
+  def update?(user = nil)
     return true if subject.root?
-    subject.known? && subject.client == object.client
+    return true if subject.client == object.client
+    return true if subject.client == user
+    false
   end
 end
