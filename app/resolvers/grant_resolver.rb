@@ -30,27 +30,27 @@ class GrantResolver
     end
 
     def subjects
-      subject_resolver.resolve
+      subject_resolver.resolve(user)
     end
 
     def credentials
-      credential_resolver.resolve
+      credential_resolver.resolve(action)
     end
 
     def resources
-      resource_resolver.resolve
+      resource_resolver.resolve(target)
     end
 
     def subject_resolver
-      @subject_resolver ||= SubjectResolver.new(user)
+      @subject_resolver ||= SubjectResolver.new
     end
 
     def credential_resolver
-      @credential_resolver ||= CredentialResolver.new(action)
+      @credential_resolver ||= CredentialResolver.new
     end
 
     def resource_resolver
-      @resource_resolver ||= ResourceResolver.new(target)
+      @resource_resolver ||= ResourceResolver.new
     end
 
     def repository

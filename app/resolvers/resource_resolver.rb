@@ -1,22 +1,15 @@
 class ResourceResolver
-  attr_reader :target
-
-  def initialize(target)
-    @target = target
-  end
-
-  def resolve
-    tokens = [entity_token]
-    tokens << type_token
+  def resolve(target)
+    [entity_token(target), type_token(target)]
   end
 
   private
 
-  def entity_token
+  def entity_token(target)
     "#{target.entity_type}:#{target.id}"
   end
 
-  def type_token
+  def type_token(target)
     "type:#{target.entity_type}"
   end
 end

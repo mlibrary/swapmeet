@@ -21,17 +21,17 @@ RSpec.describe GrantResolver do
   let(:action)  { :read }
   let(:target)  { listing }
 
-  let(:subject_resolver)    { double('SubjectResolver', resolve: []) }
-  let(:anna_resolver)       { double('SubjectResolver', resolve: ['user:anna', 'account-type:umich', 'affiliation:lib-staff']) }
-  let(:katy_resolver)       { double('SubjectResolver', resolve: ['user:katy', 'account-type:umich', 'affiliation:faculty']) }
-  let(:guest_resolver)      { double('SubjectResolver', resolve: ['account-type:guest']) }
+  let(:subject_resolver)    { instance_double('SubjectResolver', resolve: []) }
+  let(:anna_resolver)       { instance_double('SubjectResolver', resolve: ['user:anna', 'account-type:umich', 'affiliation:lib-staff']) }
+  let(:katy_resolver)       { instance_double('SubjectResolver', resolve: ['user:katy', 'account-type:umich', 'affiliation:faculty']) }
+  let(:guest_resolver)      { instance_double('SubjectResolver', resolve: ['account-type:guest']) }
 
-  let(:credential_resolver) { double('CredentialResolver', resolve: []) }
-  let(:read_resolver)       { double('CredentialResolver', resolve: ['permission:read']) }
-  let(:edit_resolver)       { double('CredentialResolver', resolve: ['permission:edit']) }
+  let(:credential_resolver) { instance_double('CredentialResolver', resolve: []) }
+  let(:read_resolver)       { instance_double('CredentialResolver', resolve: ['permission:read']) }
+  let(:edit_resolver)       { instance_double('CredentialResolver', resolve: ['permission:edit']) }
 
-  let(:resource_resolver)   { double('ResourceResolver', resolve: []) }
-  let(:listing_resolver)    { double('ResourceResolver', resolve: ['listing:17', 'type:listing']) }
+  let(:resource_resolver)   { instance_double('ResourceResolver', resolve: []) }
+  let(:listing_resolver)    { instance_double('ResourceResolver', resolve: ['listing:17', 'type:listing']) }
 
   subject(:resolver) {
     GrantResolver.new(user, action, target).tap do |resolver|
