@@ -1,31 +1,36 @@
+require 'user_directory'
+
 class SubjectResolver
-  def initialize(user)
-    @user = user
+  def initialize(directory: UserDirectory.new)
+    @directory = directory
   end
 
-  def resolve
-    tokens = [user_token]
-    tokens += affiliation_tokens
-    tokens
+  def resolve(user)
+    [user_token(user)] + additional_tokens(user)
   end
 
   private
 
-  def user_token
-    "user:#{@user.username}"
+  attr_reader :directory
+
+  def user_token(user)
+    "user:#{user.username}"
   end
 
-  def affiliation_tokens
-    case user_token
-    when 'user:bob'
-      ['affiliation:lib-staff']
-    when 'user:bill'
-      ['affiliation:faculty']
-    when 'user:jane'
-      ['affiliation:lib-staff', 'affiliation:faculty']
-    else
-      []
-    end
+  def additional_tokens(user)
+    attributes = directory.attributes_for(user)
+    account_tokens(attributes) + affiliation_tokens(attributes)
+  end
+
+  def account_tokens(attributes)
+    type = attributes[:account_type] || 'guest'
+    ["account-type:#{type}"]
+  end
+
+  def affiliation_tokens(attributes)
+    affiliations = attributes[:affiliations] || []
+    affiliations.map {|a| "affiliation:#{a}" }
   end
 
 end
+

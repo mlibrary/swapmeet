@@ -1,31 +1,44 @@
 require 'subject_resolver'
 
+class FakeDirectory
+  def attributes_for(user)
+    case user.username
+    when 'bill'
+      { account_type: 'umich', affiliations: ['faculty'] }
+    when 'bob'
+      { account_type: 'umich', affiliations: ['lib-staff'] }
+    when 'jane'
+      { account_type: 'umich', affiliations: ['faculty', 'lib-staff'] }
+    else
+      { }
+    end
+  end
+end
+
 RSpec.describe SubjectResolver do
 
   context "with a known user" do
-    let(:bill)  { double('User', username: 'bill',    known?: true) }
-    let(:bob)   { double('User', username: 'bob',     known?: true) }
-    let(:jane)  { double('User', username: 'jane',    known?: true) }
-    let(:guest) { double('User', username: '<guest>', known?: false) }
+    let(:bill)  { double('User', username: 'bill') }
+    let(:bob)   { double('User', username: 'bob') }
+    let(:jane)  { double('User', username: 'jane') }
+    let(:guest) { double('User', username: '<guest>') }
+    let(:directory)    { FakeDirectory.new }
+    subject(:resolver) { SubjectResolver.new(directory: directory) }
 
-    it "resolves User `bill`'s token" do
-      resolver = SubjectResolver.new(bill)
-      expect(resolver.resolve).to eq ['user:bill', 'affiliation:faculty']
+    it "resolves User `bill`'s tokens" do
+      expect(resolver.resolve(bill)).to include('account-type:umich', 'user:bill', 'affiliation:faculty')
     end
 
-    it "resolves User `bob`'s token" do
-      resolver = SubjectResolver.new(bob)
-      expect(resolver.resolve).to eq ['user:bob', 'affiliation:lib-staff']
+    it "resolves User `bob`'s tokens" do
+      expect(resolver.resolve(bob)).to include('account-type:umich', 'user:bob', 'affiliation:lib-staff')
     end
 
-    it "resolves User `jane`'s token" do
-      resolver = SubjectResolver.new(jane)
-      expect(resolver.resolve).to eq ['user:jane', 'affiliation:lib-staff', 'affiliation:faculty']
+    it "resolves User `jane`'s tokens" do
+      expect(resolver.resolve(jane)).to include('account-type:umich', 'user:jane', 'affiliation:lib-staff', 'affiliation:faculty')
     end
 
     it "resolves guest user's tokens" do
-      resolver = SubjectResolver.new(guest)
-      expect(resolver.resolve).to eq ['user:<guest>']
+      expect(resolver.resolve(guest)).to include('account-type:guest', 'user:<guest>')
     end
   end
 end
