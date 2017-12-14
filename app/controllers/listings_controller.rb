@@ -2,7 +2,7 @@
 
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy #, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  before_action :set_policy
 
   def create
     @policy.authorize! :create?
@@ -66,7 +66,7 @@ class ListingsController < ApplicationController
     end
 
     def set_policy
-      @policy = ListingPolicy.new(current_user, @listing)
+      @policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, @listing))
     end
 
     def listing_params

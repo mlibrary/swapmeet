@@ -1,43 +1,26 @@
 # frozen_string_literal: true
 
-# Sample resource-oriented, multi-rule policy
-class ListingPolicy
-  attr_reader :user, :listing
-
-  def initialize(user, listing)
-    @user = user
-    @listing = listing
-  end
-
+class ListingPolicy < ApplicationPolicy
   def create?
-    user.known?
+    return true if subject.root?
+    subject.known?
   end
 
-  def edit?
-    listing&.owner == user
-  end
-
-  def destroy?
-    listing&.owner == user
+  def destroy?(listing = nil)
+    return true if subject.root?
+    subject.client == object.client&.owner
   end
 
   def index?
     true
   end
 
-  def new?
-    user.known?
-  end
-
-  def show?
+  def show?(listing = nil)
     true
   end
 
-  def update?
-    listing&.owner == user
-  end
-
-  def authorize!(action, message = nil)
-    raise NotAuthorizedError.new(message) unless send(action)
+  def update?(listing = nil)
+    return true if subject.root?
+    subject.client == object.client&.owner
   end
 end

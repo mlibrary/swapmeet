@@ -21,11 +21,6 @@ RSpec.describe UsersPolicy do
   context 'current user is guest' do
     let(:current_user) { guest }
 
-    describe '#edit?' do
-      subject { policy.edit? }
-      it { is_expected.to be false }
-    end
-
     describe '#index?' do
       subject { policy.index? }
       it { is_expected.to be true }
@@ -54,11 +49,6 @@ RSpec.describe UsersPolicy do
 
   context 'current user is root' do
     let(:current_user) { root }
-
-    describe '#edit?' do
-      subject { policy.edit? }
-      it { is_expected.to be true }
-    end
 
     describe '#index?' do
       subject { policy.index? }
@@ -89,11 +79,6 @@ RSpec.describe UsersPolicy do
   context 'current user is not target user' do
     let(:current_user) { user }
 
-    describe '#edit?' do
-      subject { policy.edit? }
-      it { is_expected.to be false }
-    end
-
     describe '#index?' do
       subject { policy.index? }
       it { is_expected.to be true }
@@ -122,11 +107,6 @@ RSpec.describe UsersPolicy do
 
   context 'current user is target user' do
     let(:current_user) { target_user }
-
-    describe '#edit?' do
-      subject { policy.edit? }
-      it { is_expected.to be true }
-    end
 
     describe '#index?' do
       subject { policy.index? }

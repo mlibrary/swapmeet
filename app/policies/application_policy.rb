@@ -14,8 +14,7 @@ class ApplicationPolicy
   end
 
   def edit?(obj = nil)
-    return true if subject.root?
-    false
+    update?(obj)
   end
 
   def destroy?(obj = nil)
@@ -29,8 +28,7 @@ class ApplicationPolicy
   end
 
   def new?
-    return true if subject.root?
-    false
+    create?
   end
 
   def show?(obj = nil)
