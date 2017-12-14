@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'permission_mapper'
 
 class CredentialResolver
@@ -11,16 +13,15 @@ class CredentialResolver
 
   private
 
-  def permissions_for(action)
-    perms = permission_mapper.permissions_for(action)
-    perms.map {|p| "permission:#{p}" }
-  end
+    def permissions_for(action)
+      perms = permission_mapper.permissions_for(action)
+      perms.map { |p| "permission:#{p}" }
+    end
 
-  def roles_granting(action)
-    roles = permission_mapper.roles_granting(action)
-    roles.map {|r| "role:#{r}" }
-  end
+    def roles_granting(action)
+      roles = permission_mapper.roles_granting(action)
+      roles.map { |r| "role:#{r}" }
+    end
 
-  attr_reader :permission_mapper
-  
+    attr_reader :permission_mapper
 end

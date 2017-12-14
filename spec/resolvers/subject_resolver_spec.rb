@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'subject_resolver'
 
 class FakeDirectory
@@ -10,7 +12,7 @@ class FakeDirectory
     when 'jane'
       { account_type: 'umich', affiliations: ['faculty', 'lib-staff'] }
     else
-      { }
+      {}
     end
   end
 end

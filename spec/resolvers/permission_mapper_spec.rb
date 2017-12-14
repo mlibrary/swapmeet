@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'permission_mapper'
 
 RSpec.describe PermissionMapper do

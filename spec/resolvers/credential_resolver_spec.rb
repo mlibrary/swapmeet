@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'credential_resolver'
 
 class FakeRoles
@@ -62,7 +64,7 @@ RSpec.describe CredentialResolver do
       expect(resolver.resolve(:read)).to include('permission:read')
     end
   end
-  
+
   context "when editor and admin roles grant edit permission" do
     let(:mapper)   { FakeRoles.new }
     let(:resolver) { CredentialResolver.new(permission_mapper: mapper) }
@@ -84,4 +86,3 @@ RSpec.describe CredentialResolver do
     end
   end
 end
-
