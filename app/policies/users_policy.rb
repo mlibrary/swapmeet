@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class UsersPolicy < ApplicationPolicy
-  def edit?(user = nil)
-    return true if subject.root?
-    return true if subject.client == object.client
-    return true if subject.client == user
-    false
-  end
-
   def index?
     return true if subject.root?
     true

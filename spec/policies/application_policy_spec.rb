@@ -30,7 +30,7 @@ RSpec.describe ApplicationPolicy do
 
     describe '#edit?' do
       subject { policy.edit? }
-      it { is_expected.to be false }
+      it { is_expected.to be policy.update? }
     end
 
     describe '#index?' do
@@ -40,7 +40,7 @@ RSpec.describe ApplicationPolicy do
 
     describe '#new?' do
       subject { policy.new? }
-      it { is_expected.to be false }
+      it { is_expected.to be policy.create? }
     end
 
     describe '#show?' do

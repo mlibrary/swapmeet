@@ -9,7 +9,7 @@ class User < ApplicationRecord
   end
 
   def self.guest
-    user = new(username: '<guest>', display_name: 'Guest', email: '').tap(&:readonly!)
+    new(username: '<guest>', display_name: 'Guest', email: '').tap(&:readonly!)
   end
 
   def known?
