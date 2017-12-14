@@ -35,8 +35,12 @@ RSpec.describe GatekeepersController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :gatekeeper, :Gatekeeper
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :gatekeeper, :Gatekeeper, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :gatekeeper, :Gatekeeper, false
       end
 
       describe '#destory' do
@@ -59,8 +63,12 @@ RSpec.describe GatekeepersController, type: :controller do
         it_should_behave_like 'authorized#show', :gatekeeper, :Gatekeeper
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :gatekeeper, :Gatekeeper
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :gatekeeper, :Gatekeeper, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :gatekeeper, :Gatekeeper, false
       end
     end
   end

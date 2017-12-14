@@ -35,11 +35,13 @@ RSpec.describe ListingsController do
     end
 
     context 'authorized' do
-      describe '#create' do
-        before do
-          allow(User).to receive(:guest).and_return(nil)
-        end
-        it_should_behave_like 'authorized#create', :listing, :Listing
+      describe '#create success' do
+        before { allow(controller).to receive(:current_user).and_return(nil) }
+        it_should_behave_like 'authorized#create', :listing, :Listing, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :listing, :Listing, false
       end
 
       describe '#destory' do
@@ -62,8 +64,12 @@ RSpec.describe ListingsController do
         it_should_behave_like 'authorized#show', :listing, :Listing
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :listing, :Listing
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :listing, :Listing, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :listing, :Listing, false
       end
     end
   end
