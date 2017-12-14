@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grant_resolver'
 
 class FakeRepository

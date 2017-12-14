@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'subject_resolver'
 require 'credential_resolver'
 require 'resource_resolver'
