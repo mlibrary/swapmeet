@@ -1,4 +1,5 @@
 [![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg?branch=master)](https://coveralls.io/github/gkostin1966/swapmeet?branch=master)
+[![Floobits Status](https://floobits.com/gkostin/swapmeet.svg)](https://floobits.com/gkostin/swapmeet/redirect)
 
 # README
 
