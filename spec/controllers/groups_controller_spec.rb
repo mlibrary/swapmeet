@@ -35,8 +35,12 @@ RSpec.describe GroupsController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :group, :Group
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :group, :Group, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :group, :Group, false
       end
 
       describe '#destory' do
@@ -59,8 +63,12 @@ RSpec.describe GroupsController, type: :controller do
         it_should_behave_like 'authorized#show', :group, :Group
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :group, :Group
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :group, :Group, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :group, :Group, false
       end
     end
   end

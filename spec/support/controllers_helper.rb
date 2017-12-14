@@ -145,17 +145,28 @@ end
 # Authorized
 #
 
-RSpec.shared_examples 'authorized#create' do |model, klass|
+RSpec.shared_examples 'authorized#create' do |model, klass, save = true|
   subject { post :create, params: { model => attributes_for(model) } }
+
+  let(:new_model) { build(model) }
   controller do
     def set_policy
       @policy = ControllersHelper::AuthorizePolicy.new
     end
   end
-  before { subject }
+  before do
+    allow(new_model).to receive(:save).and_return(false)
+    allow(klass.to_s.classify.constantize).to receive(:new).and_return(new_model) unless save
+    subject
+  end
   it "create #{model} authorized" do
-    expect(response).to have_http_status(:found)
-    expect(response).to redirect_to send("#{model}_path", klass.to_s.classify.constantize.last)
+    if save
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to send("#{model}_path", klass.to_s.classify.constantize.last)
+    else
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template('new')
+    end
     response_check if respond_to?(:response_check)
   end
 end
@@ -243,7 +254,7 @@ RSpec.shared_examples 'authorized#show' do |model, klass|
   end
 end
 
-RSpec.shared_examples 'authorized#update' do |model, klass|
+RSpec.shared_examples 'authorized#update' do |model, klass, save = true|
   subject { post :update, params: { id: target.id, model => attributes_for(model) } }
   let(:target) { build(model, id: 1) }
   controller do
@@ -253,11 +264,17 @@ RSpec.shared_examples 'authorized#update' do |model, klass|
   end
   before do
     allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
+    allow(target).to receive(:save).and_return(false) unless save
     subject
   end
   it "update #{model} authorized" do
-    expect(response).to have_http_status(:found)
-    expect(response).to redirect_to send("#{model}_path", target)
+    if save
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to send("#{model}_path", target)
+    else
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template('edit')
+    end
     response_check if respond_to?(:response_check)
   end
 end

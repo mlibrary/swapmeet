@@ -24,9 +24,10 @@ group :development, :test do
   # test coverage with coveralls
   gem 'coveralls', require: false
   gem 'debase'
-  gem 'factory_bot_rails', '~>4.8', '>=4.8.2'
-  gem 'faker', '~>1.8', '>=1.8.4'
+  gem 'factory_bot_rails', '~> 4.8', '>= 4.8.2'
+  gem 'faker', '~> 1.8', '>= 1.8.4'
   gem 'pry-byebug'
+  gem 'rails-controller-testing', '~> 0.1', '>= 0.1.1'
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.49', '>= 0.49.1', require: false
   gem 'rubocop-rails', '~> 1.1', '>= 1.1.1', require: false

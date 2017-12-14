@@ -104,8 +104,12 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :user, :User
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :user, :User, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :user, :User, false
       end
 
       describe '#destory' do
@@ -168,8 +172,12 @@ RSpec.describe UsersController, type: :controller do
         it_should_behave_like 'authorized#show', :user, :User
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :user, :User
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :user, :User, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :user, :User, false
       end
     end
   end

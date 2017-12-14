@@ -35,8 +35,12 @@ RSpec.describe PublishersController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :publisher, :Publisher
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :publisher, :Publisher, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :publisher, :Publisher, false
       end
 
       describe '#destory' do
@@ -59,8 +63,12 @@ RSpec.describe PublishersController, type: :controller do
         it_should_behave_like 'authorized#show', :publisher, :Publisher
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :publisher, :Publisher
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :publisher, :Publisher, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :publisher, :Publisher, false
       end
     end
   end

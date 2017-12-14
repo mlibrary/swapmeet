@@ -35,8 +35,12 @@ RSpec.describe DomainsController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :domain, :Domain
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :domain, :Domain, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :domain, :Domain, false
       end
 
       describe '#destory' do
@@ -59,8 +63,12 @@ RSpec.describe DomainsController, type: :controller do
         it_should_behave_like 'authorized#show', :domain, :Domain
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :domain, :Domain
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :domain, :Domain, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :domain, :Domain, false
       end
     end
   end

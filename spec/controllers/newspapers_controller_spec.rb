@@ -35,8 +35,12 @@ RSpec.describe NewspapersController, type: :controller do
     end
 
     context 'authorized' do
-      describe '#create' do
-        it_should_behave_like 'authorized#create', :newspaper, :Newspaper
+      describe '#create success' do
+        it_should_behave_like 'authorized#create', :newspaper, :Newspaper, true
+      end
+
+      describe '#create fail' do
+        it_should_behave_like 'authorized#create', :newspaper, :Newspaper, false
       end
 
       describe '#destory' do
@@ -59,8 +63,12 @@ RSpec.describe NewspapersController, type: :controller do
         it_should_behave_like 'authorized#show', :newspaper, :Newspaper
       end
 
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :newspaper, :Newspaper
+      describe '#update success' do
+        it_should_behave_like 'authorized#update', :newspaper, :Newspaper, true
+      end
+
+      describe '#update fail' do
+        it_should_behave_like 'authorized#update', :newspaper, :Newspaper, false
       end
     end
   end
