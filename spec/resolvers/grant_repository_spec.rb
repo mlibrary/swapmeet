@@ -7,4 +7,3 @@ RSpec.describe GrantRepository do
     expect(subject.grants_for(nil, nil, nil)).to eq([])
   end
 end
-
