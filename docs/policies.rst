@@ -1,23 +1,5 @@
-# Authorization Overview
-
-# Identity and Authentication
-
-Users can be identified in any number of ways and carry with them various
-attributes that determine the entirety of "who they are". Our typical needs
-include identifying a person by username or email address, and building a
-profile of attributes such as geographical region (as determined by IP address),
-or University status (student, staff, etc.). The identifiers and attributes are
-intrinsic to the user and do not, by themselves, grant any permissions within
-an application. Likewise, these attributes cannot be granted within an
-application, only inspected.
-
-A&E will continue to provide the identity and attributes of users. The
-specifics of whether this will be implemented with environment variables,
-HTTP headers, SAML, or other means is to be determined. An application is
-not expected to implement its own login process except to the degree that
-it can recognize the required authentication information provided to it.
-
-# Policies
+Policies
+========
 
 A single, consistent model for authorizing user actions is helpful in
 developing secure, correct applications. One basic approach to this is to use
@@ -51,7 +33,9 @@ For the sake of the following discussion, a rule should be considered as
 applying for a specific action, without regard for whether it is the only rule
 of a policy or one of multiple rules on a broader policy.
 
-## Rules vs Facts
+
+Rules vs. Facts
+---------------
 
 One important distinction is that of **Rules** versus **Facts**. A given rule
 will generally be static but may consider dynamic facts. For example, a rule
@@ -59,7 +43,8 @@ may state that a user may only delete documents they own. The rule considers
 dynamic facts of who is acting and the owner of the object acted upon; it has a
 context of two parameters.
 
-## Types of Rules
+Types of Rules
+--------------
 
 Rules sit on a continuum of how dynamic they are; that is, how much external
 information is needed to make the decision, and where that information comes
@@ -81,7 +66,8 @@ design activity and incidental variation that is unhelpful across multiple
 applications in an organization. These examples are not necessarily exhaustive,
 but aim to provide a representative range with extremes identified. 
 
-### Totally Static
+Totally Static
+~~~~~~~~~~~~~~
 
 The rule is encoded in the application and will yield the same answer until the
 source code is changed. This may be used a placeholder for a permission check
@@ -89,7 +75,8 @@ for a feature not yet enabled or as a deprecation tool to disable an action
 while source-level invocations are removed. This type of rule is uncommon, only
 really useful in transition to richer implementation or removal.
 
-### Configuration-Only
+Configuration-Only
+~~~~~~~~~~~~~~~~~~
 
 The rule considers only a system configuration value and no other contextual
 information. This is functionally equivalent but semantically preferable to a
@@ -113,7 +100,8 @@ user. An example of this might be whether "social widgets" should be displayed
 in a web application. This is not a matter of authorization, so it should not
 be implemented as a rule.
 
-### User and Resource
+User and Resource
+~~~~~~~~~~~~~~~~~
 
 The rule considers the acting user in combination with a target resource or
 multiple resources. This is a very common rule type for which the policy
@@ -127,23 +115,26 @@ This type of rule is usually quite concise in its expression in source code,
 which helps clarify behavior so that it can be implemented, verified,
 communicated, and maintained with confidence.
 
-### User, Resource, and Context
+User, Resource, and Context
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The rule considers the user, the target resource, and contextual information
 such as region as determined by IP address, usage quotas, or configuration. A
-small extension to _User and Resource_ rule type, the additional context is not
+small extension to *User and Resource* rule type, the additional context is not
 usually supplied by the calling code (as are the user and resource), but
 retrieved from the environment or usage session information.
 
-### System Role and Resource
+System Role and Resource
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Rules of this type are similar to _User and Resource_ rules, but they also
+Rules of this type are similar to *User and Resource* rules, but they also
 consider the user's system-wide role, typically an attribute of the user from a
 fixed set of application roles. An administrator flag is commonly converted to
 a named role when using this model. For this discussion a role implies a set
 of permitted actions.
 
-### Agent and Resource
+Agent and Resource
+~~~~~~~~~~~~~~~~~~
 
 The rule considers the acting user and the target resource, in light of
 permitted agents. An **agent** is an abstraction of a permitted user or group.
@@ -164,7 +155,8 @@ The agent abstraction reduces this type of check to whether the agent owns the
 resource or if the resource is shared with the agent. The rules can remain
 simple with the consistent semantics of "user or group" externalized.
 
-### Agent, Resource, Context, Role, and Permissions
+Agent, Resource, Context, Role, and Permissions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The rule considers all of the above information in addition to dynamic
 permissions granted to roles. The roles may be fixed by the application or
@@ -183,7 +175,8 @@ application will behave as desired in production.
 Significant tooling is typically built to allow runtime inspection or
 modification of permissions within applications with this level of flexibility.
 
-### "One Rule"
+"One Rule"
+~~~~~~~~~~
 
 In scenarios where groups, roles, permissions and actions must be allowed to be
 defined at runtime, the rules tend to become very generic while the "fact" data
@@ -201,7 +194,8 @@ developers of the base application implement a development environment as much
 as a specific application. Inspection or modification of rules and facts in a
 system of this complexity requires extensive operational tooling and expertise.
 
-### Enterprise Authorization
+Enterprise Authorization
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some enterprises externalize application rules to policy systems. The
 applications formulate requests in a standardized format, being explicit about

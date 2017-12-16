@@ -24,3 +24,5 @@ spec/examples.txt
 # Ignore coverall's files
 /coverage
 
+/docs/_build/*
+
