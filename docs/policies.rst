@@ -8,10 +8,10 @@ different than declarative or hybrid systems like CanCan, for example.
 
 With CanCan, there is a convenient method for declaring that a user "can do"
 something, building up a map of the users' permitted actions on each request.
-Where this breaks down somewhat is when dynamic roles and object state must
-be considered. The typical solution is to provide a block that serves as a
-boolean predicate for a given operation. This leads to a hybrid of statements
-and predicates, with no clear pattern for what should be placed where.
+This breaks down somewhat when dynamic roles and object state must be
+considered. The typical solution is to provide a block that serves as a boolean
+predicate for a given operation. This leads to a hybrid of statements and
+predicates, with no clear pattern for what should be placed where.
 
 The policy approach is slightly different in that it assumes there will be an
 object that can answer "yes" or "no" to the question of whether a given user
@@ -46,13 +46,13 @@ context of two parameters.
 Types of Rules
 --------------
 
-Rules sit on a continuum of how dynamic they are; that is, how much external
-information is needed to make the decision, and where that information comes
-from. The extent to which a rule uses dynamic information can inform how it is
-constructed.
+Rules sit on a continuum of how dynamic their context is; that is, how much
+external information is needed to make the decision, and where that information
+comes from. The extent to which a rule uses dynamic information can inform how
+it is constructed.
 
 In general, rules that consider few and simple facts should be implemented as
-directly as possible, in the source code and without calling out to additional
+directly as possible, in the source code, and without calling out to additional
 collaborators. This facilitates understanding and testing by limiting the scope
 of what could result in different answers.
 
@@ -96,9 +96,9 @@ flag or whether the user is an administrator.
 
 Note that feature flags are appropriate to consult directly when system
 behavior should be conditional, but is unlikely to vary based on the acting
-user. An example of this might be whether "social widgets" should be displayed
-in a web application. This is not a matter of authorization, so it should not
-be implemented as a rule.
+user. An example of this might be whether the implementors have decided to
+enable "social widgets" or PDF export across an entire web application. This is
+not a matter of authorization, so it should not be implemented as a rule.
 
 User and Resource
 ~~~~~~~~~~~~~~~~~
@@ -130,8 +130,11 @@ System Role and Resource
 Rules of this type are similar to *User and Resource* rules, but they also
 consider the user's system-wide role, typically an attribute of the user from a
 fixed set of application roles. An administrator flag is commonly converted to
-a named role when using this model. For this discussion a role implies a set
-of permitted actions.
+a named role when using this model.
+
+For this discussion, a role implies a fixed set of permitted actions. For example, an
+"editor" may be able to update items, but not delete them. This would be encoded
+directly in the rule, only changing when the application changes.
 
 Agent and Resource
 ~~~~~~~~~~~~~~~~~~
@@ -169,8 +172,9 @@ Inspecting rules of this type is much more abstract and requires significantly
 more knowledge of the deployment infrastructure and configuration model,
 especially if the permissions are granted in a database. Tests can only verify
 that the right authorization questions are asked and answered as expected for
-example configurations; they are no longer effective for validating that an
-application will behave as desired in production.
+example configurations; they are no longer effective for verifying that an
+application will behave as desired in production. The implementors hold the
+responsibility for ensuring that the configuration is correct.
 
 Significant tooling is typically built to allow runtime inspection or
 modification of permissions within applications with this level of flexibility.
@@ -178,7 +182,7 @@ modification of permissions within applications with this level of flexibility.
 "One Rule"
 ~~~~~~~~~~
 
-In scenarios where groups, roles, permissions and actions must be allowed to be
+In scenarios where groups, roles, permissions, and actions must be allowed to be
 defined at runtime, the rules tend to become very generic while the "fact" data
 becomes very detailed. Almost no literal values will be used in a rule, relying
 on assembly of a set of attributes and requirements from persisted data. Taken
