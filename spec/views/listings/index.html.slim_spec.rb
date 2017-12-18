@@ -7,18 +7,22 @@ RSpec.describe "listings/index", type: :view do
   let(:newspaper) { build(:newspaper, id: 1) }
   before(:each) do
     @policy = ControllersHelper::AuthorizePolicy.new
+    @filter = Filter.new
+    @newspapers = []
+    @owners = []
+    @categories = []
     assign(:listings, [
         build(:listing,
               id: 1,
-              title: "Title",
-              body: "Body",
+              title: "Listing Title",
+              body: "Listing Body",
               category: category,
               newspaper: newspaper
         ),
         build(:listing,
               id: 2,
-              title: "Title",
-              body: "Body",
+              title: "Listing Title",
+              body: "Listing Body",
               category: category,
               newspaper: newspaper
         )
@@ -27,7 +31,7 @@ RSpec.describe "listings/index", type: :view do
 
   it "renders a list of listings" do
     render
-    assert_select "tr>td", text: "Title".to_s, count: 2
+    assert_select "tr>td", text: "Listing Title".to_s, count: 2
     assert_select "tr>td", text: "Newspaper".to_s, count: 2
     assert_select "tr>td", text: "(No one)".to_s, count: 2
   end

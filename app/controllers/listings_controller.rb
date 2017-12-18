@@ -6,7 +6,33 @@ class ListingsController < ApplicationController
 
   def index
     @policy.authorize! :index?
-    @listings = Listing.all
+    @filter = Filter.new
+    @newspapers = Newspaper.all
+    @owners = User.all
+    @categories = Category.all
+
+    if params[:f].present?
+      @filter.newspaper = params[:f][:newspaper]
+      @filter.owner = params[:f][:owner]
+      @filter.category = params[:f][:category]
+      template = []
+      values = []
+      if @filter.newspaper.present?
+        template << "newspaper_id = ?"
+        values << @filter.newspaper
+      end
+      if @filter.owner.present?
+        template << "owner_id = ?"
+        values << @filter.owner
+      end
+      if @filter.category.present?
+        template << "category_id = ?"
+        values << @filter.category
+      end
+      @listings = Listing.where(template.join(" AND "), *values) if values.any?
+    end
+
+    @listings ||= Listing.all
   end
 
   def show
@@ -61,13 +87,12 @@ class ListingsController < ApplicationController
   end
 
   private
-
-    def set_listing
-      @listing ||= Listing.find(params[:id])
-    end
-
     def set_policy
       @policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, @listing))
+    end
+
+    def set_listing
+      @listing = Listing.find(params[:id])
     end
 
     def listing_params
