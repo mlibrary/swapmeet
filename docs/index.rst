@@ -26,6 +26,3 @@ Table of Contents
     authentication
     policies
 
-
-.. _wooop: policies.html
-.. _braf: :ref:`woop`
