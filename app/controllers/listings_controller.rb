@@ -4,10 +4,29 @@ class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @listings = Listing.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @listing = Listing.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
+    # @listing.category = Category.find(listing_params[:category])
     respond_to do |format|
       if @listing.save
         format.html { redirect_to @listing, notice: 'Listing was successfully created.' }
@@ -17,33 +36,6 @@ class ListingsController < ApplicationController
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def destroy
-    @policy.authorize! :destroy?
-    @listing.destroy
-    respond_to do |format|
-      format.html { redirect_to listings_url, notice: 'Listing was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @listings = Listing.all
-  end
-
-  def new
-    @policy.authorize! :new?
-    @listing = Listing.new
-  end
-
-  def show
-    @policy.authorize! :show?
   end
 
   def update
@@ -59,6 +51,15 @@ class ListingsController < ApplicationController
     end
   end
 
+  def destroy
+    @policy.authorize! :destroy?
+    @listing.destroy
+    respond_to do |format|
+      format.html { redirect_to listings_url, notice: 'Listing was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
     def set_listing
@@ -70,6 +71,6 @@ class ListingsController < ApplicationController
     end
 
     def listing_params
-      params.require(:listing).permit(:title, :body, :newspaper_id)
+      params.require(:listing).permit(:category_id, :title, :body, :newspaper_id)
     end
 end

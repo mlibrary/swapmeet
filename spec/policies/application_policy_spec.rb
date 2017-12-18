@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationPolicy do
+RSpec.describe ApplicationPolicy, type: :policy do
   let(:policy) { ApplicationPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(nil, nil)) }
   let(:guest) { User.guest }
   let(:root) { build(:user, id: '1') }

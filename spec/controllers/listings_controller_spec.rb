@@ -2,69 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe ListingsController do
-  context 'policy' do
-    context 'unauthorized' do
-      describe '#create' do
-        it_should_behave_like 'unauthorized#create', :listing, :Listing
-      end
-
-      describe '#destory' do
-        it_should_behave_like 'unauthorized#destroy', :listing, :Listing
-      end
-
-      describe '#edit' do
-        it_should_behave_like 'unauthorized#edit', :listing, :Listing
-      end
-
-      describe '#index' do
-        it_should_behave_like 'unauthorized#index', :listing
-      end
-
-      describe '#new' do
-        it_should_behave_like 'unauthorized#new', :listing
-      end
-
-      describe '#show' do
-        it_should_behave_like 'unauthorized#show', :listing, :Listing
-      end
-
-      describe '#update' do
-        it_should_behave_like 'unauthorized#update', :listing, :Listing
-      end
+RSpec.describe ListingsController, type: :controller do
+  context 'policy enforcement' do
+    let(:user) { create(:user) }
+    let(:category) { create(:category, id: '1') }
+    before do
+      allow(controller).to receive(:current_user).and_return(user)
+      allow(Category).to receive(:find).with("1").and_return(category)
     end
-
-    context 'authorized' do
-      describe '#create' do
-        before do
-          allow(User).to receive(:guest).and_return(nil)
-        end
-        it_should_behave_like 'authorized#create', :listing, :Listing
-      end
-
-      describe '#destory' do
-        it_should_behave_like 'authorized#destroy', :listing, :Listing
-      end
-
-      describe '#edit' do
-        it_should_behave_like 'authorized#edit', :listing, :Listing
-      end
-
-      describe '#index' do
-        it_should_behave_like 'authorized#index', :listing
-      end
-
-      describe '#new' do
-        it_should_behave_like 'authorized#new', :listing
-      end
-
-      describe '#show' do
-        it_should_behave_like 'authorized#show', :listing, :Listing
-      end
-
-      describe '#update' do
-        it_should_behave_like 'authorized#update', :listing, :Listing
-      end
-    end
+    it_should_behave_like 'policy enforcer', :listing, :Listing, "body": "body", "category_id": "1", "title": "title"
   end
 end

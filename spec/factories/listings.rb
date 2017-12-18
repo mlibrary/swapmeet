@@ -4,5 +4,6 @@ FactoryBot.define do
   factory :listing do
     title "title"
     body "body"
+    category { create(:category) }
   end
 end

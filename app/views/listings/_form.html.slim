@@ -7,6 +7,9 @@
           li = message
 
   .field
+    = f.label :category
+    = f.collection_select :category_id, Category.all, :id, :name, prompt: "Select a Category"
+  .field
     = f.label :title
     = f.text_field :title, id: :listing_title
   .field

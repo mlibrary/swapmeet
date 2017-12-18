@@ -4,6 +4,24 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @users = User.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @user = User.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @user = User.new(user_params)
@@ -18,6 +36,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    @policy.authorize! :update?
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def destroy
     @policy.authorize! :destroy?
     @user.destroy
@@ -25,15 +56,6 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
     end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @users = User.all
   end
 
   def join
@@ -66,28 +88,6 @@ class UsersController < ApplicationController
   def logout
     logout!
     redirect_to root_path
-  end
-
-  def new
-    @policy.authorize! :new?
-    @user = User.new
-  end
-
-  def show
-    @policy.authorize! :show?
-  end
-
-  def update
-    @policy.authorize! :update?
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
-      else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   private

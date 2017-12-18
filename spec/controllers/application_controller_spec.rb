@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationController do
+RSpec.describe ApplicationController, type: :controller do
   context 'rescue_from exception' do
     controller do
       attr_accessor :the_exception

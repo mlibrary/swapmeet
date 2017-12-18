@@ -4,10 +4,27 @@ class DomainsController < ApplicationController
   before_action :set_domain, only: [:show, :edit, :update, :destroy]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @domains = Domain.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @domain = Domain.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @domain = Domain.new(domain_params)
-
     respond_to do |format|
       if @domain.save
         format.html { redirect_to @domain, notice: 'Domain was successfully created.' }
@@ -17,33 +34,6 @@ class DomainsController < ApplicationController
         format.json { render json: @domain.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def destroy
-    @policy.authorize! :destroy?
-    @domain.destroy
-    respond_to do |format|
-      format.html { redirect_to domains_url, notice: 'Domain was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @domains = Domain.all
-  end
-
-  def new
-    @policy.authorize! :new?
-    @domain = Domain.new
-  end
-
-  def show
-    @policy.authorize! :show?
   end
 
   def update
@@ -56,6 +46,15 @@ class DomainsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @domain.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    @policy.authorize! :destroy?
+    @domain.destroy
+    respond_to do |format|
+      format.html { redirect_to domains_url, notice: 'Domain was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 

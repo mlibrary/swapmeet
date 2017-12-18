@@ -4,6 +4,24 @@ class NewspapersController < ApplicationController
   before_action :set_newspaper, only: [:show, :edit, :update, :destroy]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @newspapers = Newspaper.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @newspaper = Newspaper.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @newspaper = Newspaper.new(newspaper_params)
@@ -18,33 +36,6 @@ class NewspapersController < ApplicationController
     end
   end
 
-  def destroy
-    @policy.authorize! :destroy?
-    @newspaper.destroy
-    respond_to do |format|
-      format.html { redirect_to newspapers_url, notice: 'Newspaper was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @newspapers = Newspaper.all
-  end
-
-  def new
-    @policy.authorize! :new?
-    @newspaper = Newspaper.new
-  end
-
-  def show
-    @policy.authorize! :show?
-  end
-
   def update
     @policy.authorize! :update?
     respond_to do |format|
@@ -55,6 +46,15 @@ class NewspapersController < ApplicationController
         format.html { render :edit }
         format.json { render json: @newspaper.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    @policy.authorize! :destroy?
+    @newspaper.destroy
+    respond_to do |format|
+      format.html { redirect_to newspapers_url, notice: 'Newspaper was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 

@@ -1,6 +1,8 @@
 h1 Indexes
 
 ul
+  - if @categories_policy.index?
+    li = link_to 'Categories', categories_path
   - if @domains_policy.index?
     li = link_to 'Domains', domains_path
   - if @gatekeepers_policy.index?
