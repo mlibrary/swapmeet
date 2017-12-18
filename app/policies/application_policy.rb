@@ -8,21 +8,12 @@ class ApplicationPolicy
     @object = object
   end
 
-  def create?
-    return true if subject.root?
-    false
-  end
-
-  def edit?(obj = nil)
-    update?(obj)
-  end
-
-  def destroy?(obj = nil)
-    return true if subject.root?
-    false
-  end
-
   def index?
+    return true if subject.root?
+    false
+  end
+
+  def show?(obj = nil)
     return true if subject.root?
     false
   end
@@ -31,12 +22,21 @@ class ApplicationPolicy
     create?
   end
 
-  def show?(obj = nil)
+  def edit?(obj = nil)
+    update?(obj)
+  end
+
+  def create?
     return true if subject.root?
     false
   end
 
   def update?(obj = nil)
+    return true if subject.root?
+    false
+  end
+
+  def destroy?(obj = nil)
     return true if subject.root?
     false
   end

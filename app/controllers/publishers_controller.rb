@@ -4,6 +4,24 @@ class PublishersController < ApplicationController
   before_action :set_publisher, only: [:show, :edit, :update, :destroy]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @publishers = Publisher.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @publisher = Publisher.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @publisher = Publisher.new(publisher_params)
@@ -18,33 +36,6 @@ class PublishersController < ApplicationController
     end
   end
 
-  def destroy
-    @policy.authorize! :destroy?
-    @publisher.destroy
-    respond_to do |format|
-      format.html { redirect_to publishers_url, notice: 'Publisher was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @publishers = Publisher.all
-  end
-
-  def new
-    @policy.authorize! :new?
-    @publisher = Publisher.new
-  end
-
-  def show
-    @policy.authorize! :show?
-  end
-
   def update
     @policy.authorize! :update?
     respond_to do |format|
@@ -55,6 +46,15 @@ class PublishersController < ApplicationController
         format.html { render :edit }
         format.json { render json: @publisher.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    @policy.authorize! :destroy?
+    @publisher.destroy
+    respond_to do |format|
+      format.html { redirect_to publishers_url, notice: 'Publisher was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 

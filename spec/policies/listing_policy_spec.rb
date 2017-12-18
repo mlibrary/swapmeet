@@ -2,7 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe ListingPolicy do
+RSpec.describe ListingPolicy, type: :policy do
+  it_should_behave_like 'application policy'
+
   subject { policy }
 
   let(:policy) { ListingPolicy.new(PolicyAgent.new(:User, user), PolicyAgent.new(:Listing, listing)) }

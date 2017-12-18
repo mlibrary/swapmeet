@@ -49,6 +49,7 @@ class ApplicationController < ActionController::Base
   private
 
     def set_policies
+      @categories_policy = CategoriesPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Category, nil))
       @domains_policy = DomainsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Domain, nil))
       @gatekeepers_policy = GatekeepersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Gatekeeper, nil))
       @groups_policy = GroupsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Group, nil))

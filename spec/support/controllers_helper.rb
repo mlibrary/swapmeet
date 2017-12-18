@@ -24,240 +24,101 @@ module ControllersHelper
 end
 
 #
-# Unauthorized
+# Policy Enforcement
 #
+RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
+  describe "#{model} unautorized" do
+    controller do
+      def set_policy
+        @policy = ControllersHelper::UnauthorizePolicy.new
+      end
+    end
 
-RSpec.shared_examples 'unauthorized#create' do |model, klass|
-  subject { post :create, params: { model => attributes_for(model) } }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    before do
+      attrs ||= attributes_for(model)
+      allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(nil)
+    end
+
+    it '#index' do
+      get :index
+      expect(response).to be_unauthorized
+    end
+
+    it '#show' do
+      get :show, params: { id: '1' }
+      expect(response).to be_unauthorized
+    end
+
+    it '#new' do
+      get :new
+      expect(response).to be_unauthorized
+    end
+
+    it '#edit' do
+      get :edit, params: { id: '1' }
+      expect(response).to be_unauthorized
+    end
+
+    it '#create' do
+      post :create, params: { model => {} }
+      expect(response).to be_unauthorized
+    end
+
+    it '#update' do
+      post :update, params: { id: '1', model => {} }
+      expect(response).to be_unauthorized
+    end
+
+    it '#destroy' do
+      delete :destroy, params: { id: '1' }
+      expect(response).to be_unauthorized
     end
   end
-  before { subject }
-  it "create #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#destroy' do |model, klass|
-  subject { delete :destroy, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+  describe "#{model} authorized" do
+    let(:target) { build(model, id: 1) }
+
+    controller do
+      def set_policy
+        @policy = ControllersHelper::AuthorizePolicy.new
+      end
     end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "destroy #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#edit' do |model, klass|
-  subject { get :edit, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    before { allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target) }
+
+    it '#index' do
+      get :index
+      expect(response).to be_success
     end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "edit #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#index' do |model|
-  subject { get :index }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    it '#show' do
+      get :show, params: { id: '1' }
+      expect(response).to be_success
     end
-  end
-  before { subject }
-  it "index #{model} unautorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#new' do |model|
-  subject { get :new }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    it '#new' do
+      get :new
+      expect(response).to be_success
     end
-  end
-  before { subject }
-  it "new #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#show' do |model, klass|
-  subject { get :show, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    it '#edit' do
+      get :edit, params: { id: '1' }
+      expect(response).to be_success
     end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "show #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'unauthorized#update' do |model, klass|
-  subject { post :update, params: { id: target.id, model => attributes_for(model) } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::UnauthorizePolicy.new
+    it '#create' do
+      post :create, params: { model => attrs }
+      expect(response).to have_http_status(:found)
     end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "update #{model} unauthorized" do
-    expect(response).to be_unauthorized
-    response_check if respond_to?(:response_check)
-  end
-end
 
-#
-# Authorized
-#
-
-RSpec.shared_examples 'authorized#create' do |model, klass|
-  subject { post :create, params: { model => attributes_for(model) } }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
+    it '#update' do
+      post :update, params: { id: '1', model => attrs }
+      expect(response).to have_http_status(:found)
     end
-  end
-  before { subject }
-  it "create #{model} authorized" do
-    expect(response).to have_http_status(:found)
-    expect(response).to redirect_to send("#{model}_path", klass.to_s.classify.constantize.last)
-    response_check if respond_to?(:response_check)
-  end
-end
 
-RSpec.shared_examples 'authorized#destroy' do |model, klass|
-  subject { delete :destroy, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
+    it '#destroy' do
+      delete :destroy, params: { id: '1' }
+      expect(response).to have_http_status(:found)
     end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "destroy #{model} authorized" do
-    expect(response).to have_http_status(:found)
-    expect(response).to redirect_to send("#{model}s_path")
-    response_check if respond_to?(:response_check)
-  end
-end
-
-RSpec.shared_examples 'authorized#edit' do |model, klass|
-  subject { get :edit, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
-    end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "edit #{model} authorized" do
-    expect(response).to be_success
-    response_check if respond_to?(:response_check)
-  end
-end
-
-RSpec.shared_examples 'authorized#index' do |model|
-  subject { get :index }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
-    end
-  end
-  before { subject }
-  it "index #{model} autorized" do
-    expect(response).to be_success
-    response_check if respond_to?(:response_check)
-  end
-end
-
-RSpec.shared_examples 'authorized#new' do |model|
-  subject { get :new }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
-    end
-  end
-  before { subject }
-  it "new #{model} authorized" do
-    expect(response).to be_success
-    response_check if respond_to?(:response_check)
-  end
-end
-
-RSpec.shared_examples 'authorized#show' do |model, klass|
-  subject { get :show, params: { id: target.id } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
-    end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "show #{model} authorized" do
-    expect(response).to be_success
-    response_check if respond_to?(:response_check)
-  end
-end
-
-RSpec.shared_examples 'authorized#update' do |model, klass|
-  subject { post :update, params: { id: target.id, model => attributes_for(model) } }
-  let(:target) { build(model, id: 1) }
-  controller do
-    def set_policy
-      @policy = ControllersHelper::AuthorizePolicy.new
-    end
-  end
-  before do
-    allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
-    subject
-  end
-  it "update #{model} authorized" do
-    expect(response).to have_http_status(:found)
-    expect(response).to redirect_to send("#{model}_path", target)
-    response_check if respond_to?(:response_check)
   end
 end

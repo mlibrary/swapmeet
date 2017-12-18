@@ -4,6 +4,24 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   before_action :set_policy
 
+  def index
+    @policy.authorize! :index?
+    @groups = Group.all
+  end
+
+  def show
+    @policy.authorize! :show?
+  end
+
+  def new
+    @policy.authorize! :new?
+    @group = Group.new
+  end
+
+  def edit
+    @policy.authorize! :edit?
+  end
+
   def create
     @policy.authorize! :create?
     @group = Group.new(group_params)
@@ -19,33 +37,6 @@ class GroupsController < ApplicationController
     end
   end
 
-  def destroy
-    @policy.authorize! :destroy?
-    @group.destroy
-    respond_to do |format|
-      format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  def edit
-    @policy.authorize! :edit?
-  end
-
-  def index
-    @policy.authorize! :index?
-    @groups = Group.all
-  end
-
-  def new
-    @policy.authorize! :new?
-    @group = Group.new
-  end
-
-  def show
-    @policy.authorize! :show?
-  end
-
   def update
     @policy.authorize! :update?
     respond_to do |format|
@@ -56,6 +47,15 @@ class GroupsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    @policy.authorize! :destroy?
+    @group.destroy
+    respond_to do |format|
+      format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 

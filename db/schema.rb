@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171211194756) do
+ActiveRecord::Schema.define(version: 20171215151444) do
+
+  create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "display_name"
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "domains", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -62,6 +70,8 @@ ActiveRecord::Schema.define(version: 20171211194756) do
     t.datetime "updated_at", null: false
     t.bigint "owner_id"
     t.bigint "newspaper_id"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_listings_on_category_id"
     t.index ["newspaper_id"], name: "index_listings_on_newspaper_id"
     t.index ["owner_id"], name: "index_listings_on_owner_id"
   end
@@ -98,6 +108,7 @@ ActiveRecord::Schema.define(version: 20171211194756) do
   add_foreign_key "gatekeepers", "newspapers"
   add_foreign_key "gatekeepers", "publishers"
   add_foreign_key "gatekeepers", "users"
+  add_foreign_key "listings", "categories"
   add_foreign_key "listings", "users", column: "owner_id"
   add_foreign_key "newspapers", "publishers"
 end
