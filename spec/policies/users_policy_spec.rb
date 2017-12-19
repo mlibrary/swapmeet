@@ -3,136 +3,85 @@
 require 'rails_helper'
 
 RSpec.describe UsersPolicy, type: :policy do
-  it_should_behave_like 'application policy'
+  it_should_behave_like 'an application policy'
 
-  let(:policy) { UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, target_user)) }
-  let(:guest) { User.guest }
-  let(:root) { build(:user, id: '1') }
-  let(:user) { build(:user, id: '2') }
-  let(:target_user) { build(:user, id: '3') }
+  describe 'users policy' do
+    subject { described_class.new(subject_agent, object_agent) }
 
-  before do
-    allow(root).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('1').and_return(root)
-    allow(user).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('2').and_return(user)
-    allow(target_user).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('3').and_return(target_user)
-  end
+    let(:subject_agent) { double('subject agent') }
+    let(:object_agent) { double('object agent') }
+    let(:subject_client) { double('subject client') }
+    let(:object_client) { double('object client') }
 
-  context 'current user is guest' do
-    let(:current_user) { guest }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
+    before do
+      allow(subject_agent).to receive(:known?).and_return(known)
+      allow(subject_agent).to receive(:application_administrator?).and_return(application_administrator)
+      allow(subject_agent).to receive(:platform_administrator?).and_return(platform_administrator)
+      allow(subject_agent).to receive(:client).and_return(subject_client)
+      allow(object_agent).to receive(:client).and_return(object_client)
     end
 
-    describe '#join?' do
-      subject { policy.join? }
-      it { is_expected.to be false }
-    end
-
-    describe '#leave?' do
-      subject { policy.leave? }
-      it { is_expected.to be false }
-    end
-
-    describe '#show?' do
-      subject { policy.show? }
-      it { is_expected.to be false }
-    end
-
-    describe '#update?' do
-      subject { policy.update? }
-      it { is_expected.to be false }
-    end
-  end
-
-  context 'current user is root' do
-    let(:current_user) { root }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
-    end
-
-    describe '#join?' do
-      subject { policy.join? }
-      it { is_expected.to be true }
-    end
-
-    describe '#leave?' do
-      subject { policy.leave? }
-      it { is_expected.to be true }
-    end
-
-    describe '#show?' do
-      subject { policy.show? }
-      it { is_expected.to be true }
-    end
-
-    describe '#update?' do
-      subject { policy.update? }
-      it { is_expected.to be true }
-    end
-  end
-
-  context 'current user is not target user' do
-    let(:current_user) { user }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
-    end
-
-    describe '#join?' do
-      subject { policy.join? }
-      it { is_expected.to be false }
-    end
-
-    describe '#leave?' do
-      subject { policy.leave? }
-      it { is_expected.to be false }
-    end
-
-    describe '#show?' do
-      subject { policy.show? }
-      it { is_expected.to be false }
-    end
-
-    describe '#update?' do
-      subject { policy.update? }
-      it { is_expected.to be false }
-    end
-  end
-
-  context 'current user is target user' do
-    let(:current_user) { target_user }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
-    end
-
-    describe '#join?' do
-      subject { policy.join? }
-      it { is_expected.to be true }
-    end
-
-    describe '#leave?' do
-      subject { policy.leave? }
-      it { is_expected.to be true }
-    end
-
-    describe '#show?' do
-      subject { policy.show? }
-      it { is_expected.to be true }
-    end
-
-    describe '#update?' do
-      subject { policy.update? }
-      it { is_expected.to be true }
+    context 'for anonymous user' do
+      let(:known) { false }
+      let(:application_administrator) { false }
+      let(:platform_administrator) { false }
+      it do
+        expect(subject.index?).to be true
+        expect(subject.show?).to be false
+        expect(subject.create?).to be false
+        expect(subject.update?).to be false
+        expect(subject.destroy?).to be false
+        expect(subject.join?).to be false
+        expect(subject.leave?).to be false
+      end
+      context 'for authenticated user' do
+        let(:known) { true }
+        it do
+          expect(subject.index?).to be true
+          expect(subject.show?).to be false
+          expect(subject.create?).to be false
+          expect(subject.update?).to be false
+          expect(subject.destroy?).to be false
+          expect(subject.join?).to be false
+          expect(subject.leave?).to be false
+        end
+        context 'with their own record' do
+          let(:object_client) { subject_client }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be true
+            expect(subject.create?).to be false
+            expect(subject.update?).to be true
+            expect(subject.destroy?).to be false
+            expect(subject.join?).to be true
+            expect(subject.leave?).to be true
+          end
+        end
+        context 'with the role of application administrator' do
+          let(:application_administrator) { true }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be true
+            expect(subject.create?).to be true
+            expect(subject.update?).to be true
+            expect(subject.destroy?).to be true
+            expect(subject.join?).to be false
+            expect(subject.leave?).to be false
+          end
+        end
+        context 'with the role of platform administrator' do
+          let(:platform_administrator) { true }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be true
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
+            expect(subject.join?).to be false
+            expect(subject.leave?).to be false
+          end
+        end
+      end
     end
   end
 end

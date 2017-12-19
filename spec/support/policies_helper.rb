@@ -3,13 +3,13 @@
 module PoliciesHelper
 end
 
-RSpec.shared_examples 'application policy' do
+RSpec.shared_examples 'an application policy' do
   subject { described_class.new(subject_agent, object_agent) }
 
   let(:subject_agent) { double('subject agent') }
   let(:object_agent) { double('object agent') }
 
-  it 'application policy' do
+  it 'is an application policy' do
     is_expected.to be_a ApplicationPolicy
   end
 
