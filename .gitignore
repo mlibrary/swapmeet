@@ -26,3 +26,8 @@ spec/examples.txt
 
 /docs/_build/*
 
+# Ignore selected files in the config directory
+/config/administrators.yml
+/config/cable.yml
+/config/database.yml
+/config/secrets.yml

@@ -1,0 +1,17 @@
+development:
+  application:
+    - me@example.com
+  platform:
+    - me@example.com
+
+test:
+  application:
+    - me@example.com
+  platform:
+    - me@example.com
+
+production:
+  application:
+    - <%= ENV["APPLICATION_ADMINISTRATOR"] %>
+  platform:
+    - <%= ENV["PLATFORM_ADMINISTRATOR"] %>
