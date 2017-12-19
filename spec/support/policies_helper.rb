@@ -9,7 +9,9 @@ RSpec.shared_examples 'application policy' do
   let(:subject_agent) { double('subject agent') }
   let(:object_agent) { double('object agent') }
 
-  it { is_expected.to be_a ApplicationPolicy }
+  it 'application policy' do
+    is_expected.to be_a ApplicationPolicy
+  end
 
   it 'aliases new?' do
     is_expected.to receive(:create?)
