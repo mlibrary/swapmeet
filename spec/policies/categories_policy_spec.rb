@@ -3,47 +3,61 @@
 require 'rails_helper'
 
 RSpec.describe CategoriesPolicy, type: :policy do
-  it_should_behave_like 'application policy'
+  it_should_behave_like 'an application policy'
 
-  let(:policy) { CategoriesPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Category, category)) }
-  let(:guest) { User.guest }
-  let(:root) { build(:user, id: '1') }
-  let(:user) { build(:user, id: '2') }
-  let(:category) { build(:category, id: '1') }
+  describe 'categories policy' do
+    subject { described_class.new(subject_agent, object_agent) }
 
-  before do
-    allow(root).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('1').and_return(root)
-    allow(user).to receive(:persisted?).and_return(true)
-    allow(User).to receive(:find).with('2').and_return(user)
-    allow(Category).to receive(:find).with('1').and_return(user)
-    allow(category).to receive(:persisted?).and_return(true)
-  end
+    let(:subject_agent) { double('subject agent') }
+    let(:object_agent) { double('object agent') }
 
-  context 'current user is guest' do
-    let(:current_user) { guest }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
+    before do
+      allow(subject_agent).to receive(:known?).and_return(known)
+      allow(subject_agent).to receive(:application_administrator?).and_return(application_administrator)
+      allow(subject_agent).to receive(:platform_administrator?).and_return(platform_administrator)
     end
-  end
 
-  context 'current user is root' do
-    let(:current_user) { root }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
-    end
-  end
-
-  context 'current user is user' do
-    let(:current_user) { user }
-
-    describe '#index?' do
-      subject { policy.index? }
-      it { is_expected.to be true }
+    context 'for anonymous user' do
+      let(:known) { false }
+      let(:application_administrator) { false }
+      let(:platform_administrator) { false }
+      it do
+        expect(subject.index?).to be true
+        expect(subject.show?).to be false
+        expect(subject.create?).to be false
+        expect(subject.update?).to be false
+        expect(subject.destroy?).to be false
+      end
+      context 'for authenticated user' do
+        let(:known) { true }
+        it do
+          expect(subject.index?).to be true
+          expect(subject.show?).to be false
+          expect(subject.create?).to be false
+          expect(subject.update?).to be false
+          expect(subject.destroy?).to be false
+        end
+        context 'with the role of application administrator' do
+          let(:application_administrator) { true }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
+          end
+        end
+        context 'with the role of platform administrator' do
+          let(:platform_administrator) { true }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
+          end
+        end
+      end
     end
   end
 end

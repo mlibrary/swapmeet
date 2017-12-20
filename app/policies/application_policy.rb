@@ -9,12 +9,10 @@ class ApplicationPolicy
   end
 
   def index?
-    return true if subject.root?
     false
   end
 
   def show?(obj = nil)
-    return true if subject.root?
     false
   end
 
@@ -27,17 +25,14 @@ class ApplicationPolicy
   end
 
   def create?
-    return true if subject.root?
     false
   end
 
   def update?(obj = nil)
-    return true if subject.root?
     false
   end
 
   def destroy?(obj = nil)
-    return true if subject.root?
     false
   end
 
