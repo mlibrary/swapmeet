@@ -68,6 +68,8 @@ class UsersController < ApplicationController
   def add
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
+      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      publisher_policy.authorize! add?(publisher)
       publisher.users << @user
       respond_to do |format|
         format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully added..' }
@@ -84,6 +86,8 @@ class UsersController < ApplicationController
   def remove
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
+      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      publisher_policy.authorize! remove?(publisher)
       publisher.users.delete(@user)
       respond_to do |format|
         format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully removed.' }
