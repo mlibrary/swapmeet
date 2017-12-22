@@ -26,5 +26,8 @@ table
         - if @policy.destroy?
           td = link_to 'Destroy', publisher, data: { confirm: 'Are you sure?' }, method: :delete
 
+
+br
+
 - if @policy.new?
-= link_to 'New Publisher', new_publisher_path
+  = link_to 'New Publisher', new_publisher_path

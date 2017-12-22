@@ -18,5 +18,4 @@
   .field
     = f.label :newspaper
     = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
-  .actions
-    = f.submit
+  .actions = f.submit

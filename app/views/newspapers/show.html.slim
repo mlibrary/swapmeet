@@ -13,8 +13,8 @@ p
   = link_to @newspaper.publisher&.display_name, publisher_path(@newspaper.publisher) if @newspaper.publisher
 
 - if @policy.edit?
-=> link_to 'Edit', edit_newspaper_path(@newspaper)
-'|
+  => link_to 'Edit', edit_newspaper_path(@newspaper)
+  '|
 =< link_to 'Back', newspapers_path
 
 - unless @newspaper.listings.empty?

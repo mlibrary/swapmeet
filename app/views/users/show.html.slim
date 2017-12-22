@@ -25,8 +25,8 @@ p
     li
       => link_to publisher.display_name, publisher_path(publisher)
       - if @policy.leave?
-      =<> ' '
-      =< link_to 'Remove', remove_publisher_user_path(publisher, @user), method: :delete
+        =<> ' '
+        =< link_to 'Remove', remove_publisher_user_path(publisher, @user), method: :delete
 
 - unless @user.groups.empty?
   hr
@@ -36,8 +36,8 @@ p
     li
       => link_to group.display_name, group_path(group)
       - if @policy.leave?
-      =<> ' '
-      =< link_to 'Leave', leave_group_user_path(group, @user), method: :delete
+        =<> ' '
+        =< link_to 'Leave', leave_group_user_path(group, @user), method: :delete
 
 - unless @user.listings.empty?
   hr
