@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :add, :remove]
   before_action :set_policy
 
   def index
-    @policy.authorize! :index?
-    @groups = Group.all
+    if params[:publisher_id].present?
+      @publisher = Publisher.find(params[:publisher_id])
+      @groups = Group.all
+      render "publishers/groups"
+    else
+      @policy.authorize! :index?
+      @groups = Group.all
+      render
+    end
   end
 
   def show
@@ -59,10 +66,42 @@ class GroupsController < ApplicationController
     end
   end
 
+  def add
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.groups << @group
+      respond_to do |format|
+        format.html { redirect_to publisher_groups_path(publisher), notice: 'Group was successfully added..' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to groups_path, notice: 'Group was not successfully added.' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  def remove
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.groups.delete(@group)
+      respond_to do |format|
+        format.html { redirect_to publisher_groups_path(publisher), notice: 'Group was successfully removed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to groups_path, notice: 'Group was not successfully removed.' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   private
     # Authorization Policy
     def set_policy
-      @policy = GroupsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Group, @group))
+      @policy = GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, @group))
     end
 
     # Use callbacks to share common setup or constraints between actions.

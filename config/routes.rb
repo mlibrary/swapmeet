@@ -13,7 +13,27 @@ Rails.application.routes.draw do
   end
   resources :domains
   resources :newspapers
-  resources :publishers
+  resources :publishers do
+    resources :groups, only: [:index] do
+      member do
+        patch :add
+        delete :remove
+      end
+    end
+    resources :users, only: [:index] do
+      resources :privileges, only: [:index] do
+        member do
+          patch :permit
+          delete :revoke
+        end
+      end
+      member do
+        patch :add
+        delete :remove
+      end
+    end
+  end
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'listings#index'
   resources :listings

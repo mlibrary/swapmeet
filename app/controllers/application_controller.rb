@@ -49,13 +49,13 @@ class ApplicationController < ActionController::Base
   private
 
     def set_policies
-      @categories_policy = CategoriesPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Category, nil))
-      @domains_policy = DomainsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Domain, nil))
-      @gatekeepers_policy = GatekeepersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Gatekeeper, nil))
-      @groups_policy = GroupsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Group, nil))
-      @listings_policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, nil))
-      @newspapers_policy = NewspapersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Newspaper, nil))
-      @publishers_policy = PublishersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Publisher, nil))
-      @users_policy = UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, nil))
+      @categories_policy = CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, nil))
+      @domains_policy = DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Domain, nil))
+      @gatekeepers_policy = GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, nil))
+      @groups_policy = GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, nil))
+      @listings_policy = ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, nil))
+      @newspapers_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, nil))
+      @publishers_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Publisher, nil))
+      @users_policy = UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, nil))
     end
 end

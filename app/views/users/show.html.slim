@@ -17,6 +17,17 @@ p
   '|
 =< link_to 'Back', users_path
 
+- unless @user.publishers.empty?
+  hr
+  h2 Publishers
+  ul
+  - @user.publishers.each do |publisher|
+    li
+      => link_to publisher.display_name, publisher_path(publisher)
+      - if @policy.leave?
+      =<> ' '
+      =< link_to 'Remove', remove_publisher_user_path(publisher, @user), method: :delete
+
 - unless @user.groups.empty?
   hr
   h2 Groups

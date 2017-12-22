@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215151444) do
+ActiveRecord::Schema.define(version: 20171221230715) do
 
   create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -39,6 +39,14 @@ ActiveRecord::Schema.define(version: 20171215151444) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role_type"
+    t.string "role_id"
+    t.string "subject_type"
+    t.string "subject_id"
+    t.string "verb_type"
+    t.string "verb_id"
+    t.string "object_type"
+    t.string "object_id"
     t.index ["domain_id"], name: "index_gatekeepers_on_domain_id"
     t.index ["group_id"], name: "index_gatekeepers_on_group_id"
     t.index ["listing_id"], name: "index_gatekeepers_on_listing_id"
@@ -54,6 +62,13 @@ ActiveRecord::Schema.define(version: 20171215151444) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_groups_on_parent_id"
+  end
+
+  create_table "groups_publishers", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "publisher_id", null: false
+    t.bigint "group_id", null: false
+    t.index ["group_id", "publisher_id"], name: "index_groups_publishers_on_group_id_and_publisher_id"
+    t.index ["publisher_id", "group_id"], name: "index_groups_publishers_on_publisher_id_and_group_id"
   end
 
   create_table "groups_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -92,6 +107,13 @@ ActiveRecord::Schema.define(version: 20171215151444) do
     t.datetime "updated_at", null: false
     t.bigint "domain_id"
     t.index ["domain_id"], name: "index_publishers_on_domain_id"
+  end
+
+  create_table "publishers_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "publisher_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["publisher_id", "user_id"], name: "index_publishers_users_on_publisher_id_and_user_id"
+    t.index ["user_id", "publisher_id"], name: "index_publishers_users_on_user_id_and_publisher_id"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

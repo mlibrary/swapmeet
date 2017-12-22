@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe PublishersPolicy, type: :policy do
+RSpec.describe PrivilegesPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
-  describe 'publishers policy' do
+  describe 'categories policy' do
     subject { described_class.new(subject_agent, object_agent) }
 
     let(:subject_agent) { double('subject agent') }
@@ -33,6 +33,8 @@ RSpec.describe PublishersPolicy, type: :policy do
         expect(subject.create?).to be false
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
+        expect(subject.permit?).to be false
+        expect(subject.revoke?).to be false
       end
       context 'for authenticated user' do
         let(:client_type) { :AnyType }
@@ -44,6 +46,8 @@ RSpec.describe PublishersPolicy, type: :policy do
           expect(subject.create?).to be false
           expect(subject.update?).to be false
           expect(subject.destroy?).to be false
+          expect(subject.permit?).to be false
+          expect(subject.revoke?).to be false
         end
         context 'with the role of application administrator' do
           let(:application_administrator) { true }
@@ -53,16 +57,20 @@ RSpec.describe PublishersPolicy, type: :policy do
             expect(subject.create?).to be false
             expect(subject.update?).to be false
             expect(subject.destroy?).to be false
+            expect(subject.permit?).to be true
+            expect(subject.revoke?).to be true
           end
         end
         context 'with the role of platform administrator' do
           let(:platform_administrator) { true }
           it do
-            expect(subject.index?).to be true
-            expect(subject.show?).to be true
-            expect(subject.create?).to be true
-            expect(subject.update?).to be true
-            expect(subject.destroy?).to be true
+            expect(subject.index?).to be false
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
+            expect(subject.permit?).to be true
+            expect(subject.revoke?).to be true
           end
         end
       end
