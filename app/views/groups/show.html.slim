@@ -44,5 +44,5 @@ p
     li
       => link_to publisher.display_name, publisher_path(publisher)
       - if @policy.remove?
-      =<> ' '
-      =< link_to 'Remove', remove_publisher_group_path(publisher, @group), method: :delete
+        =<> ' '
+        =< link_to 'Remove', remove_publisher_group_path(publisher, @group), method: :delete
