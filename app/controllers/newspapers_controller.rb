@@ -61,7 +61,7 @@ class NewspapersController < ApplicationController
   private
     # Authorization Policy
     def set_policy
-      @policy = NewspapersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Newspaper, @newspaper))
+      @policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, @newspaper))
     end
 
     # Use callbacks to share common setup or constraints between actions.

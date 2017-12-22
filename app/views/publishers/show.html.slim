@@ -15,13 +15,47 @@ p
 - if @policy.edit?
   => link_to 'Edit', edit_publisher_path(@publisher)
   '|
-=< link_to 'Back', publishers_path
+  =< link_to 'Back', publishers_path
 
-- unless @publisher.newspapers.empty?
-  hr
-  h2 Newspapers
-  ul
-  - @publisher.newspapers.each do |newspaper|
-    li
-      = link_to newspaper.display_name, newspaper_path(newspaper)
+hr
+h2 Newspapers
+ul
+- @publisher.newspapers.each do |newspaper|
+  li
+    = link_to newspaper.display_name, newspaper_path(newspaper)
+= link_to 'Add Newspaper', newspapers_path
 
+hr
+h2 Groups
+ul
+- @publisher.groups.each do |group|
+  li
+    = link_to group.display_name, group_path(group)
+= link_to 'Mange Groups', publisher_groups_path(@publisher)
+
+hr
+h2 Users
+table
+  thead
+    tr
+      th Name
+      th Email
+      th Administrator
+
+  tbody
+  - if @publisher.users.empty?
+    tr
+      td
+      td No Users
+      td
+  - else
+    - @publisher.users.each do |user|
+      tr
+        td = user.display_name
+        td = link_to user.email, user_path(user)
+        - if @publisher.administrator?(user.id)
+          td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher, user, 1), method: :delete
+        - else
+          td = link_to 'permit', permit_publisher_user_privilege_path(@publisher, user, 1), method: :patch
+
+= link_to 'Manage Users', publisher_users_path(@publisher)

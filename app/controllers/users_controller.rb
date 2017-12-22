@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave]
+  before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave, :add, :remove]
   before_action :set_policy
 
   def index
-    @policy.authorize! :index?
-    @users = User.all
+    if params[:publisher_id].present?
+      @publisher = Publisher.find(params[:publisher_id])
+      @users = User.all
+      render "publishers/users"
+    else
+      @policy.authorize! :index?
+      @users = User.all
+      render
+    end
   end
 
   def show
@@ -58,6 +65,38 @@ class UsersController < ApplicationController
     end
   end
 
+  def add
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.users << @user
+      respond_to do |format|
+        format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully added..' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to users_path, notice: 'User was not successfully added.' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  def remove
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.users.delete(@user)
+      respond_to do |format|
+        format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully removed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to users_path, notice: 'User was not successfully removed.' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   def join
     @policy.authorize! :join?
     group_id = params[:group_id]
@@ -97,7 +136,7 @@ class UsersController < ApplicationController
     end
 
     def set_policy
-      @policy ||= UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, @user))
+      @policy ||= UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
     end
 
     def user_params

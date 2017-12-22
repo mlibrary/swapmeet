@@ -88,7 +88,7 @@ class ListingsController < ApplicationController
 
   private
     def set_policy
-      @policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, @listing))
+      @policy = ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, @listing))
     end
 
     def set_listing

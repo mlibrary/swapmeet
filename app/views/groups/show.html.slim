@@ -35,3 +35,14 @@ p
   - @group.users.each do |user|
       li
         = link_to user.display_name, user_path(user)
+
+- unless @group.publishers.empty?
+  hr
+  h2 Publishers
+  ul
+  - @group.publishers.each do |publisher|
+    li
+      => link_to publisher.display_name, publisher_path(publisher)
+      - if @policy.remove?
+      =<> ' '
+      =< link_to 'Remove', remove_publisher_group_path(publisher, @group), method: :delete

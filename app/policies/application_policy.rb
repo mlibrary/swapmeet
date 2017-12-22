@@ -37,6 +37,7 @@ class ApplicationPolicy
   end
 
   def authorize!(action, message = nil)
+    return true if Rails.application.config.administrators[:root].include?(subject.client.email) if subject&.client&.respond_to?(:email)
     raise NotAuthorizedError.new(message) unless send(action)
   end
 end

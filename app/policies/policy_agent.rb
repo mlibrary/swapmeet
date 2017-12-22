@@ -9,32 +9,17 @@ class PolicyAgent
     @client = client
   end
 
-  def known?
-    client_persisted?
+  def client_type
+    @client_type.to_s
   end
 
-  def owner
-    client.owner if client&.respond_to?(:owner)
+  def client_id
+    return client&.id if client&.respond_to?(:id)
+    client&.to_s
   end
 
-  def application_administrator?
-    return true if Rails.application.config.administrators[:application].include?(client_email)
+  def client_persisted?
+    return client&.persisted? if client&.respond_to?(:persisted?)
     false
   end
-
-  def platform_administrator?
-    return true if Rails.application.config.administrators[:platform].include?(client_email)
-    false
-  end
-
-  private
-
-    def client_persisted?
-      return false if client&.persisted? == nil
-      client.persisted?
-    end
-
-    def client_email
-      client.email if client&.respond_to?(:email)
-    end
 end

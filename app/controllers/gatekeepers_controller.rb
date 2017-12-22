@@ -61,7 +61,7 @@ class GatekeepersController < ApplicationController
   private
     # Authorization Policy
     def set_policy
-      @policy = GatekeepersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Gatekeeper, @gatekeeper))
+      @policy = GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, @gatekeeper))
     end
 
     # Use callbacks to share common setup or constraints between actions.

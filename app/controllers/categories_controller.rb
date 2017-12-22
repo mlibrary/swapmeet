@@ -61,7 +61,7 @@ class CategoriesController < ApplicationController
   private
     # Authorization Policy
     def set_policy
-      @policy = CategoriesPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Category, @category))
+      @policy = CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, @category))
     end
 
     # Use callbacks to share common setup or constraints between actions.

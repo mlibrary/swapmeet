@@ -1,16 +1,22 @@
 development:
+  root:
+    - me@example.com
   application:
     - me@example.com
   platform:
     - me@example.com
 
 test:
+  root:
+    - me@example.com
   application:
     - me@example.com
   platform:
     - me@example.com
 
 production:
+  root:
+    - <%= ENV["ROOT_ADMINISTRATOR"] %>
   application:
     - <%= ENV["APPLICATION_ADMINISTRATOR"] %>
   platform:
