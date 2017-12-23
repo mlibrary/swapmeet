@@ -10,6 +10,8 @@ RSpec.describe PublishersPolicy, type: :policy do
 
     let(:subject_agent) { double('subject agent') }
     let(:object_agent) { double('object agent') }
+    let(:client) { double('client') }
+    let(:publisher) { double('publisher') }
 
     before do
       allow(subject_agent).to receive(:client_type).and_return(client_type)
@@ -17,6 +19,8 @@ RSpec.describe PublishersPolicy, type: :policy do
       allow(subject_agent).to receive(:known?).and_return(known)
       allow(subject_agent).to receive(:application_administrator?).and_return(application_administrator)
       allow(subject_agent).to receive(:platform_administrator?).and_return(platform_administrator)
+      allow(subject_agent).to receive(:client).and_return(client)
+      allow(publisher).to receive(:administrator?).with(client).and_return(false)
       allow(object_agent).to receive(:client_type).and_return(client_type)
       allow(object_agent).to receive(:client_id).and_return(client_id)
     end
@@ -63,6 +67,33 @@ RSpec.describe PublishersPolicy, type: :policy do
             expect(subject.create?).to be true
             expect(subject.update?).to be true
             expect(subject.destroy?).to be true
+          end
+        end
+        context 'with the role of publisher administrator' do
+          before do
+            allow(publisher).to receive(:administrator?).with(client).and_return(true)
+            Gatekeeper.new(
+              subject_type: client_type,
+              subject_id: client_id,
+              verb_type: 'Policy',
+              verb_id: 'permit',
+              object_type: client_type,
+              object_id: client_id
+            ).save!
+            policy_maker = PolicyMaker.new(subject_agent)
+            policy_maker.permit!(subject_agent, VerbPolicyAgent.new(:Action, :add), object_agent)
+            policy_maker.permit!(subject_agent, VerbPolicyAgent.new(:Action, :remove), object_agent)
+          end
+          it do
+            expect(subject.index?).to be false
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
+            expect(subject.show?(publisher)).to be true
+            expect(subject.update?(publisher)).to be true
+            expect(subject.add?(publisher)).to be true
+            expect(subject.remove?(publisher)).to be true
           end
         end
       end

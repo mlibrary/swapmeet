@@ -23,14 +23,19 @@ RSpec.describe PolicyMaker do
   describe '#permit!' do
     subject { policy_maker.permit!(subject_agent, verb_agent, object_agent) }
 
-    it { pending("TODO: Bootstrap PolicyResolver to resolve verb(:Pending, :permit)"); is_expected.to be false }
+    it { is_expected.to be false }
 
     context 'grant' do
       before do
-        allow(Gatekeeper).to receive(:where).and_call_original
-        allow(Gatekeeper).to receive(:where).with("subject_type = ? AND subject_id = ? AND verb_type = ? AND verb_id = ? AND object_type = ? AND object_id = ?", 'requestor_type', 'requestor_id', 'Policy', 'permit', 'object_type', 'object_id').and_return([:any])
+        Gatekeeper.new(
+          subject_type: 'requestor_type',
+          subject_id: 'requestor_id',
+          verb_type: 'Policy',
+          verb_id: 'permit',
+          object_type: 'object_type',
+          object_id: 'object_id'
+        ).save!
       end
-
       it { is_expected.to be true }
     end
   end
@@ -38,14 +43,19 @@ RSpec.describe PolicyMaker do
   describe '#revoke!' do
     subject { policy_maker.revoke!(subject_agent, verb_agent, object_agent) }
 
-    it { pending("TODO: Bootstrap PolicyResolver to resolve verb(:Pending, :revoke)"); is_expected.to be false }
+    it {  is_expected.to be false }
 
     context 'grant' do
       before do
-        allow(Gatekeeper).to receive(:where).and_call_original
-        allow(Gatekeeper).to receive(:where).with("subject_type = ? AND subject_id = ? AND verb_type = ? AND verb_id = ? AND object_type = ? AND object_id = ?", 'requestor_type', 'requestor_id', 'Policy', 'revoke', 'object_type', 'object_id').and_return([:any])
+        Gatekeeper.new(
+          subject_type: 'requestor_type',
+          subject_id: 'requestor_id',
+          verb_type: 'Policy',
+          verb_id: 'revoke',
+          object_type: 'object_type',
+          object_id: 'object_id'
+        ).save!
       end
-
       it { is_expected.to be true }
     end
   end
@@ -56,10 +66,15 @@ RSpec.describe PolicyMaker do
     let(:policy_resolver) { PolicyResolver.new(subject_agent, verb_agent, object_agent) }
 
     before do
-      allow(Gatekeeper).to receive(:where).and_call_original
-      allow(Gatekeeper).to receive(:where).with("subject_type = ? AND subject_id = ? AND verb_type = ? AND verb_id = ? AND object_type = ? AND object_id = ?", 'requestor_type', 'requestor_id', 'Policy', 'permit', 'object_type', 'object_id').and_return([:any])
-      allow(Gatekeeper).to receive(:where).with("subject_type = ? AND subject_id = ? AND verb_type = ? AND verb_id = ? AND object_type = ? AND object_id = ?", 'requestor_type', 'requestor_id', 'Policy', 'revoke', 'object_type', 'object_id').and_return([:any])
       policy_resolver
+      Gatekeeper.new(
+        subject_type: 'requestor_type',
+        subject_id: 'requestor_id',
+        verb_type: 'Policy',
+        verb_id: nil,
+        object_type: nil,
+        object_id: nil
+      ).save!
     end
 
     it do
