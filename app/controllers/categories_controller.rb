@@ -2,7 +2,6 @@
 
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -60,8 +59,8 @@ class CategoriesController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, @category))
+    def new_policy
+      CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, @category))
     end
 
     # Use callbacks to share common setup or constraints between actions.

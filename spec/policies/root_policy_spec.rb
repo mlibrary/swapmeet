@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationPolicy, type: :policy do
+RSpec.describe RootPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
-  describe 'application policy' do
+  describe 'root policy' do
     subject { described_class.new(nil, nil).any_action? }
-    it { is_expected.to be false }
+    it { is_expected.to be true }
   end
 end

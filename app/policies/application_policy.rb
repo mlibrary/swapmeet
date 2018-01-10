@@ -8,14 +8,6 @@ class ApplicationPolicy
     @object = object
   end
 
-  def index?
-    false
-  end
-
-  def show?(obj = nil)
-    false
-  end
-
   def new?
     create?
   end
@@ -24,20 +16,17 @@ class ApplicationPolicy
     update?(obj)
   end
 
-  def create?
-    false
-  end
-
-  def update?(obj = nil)
-    false
-  end
-
-  def destroy?(obj = nil)
-    false
-  end
-
   def authorize!(action, message = nil)
-    return true if Rails.application.config.administrators[:root].include?(subject.client.email) if subject&.client&.respond_to?(:email)
     raise NotAuthorizedError.new(message) unless send(action)
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    return true if method_name[-1] == '?'
+    super
+  end
+
+  def method_missing(method_name, *args, &block)
+    return false if method_name[-1] == '?'
+    super
   end
 end

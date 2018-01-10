@@ -2,7 +2,6 @@
 
 class GatekeepersController < ApplicationController
   before_action :set_gatekeeper, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -60,8 +59,8 @@ class GatekeepersController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, @gatekeeper))
+    def new_policy
+      GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, @gatekeeper))
     end
 
     # Use callbacks to share common setup or constraints between actions.

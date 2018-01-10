@@ -2,7 +2,6 @@
 
 class PrivilegesController < ApplicationController
   before_action :set_privilege
-  before_action :set_policy
 
   def index
   end
@@ -63,8 +62,8 @@ class PrivilegesController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = PrivilegesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
+    def new_policy
+      PrivilegesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
     end
 
     # Use callbacks to share common setup or constraints between actions.

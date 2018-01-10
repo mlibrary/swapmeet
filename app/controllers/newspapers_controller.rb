@@ -2,7 +2,6 @@
 
 class NewspapersController < ApplicationController
   before_action :set_newspaper, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -60,8 +59,8 @@ class NewspapersController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, @newspaper))
+    def new_policy
+      NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, @newspaper))
     end
 
     # Use callbacks to share common setup or constraints between actions.
