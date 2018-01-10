@@ -2,7 +2,6 @@
 
 class DomainsController < ApplicationController
   before_action :set_domain, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -60,8 +59,8 @@ class DomainsController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Doamin, @domain))
+    def new_policy
+      DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Doamin, @domain))
     end
 
     # Use callbacks to share common setup or constraints between actions.

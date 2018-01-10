@@ -2,7 +2,6 @@
 
 class PublishersController < ApplicationController
   before_action :set_publisher, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -60,8 +59,8 @@ class PublishersController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Publisher, @publisher))
+    def new_policy
+      PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Publisher, @publisher))
     end
 
     # Use callbacks to share common setup or constraints between actions.

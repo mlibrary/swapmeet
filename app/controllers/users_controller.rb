@@ -2,7 +2,6 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave, :add, :remove]
-  before_action :set_policy
 
   def index
     if params[:publisher_id].present?
@@ -134,14 +133,14 @@ class UsersController < ApplicationController
   end
 
   private
-
+    # Authorization Policy
+    def new_policy
+      UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+    end
     def set_user
       @user ||= User.find(params[:id])
     end
 
-    def set_policy
-      @policy ||= UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-    end
 
     def user_params
       params.require(:user).permit(:display_name, :email)

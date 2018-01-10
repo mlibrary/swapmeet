@@ -2,7 +2,6 @@
 
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
 
   def index
     @policy.authorize! :index?
@@ -87,8 +86,9 @@ class ListingsController < ApplicationController
   end
 
   private
-    def set_policy
-      @policy = ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, @listing))
+    # Authorization Policy
+    def new_policy
+      ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, @listing))
     end
 
     def set_listing

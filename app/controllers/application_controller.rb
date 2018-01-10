@@ -6,13 +6,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user
   helper_method :logged_in?
-
-  before_action :set_policies
-
   rescue_from NotAuthorizedError, with: :render_unauthorized
-
-  def indexes
-  end
+  before_action :set_policy
 
   protected
 
@@ -46,16 +41,15 @@ class ApplicationController < ActionController::Base
       end
     end
 
-  private
+    def set_policy
+      @policy = if current_user.respond_to?(:email) && Rails.application.config.administrators[:root].include?(current_user.email)
+        RootPolicy.new(nil, nil)
+      else
+        new_policy
+      end
+    end
 
-    def set_policies
-      @categories_policy = CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, nil))
-      @domains_policy = DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Domain, nil))
-      @gatekeepers_policy = GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, nil))
-      @groups_policy = GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, nil))
-      @listings_policy = ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, nil))
-      @newspapers_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, nil))
-      @publishers_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Publisher, nil))
-      @users_policy = UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, nil))
+    def new_policy
+      ApplicationPolicy.new(nil, nil)
     end
 end

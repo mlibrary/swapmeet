@@ -2,7 +2,6 @@
 
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy, :add, :remove]
-  before_action :set_policy
 
   def index
     if params[:publisher_id].present?
@@ -100,8 +99,8 @@ class GroupsController < ApplicationController
 
   private
     # Authorization Policy
-    def set_policy
-      @policy = GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, @group))
+    def new_policy
+      GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, @group))
     end
 
     # Use callbacks to share common setup or constraints between actions.
