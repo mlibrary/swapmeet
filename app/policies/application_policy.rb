@@ -8,16 +8,21 @@ class ApplicationPolicy
     @object = object
   end
 
-  def new?
-    create?
+  def new?(parent = nil)
+    create?(parent)
   end
 
   def edit?(obj = nil)
     update?(obj)
   end
 
-  def authorize!(action, message = nil)
-    raise NotAuthorizedError.new(message) unless send(action)
+  def authorize!(action, obj = nil, message = nil)
+    permit = if obj
+      send(action, obj)
+    else
+      send(action)
+    end
+    raise NotAuthorizedError.new(message) unless permit
   end
 
   def respond_to_missing?(method_name, include_private = false)

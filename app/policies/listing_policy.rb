@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ListingPolicy < ApplicationPolicy
-  def create?
+  def create?(parent = nil)
     subject.known?
   end
 

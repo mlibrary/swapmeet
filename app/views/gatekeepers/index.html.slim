@@ -3,13 +3,12 @@ h1 Listing gatekeepers
 table
   thead
     tr
-      th Role
-      th Domain
-      th Group
-      th Listing
-      th Newspaper
-      th Publisher
-      th User
+      th Subject
+      th
+      th Verb
+      th
+      th Object
+      th
       th
       th
       th
@@ -17,16 +16,18 @@ table
   tbody
     - @gatekeepers.each do |gatekeeper|
       tr
-        td = gatekeeper.role
-        td = gatekeeper.domain&.display_name
-        td = gatekeeper.group&.display_name
-        td = gatekeeper.listing&.title
-        td = gatekeeper.newspaper&.display_name
-        td = gatekeeper.publisher&.display_name
-        td = gatekeeper.user&.display_name
-        td = link_to 'Show', gatekeeper
-        td = link_to 'Edit', edit_gatekeeper_path(gatekeeper)
-        td = link_to 'Destroy', gatekeeper, data: { confirm: 'Are you sure?' }, method: :delete
+        td = gatekeeper.subject_type
+        td = gatekeeper.subject_id
+        td = gatekeeper.verb_type
+        td = gatekeeper.verb_id
+        td = gatekeeper.object_type
+        td = gatekeeper.object_id
+        - if @policy.show?(gatekeeper)
+          td = link_to 'Show', gatekeeper
+        - if @policy.edit?(gatekeeper)
+          td = link_to 'Edit', edit_gatekeeper_path(gatekeeper)
+        - if @policy.destroy?(gatekeeper)
+          td = link_to 'Destroy', gatekeeper, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 

@@ -35,23 +35,29 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @policy.authorize! :show?
+    @policy.authorize! :show?, @listing
   end
 
   def new
-    @policy.authorize! :new?
-    @listing = Listing.new
+    if params[:newspaper_id].present?
+      @newspaper = Newspaper.find(params[:newspaper_id])
+      @policy.authorize! :new?, @newspaper
+      @listing = Listing.new
+    else
+      @policy.authorize! :new?
+      @listing = Listing.new
+    end
   end
 
   def edit
-    @policy.authorize! :edit?
+    @policy.authorize! :edit?, @listing
   end
 
   def create
-    @policy.authorize! :create?
+    @newspaper = Newspaper.find(listing_params[:newspaper_id]) if listing_params[:newspaper_id].present?
+    @policy.authorize! :create?, @newspaper
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
-    # @listing.category = Category.find(listing_params[:category])
     respond_to do |format|
       if @listing.save
         format.html { redirect_to @listing, notice: 'Listing was successfully created.' }
@@ -64,7 +70,7 @@ class ListingsController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?
+    @policy.authorize! :update?, @listing
     respond_to do |format|
       if @listing.update(listing_params)
         format.html { redirect_to @listing, notice: 'Listing was successfully updated.' }
@@ -77,7 +83,7 @@ class ListingsController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?
+    @policy.authorize! :destroy?, @listing
     @listing.destroy
     respond_to do |format|
       format.html { redirect_to listings_url, notice: 'Listing was successfully destroyed.' }

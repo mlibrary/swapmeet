@@ -17,5 +17,10 @@
     = f.text_field :body, id: :listing_body
   .field
     = f.label :newspaper
-    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+    - if @newspaper.present?
+      - @listing.newspaper_id = @newspaper.id
+      = f.collection_select :newspaper_id, Newspaper.all, :id, :name, {}, disabled: true
+      = f.hidden_field :newspaper_id, value: @newspaper.id
+    - else
+      = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
   .actions = f.submit

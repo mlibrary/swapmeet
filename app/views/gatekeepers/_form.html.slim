@@ -5,27 +5,23 @@
       ul
         - @gatekeeper.errors.full_messages.each do |message|
           li = message
-  - @gatekeeper[:user_id] = current_user.id
 
   .field
-    = f.label :role
-    = f.text_field :role
+    = f.label :subject_type
+    = f.text_field :subject_type
   .field
-    = f.label :domain
-    = f.collection_select :domain_id, Domain.all, :id, :name, prompt: "Select a Domain"
+    = f.label :subject_id
+    = f.collection_select :subject_id, User.all, :id, :email, prompt: "Select a User"
   .field
-    = f.label :group
-    = f.collection_select :group_id, Group.all, :id, :name, prompt: "Select a Group"
+    = f.label :verb_type
+    = f.text_field :verb_type
   .field
-    = f.label :listing
-    = f.collection_select :listing_id, Listing.all, :id, :title, prompt: "Select a Listing"
+    = f.label :verb_id
+    = f.collection_select :verb_id, User.all, :id, :email, prompt: "Select a User"
   .field
-    = f.label :newspaper
-    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+    = f.label :object_type
+    = f.text_field :object_type
   .field
-    = f.label :publisher
-    = f.collection_select :publisher_id, Publisher.all, :id, :name, prompt: "Select a Publisher"
-  .field
-    = f.label :user
-    = f.collection_select :user_id, User.all, :id, :email, prompt: "Select a User"
+    = f.label :object_id
+    = f.collection_select :object_id, User.all, :id, :email, prompt: "Select a User"
   .actions = f.submit

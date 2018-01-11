@@ -25,6 +25,23 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         end
       end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      user = User.find(params[:user_id])
+      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      respond_to do |format|
+        if policy_maker.permit!(
+          SubjectPolicyAgent.new(:User, user),
+          VerbPolicyAgent.new(:Role, :administrator),
+          ObjectPolicyAgent.new(:Newspaper, newspaper)
+        )
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was successfully permitted.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was NOT successfully permitted.' }
+          format.json { head :no_content }
+        end
+      end
     else
       respond_to do |format|
         format.html { redirect_to root_path, notice: 'Privilege was NOT successfully permitted.' }
@@ -49,6 +66,23 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         else
           format.html { redirect_to publisher_path(publisher), notice: 'Privilege was NOT successfully revoked.' }
+          format.json { head :no_content }
+        end
+      end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      user = User.find(params[:user_id])
+      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      respond_to do |format|
+        if policy_maker.revoke!(
+          SubjectPolicyAgent.new(:User, user),
+          VerbPolicyAgent.new(:Role, :administrator),
+          ObjectPolicyAgent.new(:Newspaper, newspaper)
+        )
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was successfully revoked.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was NOT successfully revoked.' }
           format.json { head :no_content }
         end
       end

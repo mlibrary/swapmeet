@@ -9,12 +9,20 @@ RSpec.describe NewspapersPolicy, type: :policy do
     subject { described_class.new(subject_agent, object_agent) }
 
     let(:subject_agent) { double('subject agent') }
+    let(:subject_client_type) { 'SubjectClientType' }
+    let(:subject_client_id) { 'SubjectClientId' }
     let(:object_agent) { double('object agent') }
+    let(:object_client_type) { 'ObjectClientType' }
+    let(:object_client_id) { 'ObjectClientId' }
 
     before do
       allow(subject_agent).to receive(:known?).and_return(known)
       allow(subject_agent).to receive(:application_administrator?).and_return(application_administrator)
       allow(subject_agent).to receive(:platform_administrator?).and_return(platform_administrator)
+      allow(subject_agent).to receive(:client_type).and_return(subject_client_type)
+      allow(subject_agent).to receive(:client_id).and_return(subject_client_id)
+      allow(object_agent).to receive(:client_type).and_return(object_client_type)
+      allow(object_agent).to receive(:client_id).and_return(object_client_id)
     end
 
     context 'for anonymous user' do

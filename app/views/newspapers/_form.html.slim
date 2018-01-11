@@ -14,5 +14,10 @@
     = f.text_field :display_name
   .field
     = f.label :publisher
-    = f.collection_select :publisher_id, Publisher.all, :id, :name, prompt: "Select a Publisher"
+    - if @publisher.present?
+      - @newspaper.publisher_id = @publisher.id
+      = f.collection_select :publisher_id, Publisher.all, :id, :name, {}, disabled: true
+      = f.hidden_field :publisher_id, value: @publisher.id
+    - else
+      = f.collection_select :publisher_id, Publisher.all, :id, :name, { prompt: "Select a Publisher" }
   .actions = f.submit

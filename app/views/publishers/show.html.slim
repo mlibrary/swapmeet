@@ -22,8 +22,8 @@ h2 Newspapers
 ul
 - @publisher.newspapers.each do |newspaper|
   li
-    = link_to newspaper.display_name, newspaper_path(newspaper)
-= link_to 'Add Newspaper', newspapers_path
+    = link_to newspaper.display_name, publisher_newspaper_path(@publisher, newspaper)
+= link_to 'Create Newspaper', new_publisher_newspaper_path(@publisher)
 
 hr
 h2 Groups

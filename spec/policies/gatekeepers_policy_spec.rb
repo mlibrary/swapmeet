@@ -31,30 +31,30 @@ RSpec.describe GatekeepersPolicy, type: :policy do
       context 'for authenticated user' do
         let(:known) { true }
         it do
-          expect(subject.index?).to be true
-          expect(subject.show?).to be true
-          expect(subject.create?).to be true
-          expect(subject.update?).to be true
-          expect(subject.destroy?).to be true
+          expect(subject.index?).to be false
+          expect(subject.show?).to be false
+          expect(subject.create?).to be false
+          expect(subject.update?).to be false
+          expect(subject.destroy?).to be false
         end
         context 'with the role of application administrator' do
           let(:application_administrator) { true }
           it do
-            expect(subject.index?).to be true
-            expect(subject.show?).to be true
-            expect(subject.create?).to be true
-            expect(subject.update?).to be true
-            expect(subject.destroy?).to be true
+            expect(subject.index?).to be false
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
           end
         end
         context 'with the role of platform administrator' do
           let(:platform_administrator) { true }
           it do
-            expect(subject.index?).to be true
-            expect(subject.show?).to be true
-            expect(subject.create?).to be true
-            expect(subject.update?).to be true
-            expect(subject.destroy?).to be true
+            expect(subject.index?).to be false
+            expect(subject.show?).to be false
+            expect(subject.create?).to be false
+            expect(subject.update?).to be false
+            expect(subject.destroy?).to be false
           end
         end
       end

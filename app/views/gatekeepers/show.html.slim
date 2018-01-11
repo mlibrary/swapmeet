@@ -3,26 +3,14 @@ h1 Gatekeeper
 p#notice = notice
 
 p
-  strong Role:&nbsp
-  = @gatekeeper.role
+  strong Subject:&nbsp
+  = @gatekeeper.subject_type
 p
-  strong Domain:&nbsp
-  = @gatekeeper.domain&.display_name
+  strong Verb:&nbsp
+  = @gatekeeper.verb_type
 p
-  strong Group:&nbsp
-  = @gatekeeper.group&.display_name
-p
-  strong Listing:&nbsp
-  = @gatekeeper.listing&.title
-p
-  strong Newspaper:&nbsp
-  = @gatekeeper.newspaper&.display_name
-p
-  strong Publisher:&nbsp
-  = @gatekeeper.publisher&.display_name
-p
-  strong User:&nbsp
-  = @gatekeeper.user&.display_name
+  strong Object:&nbsp
+  = @gatekeeper.object_type
 
 => link_to 'Edit', edit_gatekeeper_path(@gatekeeper)
 '|
