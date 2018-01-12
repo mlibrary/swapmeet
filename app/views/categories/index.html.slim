@@ -1,32 +1,34 @@
 h1 Listing categories
 
-table
-  thead
-    tr
-      th Name
-      th Display name
-      th Title
-      - if @policy.show?
-        th
-      - if @policy.edit?
-        th
-      - if @policy.destroy?
-        th
-
-  tbody
-    - @categories.each do |category|
-      tr
-        td = category.name
-        td = category.display_name
-        td = category.title
-        - if @policy.show?
-          td = link_to 'Show', category
-        - if @policy.edit?
-          td = link_to 'Edit', edit_category_path(category)
-        - if @policy.destroy?
-          td = link_to 'Destroy', category, data: { confirm: 'Are you sure?' }, method: :delete
+- if @categories.empty?
+    h2 No Categories
+- else
+    table
+      thead
+        tr
+          th Name
+          th Display name
+          th Title
+          - if @policy.show?
+              th
+          - if @policy.edit?
+              th
+          - if @policy.destroy?
+              th
+      tbody
+        - @categories.each do |category|
+            tr
+              td = category.name
+              td = category.display_name
+              td = category.title
+              - if @policy.show?
+                  td = link_to 'Show', category
+              - if @policy.edit?
+                  td = link_to 'Edit', edit_category_path(category)
+              - if @policy.destroy?
+                  td = link_to 'Destroy', category, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 
 -if @policy.new?
-  = link_to 'New Category', new_category_path
+    = link_to 'New Category', new_category_path

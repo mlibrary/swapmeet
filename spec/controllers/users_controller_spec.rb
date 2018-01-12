@@ -88,6 +88,7 @@ RSpec.describe UsersController, type: :controller do
           end
         end
         before do
+          controller.instance_variable_set("@user", user)
           routes.draw { patch "/groups/:group_id/users/:id/join" => "users#join" }
           allow(Group).to receive(:find).with('1').and_return(group)
           allow(User).to receive(:find).with('2').and_return(user)
@@ -108,6 +109,7 @@ RSpec.describe UsersController, type: :controller do
           end
         end
         before do
+          controller.instance_variable_set("@user", user)
           routes.draw { delete "/groups/:group_id/users/:id/leave" => "users#leave" }
           allow(Group).to receive(:find).with('1').and_return(group)
           allow(User).to receive(:find).with('2').and_return(user)

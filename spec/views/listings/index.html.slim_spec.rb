@@ -2,11 +2,16 @@
 
 require 'rails_helper'
 
+class AuthorizePolicy < ControllersHelper::AuthorizePolicy
+  def edit_listing?(listing); edit?; end
+  def destroy_listing?(listing); destroy?; end
+end
+
 RSpec.describe "listings/index", type: :view do
   let(:category) { build(:category, id: 1) }
   let(:newspaper) { build(:newspaper, id: 1) }
   before(:each) do
-    @policy = ControllersHelper::AuthorizePolicy.new
+    @policy = AuthorizePolicy.new
     @filter = Filter.new
     @newspapers = []
     @owners = []

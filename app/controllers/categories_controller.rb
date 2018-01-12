@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class CategoriesController < ApplicationController
-  before_action :set_category, only: [:show, :edit, :update, :destroy]
-
   def index
     @policy.authorize! :index?
     @categories = Category.all
@@ -60,18 +58,15 @@ class CategoriesController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Category, @category))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_category
-      @category = Category.find(params[:id])
+      @category = Category.find(params[:id]) if params[:id].present?
+      CategoriesPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Category, @category))
     end
 
     # # Never trust parameters from the scary internet, only allow the white list through.
     # def category_params
     #   params.fetch(:category, {})
     # end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
       params.require(:category).permit(:name, :display_name, :title)

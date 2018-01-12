@@ -6,7 +6,7 @@ RSpec.describe "Publishers", type: :request do
   describe "GET /publishers" do
     it "works! (now write some real specs)" do
       get publishers_path
-      expect(response).to have_http_status(401) # unauthorized
+      expect(response).to have_http_status(200) # ok
     end
   end
 end

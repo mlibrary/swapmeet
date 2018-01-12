@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GatekeepersController < ApplicationController
-  before_action :set_gatekeeper, only: [:show, :edit, :update, :destroy]
-
   def index
     @policy.authorize! :index?
     @gatekeepers = Gatekeeper.all
@@ -60,12 +58,8 @@ class GatekeepersController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      GatekeepersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Gatekeeper, @gatekeeper))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_gatekeeper
-      @gatekeeper = Gatekeeper.find(params[:id])
+      @gatekeeper = Gatekeeper.find(params[:id]) if params[:id].present?
+      GatekeepersPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Gatekeeper, @gatekeeper))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

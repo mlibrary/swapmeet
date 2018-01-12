@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class DomainsController < ApplicationController
-  before_action :set_domain, only: [:show, :edit, :update, :destroy]
-
   def index
     @policy.authorize! :index?
     @domains = Domain.all
@@ -60,12 +58,8 @@ class DomainsController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Doamin, @domain))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_domain
-      @domain = Domain.find(params[:id])
+      @domain = Domain.find(params[:id]) if params[:id].present?
+      DomainsPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Doamin, @domain))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

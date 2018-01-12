@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class NewspapersController < ApplicationController
-  before_action :set_newspaper, only: [:show, :edit, :update, :destroy]
-
   def index
     @policy.authorize! :index?
     @newspapers = Newspaper.all
@@ -67,12 +65,8 @@ class NewspapersController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Newspaper, @newspaper))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_newspaper
-      @newspaper = Newspaper.find(params[:id])
+      @newspaper = Newspaper.find(params[:id]) if params[:id].present?
+      NewspapersPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Newspaper, @newspaper))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

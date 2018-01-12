@@ -84,7 +84,10 @@ RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
       end
     end
 
-    before { allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target) }
+    before do
+      controller.instance_variable_set("@#{model}", target)
+      allow(klass.to_s.classify.constantize).to receive(:find).with('1').and_return(target)
+    end
 
     it '#index' do
       get :index
