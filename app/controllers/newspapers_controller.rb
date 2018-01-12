@@ -9,20 +9,27 @@ class NewspapersController < ApplicationController
   end
 
   def show
-    @policy.authorize! :show?
+    @policy.authorize! :show?, @newspaper
   end
 
   def new
-    @policy.authorize! :new?
-    @newspaper = Newspaper.new
+    if params[:publisher_id].present?
+      @publisher = Publisher.find(params[:publisher_id])
+      @policy.authorize! :new?, @publisher
+      @newspaper = Newspaper.new
+    else
+      @policy.authorize! :new?
+      @newspaper = Newspaper.new
+    end
   end
 
   def edit
-    @policy.authorize! :edit?
+    @policy.authorize! :edit?, @newspaper
   end
 
   def create
-    @policy.authorize! :create?
+    @publisher = Publisher.find(newspaper_params[:publisher_id])
+    @policy.authorize! :create?, @publisher
     @newspaper = Newspaper.new(newspaper_params)
     respond_to do |format|
       if @newspaper.save
@@ -36,7 +43,7 @@ class NewspapersController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?
+    @policy.authorize! :update?, @newspaper
     respond_to do |format|
       if @newspaper.update(newspaper_params)
         format.html { redirect_to @newspaper, notice: 'Newspaper was successfully updated.' }
@@ -49,7 +56,7 @@ class NewspapersController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?
+    @policy.authorize! :destroy?, @newspaper
     @newspaper.destroy
     respond_to do |format|
       format.html { redirect_to newspapers_url, notice: 'Newspaper was successfully destroyed.' }

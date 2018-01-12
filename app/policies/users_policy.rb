@@ -13,7 +13,7 @@ class UsersPolicy < ApplicationPolicy
     false
   end
 
-  def create?
+  def create?(parent = nil)
     return true if subject.application_administrator?
     false
   end

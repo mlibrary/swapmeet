@@ -60,12 +60,12 @@ RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
     end
 
     it '#create' do
-      post :create, params: { model => {} }
+      post :create, params: { model => attrs }
       expect(response).to be_unauthorized
     end
 
     it '#update' do
-      post :update, params: { id: '1', model => {} }
+      post :update, params: { id: '1', model => attrs }
       expect(response).to be_unauthorized
     end
 

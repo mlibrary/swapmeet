@@ -17,17 +17,6 @@ p
   '|
 =< link_to 'Back', users_path
 
-- unless @user.publishers.empty?
-  hr
-  h2 Publishers
-  ul
-  - @user.publishers.each do |publisher|
-    li
-      => link_to publisher.display_name, publisher_path(publisher)
-      - if @policy.leave?
-        =<> ' '
-        =< link_to 'Remove', remove_publisher_user_path(publisher, @user), method: :delete
-
 - unless @user.groups.empty?
   hr
   h2 Groups
@@ -46,3 +35,24 @@ p
   - @user.listings.first(@user.listings.count).each do |listing|
     li = link_to listing.title, listing_path(listing)
 
+- unless @user.newspapers.empty?
+  hr
+  h2 Newspapers
+  ul
+  - @user.newspapers.each do |newspaper|
+    li
+      => link_to newspaper.display_name, newspaper_path(newspaper)
+      - if @policy.leave?
+        =<> ' '
+        =< link_to 'Remove', remove_newspaper_user_path(newspaper, @user), method: :delete
+
+- unless @user.publishers.empty?
+  hr
+  h2 Publishers
+  ul
+  - @user.publishers.each do |publisher|
+    li
+      => link_to publisher.display_name, publisher_path(publisher)
+      - if @policy.leave?
+        =<> ' '
+        =< link_to 'Remove', remove_publisher_user_path(publisher, @user), method: :delete

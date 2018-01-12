@@ -9,7 +9,7 @@ class PublishersController < ApplicationController
   end
 
   def show
-    @policy.authorize! :show?
+    @policy.authorize! :show?, @publisher
   end
 
   def new
@@ -18,7 +18,7 @@ class PublishersController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :edit?
+    @policy.authorize! :edit?, @publisher
   end
 
   def create
@@ -36,7 +36,7 @@ class PublishersController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?
+    @policy.authorize! :update?, @publisher
     respond_to do |format|
       if @publisher.update(publisher_params)
         format.html { redirect_to @publisher, notice: 'Publisher was successfully updated.' }
@@ -49,7 +49,7 @@ class PublishersController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?
+    @policy.authorize! :destroy?, @publisher
     @publisher.destroy
     respond_to do |format|
       format.html { redirect_to publishers_url, notice: 'Publisher was successfully destroyed.' }

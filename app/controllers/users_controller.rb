@@ -8,6 +8,10 @@ class UsersController < ApplicationController
       @publisher = Publisher.find(params[:publisher_id])
       @users = User.all
       render "publishers/users"
+    elsif params[:newspaper_id].present?
+      @newspaper = Newspaper.find(params[:newspaper_id])
+      @users = User.all
+      render "newspapers/users"
     else
       @policy.authorize! :index?
       @users = User.all
@@ -16,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @policy.authorize! :show?
+    @policy.authorize! :show?, @user
   end
 
   def new
@@ -25,7 +29,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :edit?
+    @policy.authorize! :edit?, @user
   end
 
   def create
@@ -43,7 +47,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?
+    @policy.authorize! :update?, @user
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
@@ -56,7 +60,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?
+    @policy.authorize! :destroy?, @user
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
@@ -68,10 +72,19 @@ class UsersController < ApplicationController
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-      publisher_policy.authorize! add?(publisher)
+      publisher_policy.authorize! :add?, publisher
       publisher.users << @user
       respond_to do |format|
         format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully added..' }
+        format.json { head :no_content }
+      end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      newspaper_policy.authorize! :add?, newspaper
+      newspaper.users << @user
+      respond_to do |format|
+        format.html { redirect_to newspaper_users_path(newspaper), notice: 'User was successfully added..' }
         format.json { head :no_content }
       end
     else
@@ -86,10 +99,19 @@ class UsersController < ApplicationController
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-      publisher_policy.authorize! remove?(publisher)
+      publisher_policy.authorize! :remove?, publisher
       publisher.users.delete(@user)
       respond_to do |format|
         format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully removed.' }
+        format.json { head :no_content }
+      end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      newspaper_policy.authorize! :remove?, newspaper
+      newspaper.users.delete(@user)
+      respond_to do |format|
+        format.html { redirect_to newspaper_users_path(newspaper), notice: 'User was successfully added..' }
         format.json { head :no_content }
       end
     else
@@ -140,7 +162,6 @@ class UsersController < ApplicationController
     def set_user
       @user ||= User.find(params[:id])
     end
-
 
     def user_params
       params.require(:user).permit(:display_name, :email)

@@ -14,4 +14,8 @@ class Publisher < ApplicationRecord
     )
     policy_resolver.grant?
   end
+
+  def user?(user)
+    users.exists?(user.id)
+  end
 end

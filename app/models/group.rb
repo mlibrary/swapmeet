@@ -5,4 +5,5 @@ class Group < ApplicationRecord
   belongs_to :parent, class_name: "Group", optional: true
   has_and_belongs_to_many :users
   has_and_belongs_to_many :publishers
+  has_and_belongs_to_many :newspapers
 end

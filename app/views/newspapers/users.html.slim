@@ -1,0 +1,17 @@
+h1 Newspaper users
+
+table
+  thead
+    tr
+      th Name
+      th Email
+      th Member
+  tbody
+    - @users.each do |user|
+      tr
+        td = user.display_name
+        td = link_to user.email, user
+        - if @newspaper.users.exists?(user.id)
+          td = link_to 'Remove', remove_newspaper_user_path(@newspaper, user), method: :delete
+        - else
+          td = link_to 'Add', add_newspaper_user_path(@newspaper, user), method: :patch

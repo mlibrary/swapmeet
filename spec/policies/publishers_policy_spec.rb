@@ -72,6 +72,7 @@ RSpec.describe PublishersPolicy, type: :policy do
         context 'with the role of publisher administrator' do
           before do
             allow(publisher).to receive(:administrator?).with(client).and_return(true)
+            allow(publisher).to receive(:user?).with(client).and_return(true)
             Gatekeeper.new(
               subject_type: client_type,
               subject_id: client_id,

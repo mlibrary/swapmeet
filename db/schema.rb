@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171221230715) do
+ActiveRecord::Schema.define(version: 20180111204101) do
 
   create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -64,6 +64,13 @@ ActiveRecord::Schema.define(version: 20171221230715) do
     t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
 
+  create_table "groups_newspapers", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "newspaper_id", null: false
+    t.bigint "group_id", null: false
+    t.index ["group_id", "newspaper_id"], name: "index_groups_newspapers_on_group_id_and_newspaper_id"
+    t.index ["newspaper_id", "group_id"], name: "index_groups_newspapers_on_newspaper_id_and_group_id"
+  end
+
   create_table "groups_publishers", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "publisher_id", null: false
     t.bigint "group_id", null: false
@@ -98,6 +105,13 @@ ActiveRecord::Schema.define(version: 20171221230715) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["publisher_id"], name: "index_newspapers_on_publisher_id"
+  end
+
+  create_table "newspapers_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "newspaper_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["newspaper_id", "user_id"], name: "index_newspapers_users_on_newspaper_id_and_user_id"
+    t.index ["user_id", "newspaper_id"], name: "index_newspapers_users_on_user_id_and_newspaper_id"
   end
 
   create_table "publishers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

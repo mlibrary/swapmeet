@@ -1,0 +1,15 @@
+h1 Newspaper groups
+
+table
+  thead
+    tr
+      th Name
+      th Member
+  tbody
+    - @groups.each do |group|
+      tr
+        td = link_to group.display_name, group
+        - if @newspaper.groups.exists?(group.id)
+          td = link_to 'Remove', remove_newspaper_group_path(@newspaper, group), method: :delete
+        - else
+          td = link_to 'Add', add_newspaper_group_path(@newspaper, group), method: :patch

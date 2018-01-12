@@ -17,10 +17,45 @@ p
   '|
 =< link_to 'Back', newspapers_path
 
-- unless @newspaper.listings.empty?
-  hr
-  h2 Listings
-  ul
-    - @newspaper.listings.each do |listing|
-      li
-        = link_to listing.title, listing_path(listing)
+
+hr
+h2 Listings
+ul
+- @newspaper.listings.each do |listing|
+  li
+    = link_to listing.title, newspaper_listing_path(@newspaper, listing)
+= link_to 'Create Listing', new_newspaper_listing_path(@newspaper)
+
+hr
+h2 Groups
+ul
+- @newspaper.groups.each do |group|
+  li
+    = link_to group.display_name, group_path(group)
+= link_to 'Mange Groups', newspaper_groups_path(@newspaper)
+
+hr
+h2 Users
+table
+  thead
+    tr
+      th Name
+      th Email
+      th Administrator
+  tbody
+  - if @newspaper.users.empty?
+    tr
+      td
+      td No Users
+      td
+  - else
+    - @newspaper.users.each do |user|
+      tr
+        td = user.display_name
+        td = link_to user.email, user_path(user)
+        - if @newspaper.administrator?(user.id)
+          td = link_to 'revoke', revoke_newspaper_user_privilege_path(@newspaper, user, 1), method: :delete
+        - else
+          td = link_to 'permit', permit_newspaper_user_privilege_path(@newspaper, user, 1), method: :patch
+
+= link_to 'Manage Users', newspaper_users_path(@newspaper)
