@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PrivilegesController < ApplicationController
-  before_action :set_privilege
-
   def index
   end
 
@@ -97,12 +95,8 @@ class PrivilegesController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      PrivilegesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_privilege
       @privilege = Privilege.new(id: params[:id], requestor: current_user)
+      PrivilegesPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

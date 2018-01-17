@@ -2,41 +2,61 @@
 
 class UsersPolicy < ApplicationPolicy
   def index?
+    return false unless @subject.client_type == :User.to_s
     true
   end
 
-  def show?(user = nil)
-    return true if subject.application_administrator?
-    return true if subject.platform_administrator?
-    return true if subject.client == object.client
-    return true if subject.client == user
-    false
+  def show?
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    # return true if @subject.client == @object.client
+    # PolicyResolver.new(subject, ActionPolicyAgent.new(:show), object).grant?
+    true
   end
 
-  def create?(parent = nil)
-    return true if subject.application_administrator?
-    false
+  def create?
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    PolicyResolver.new(subject, ActionPolicyAgent.new(:create), object).grant?
   end
 
-  def update?(user = nil)
-    return true if subject.application_administrator?
-    return true if subject.client == object.client
-    return true if subject.client == user
-    false
+  def update?
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.client == @object.client
+    PolicyResolver.new(subject, ActionPolicyAgent.new(:update), object).grant?
   end
 
-  def destroy?(user = nil)
-    return true if subject.application_administrator?
-    false
+  def destroy?
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    # return true if @subject.client == @object.client
+    PolicyResolver.new(subject, ActionPolicyAgent.new(:destroy), object).grant?
+  end
+
+  def show_user?(user)
+    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).show?
+  end
+
+  def edit_user?(user)
+    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).edit?
+  end
+
+  def destroy_user?(user)
+    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).destroy?
   end
 
   def join?
-    return true if subject.client == object.client
-    false
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.client == @object.client
+    PolicyResolver.new(subject, ActionPolicyAgent.new(:join), object).grant?
   end
 
   def leave?
-    return true if subject.client == object.client
-    false
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.client == @object.client
+    PolicyResolver.new(subject, ActionPolicyAgent.new(:leave), object).grant?
   end
 end

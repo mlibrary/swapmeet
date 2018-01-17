@@ -1,26 +1,24 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave, :add, :remove]
-
   def index
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
-      @users = User.all
+      @users = User.order(email: :asc)
       render "publishers/users"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
-      @users = User.all
+      @users = User.order(email: :asc)
       render "newspapers/users"
     else
       @policy.authorize! :index?
-      @users = User.all
+      @users = User.order(email: :asc)
       render
     end
   end
 
   def show
-    @policy.authorize! :show?, @user
+    @policy.authorize! :show?
   end
 
   def new
@@ -29,7 +27,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :edit?, @user
+    @policy.authorize! :edit?
   end
 
   def create
@@ -47,7 +45,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?, @user
+    @policy.authorize! :update?
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
@@ -60,7 +58,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?, @user
+    @policy.authorize! :destroy?
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
@@ -145,6 +143,7 @@ class UsersController < ApplicationController
   end
 
   def login
+    @user = User.find(params[:id]) if params[:id].present?
     auto_login(@user)
     redirect_to root_path
   end
@@ -157,12 +156,11 @@ class UsersController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-    end
-    def set_user
-      @user ||= User.find(params[:id])
+      @user = User.find(params[:id]) if params[:id].present?
+      UsersPolicy.new(UserPolicyAgent.new(current_user), UserPolicyAgent.new(@user))
     end
 
+    # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params.require(:user).permit(:display_name, :email)
     end

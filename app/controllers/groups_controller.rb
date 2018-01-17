@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :add, :remove]
-
   def index
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
@@ -100,12 +98,8 @@ class GroupsController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Group, @group))
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_group
-      @group = Group.find(params[:id])
+      @group = Group.find(params[:id]) if params[:id].present?
+      GroupsPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Group, @group))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

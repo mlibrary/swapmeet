@@ -3,98 +3,153 @@
 require 'rails_helper'
 
 RSpec.describe PolicyMaker do
+  subject { policy_maker }
+
   let(:policy_maker) { described_class.new(requestor_agent) }
-  let(:requestor_agent) { double('requestor agent') }
-  let(:subject_agent) { double('subject agent') }
-  let(:verb_agent) { double('verb agent') }
-  let(:object_agent) { double('object agent') }
+  let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, :requestor) }
+  let(:subject_agent) { SubjectPolicyAgent.new(:Subject, :subject) }
+  let(:verb_agent) { VerbPolicyAgent.new(:Verb, :verb) }
+  let(:object_agent) { ObjectPolicyAgent.new(:Object, :object) }
 
-  before do
-    allow(requestor_agent).to receive(:client_type).and_return('requestor_type')
-    allow(requestor_agent).to receive(:client_id).and_return('requestor_id')
-    allow(subject_agent).to receive(:client_type).and_return('subject_type')
-    allow(subject_agent).to receive(:client_id).and_return('subject_id')
-    allow(verb_agent).to receive(:client_type).and_return('verb_type')
-    allow(verb_agent).to receive(:client_id).and_return('verb_id')
-    allow(object_agent).to receive(:client_type).and_return('object_type')
-    allow(object_agent).to receive(:client_id).and_return('object_id')
-  end
+  context 'requestor' do
+    context 'default is to deny' do
+      it do
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be false
+      end
+    end
 
-  describe '#permit!' do
-    subject { policy_maker.permit!(subject_agent, verb_agent, object_agent) }
-
-    it { is_expected.to be false }
-
-    context 'grant' do
+    context 'grant only #permit!' do
       before do
         Gatekeeper.new(
-          subject_type: 'requestor_type',
-          subject_id: 'requestor_id',
-          verb_type: 'Policy',
-          verb_id: 'permit',
-          object_type: 'object_type',
-          object_id: 'object_id'
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::POLICY_PERMIT.client_type,
+          verb_id: PolicyMaker::POLICY_PERMIT.client_id,
+          object_type: object_agent.client_type,
+          object_id: object_agent.client_id
         ).save!
       end
-      it { is_expected.to be true }
+
+      it do
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be false
+      end
+    end
+
+    context 'grant only #revoke!' do
+      before do
+        Gatekeeper.new(
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::POLICY_REVOKE.client_type,
+          verb_id: PolicyMaker::POLICY_REVOKE.client_id,
+          object_type: object_agent.client_type,
+          object_id: object_agent.client_id
+        ).save!
+      end
+
+      it do
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+      end
+    end
+
+    context 'grant both #permit! and #revoke!' do
+      before do
+        Gatekeeper.new(
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::POLICY_ANY.client_type,
+          verb_id: PolicyMaker::POLICY_ANY.client_id,
+          object_type: object_agent.client_type,
+          object_id: object_agent.client_id
+        ).save!
+      end
+
+      it do
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+      end
     end
   end
 
-  describe '#revoke!' do
-    subject { policy_maker.revoke!(subject_agent, verb_agent, object_agent) }
-
-    it {  is_expected.to be false }
-
-    context 'grant' do
-      before do
-        Gatekeeper.new(
-          subject_type: 'requestor_type',
-          subject_id: 'requestor_id',
-          verb_type: 'Policy',
-          verb_id: 'revoke',
-          object_type: 'object_type',
-          object_id: 'object_id'
-        ).save!
-      end
-      it { is_expected.to be true }
-    end
-  end
-
-  context 'stress test' do
-    subject { policy_maker }
-
+  context 'policy' do
     let(:policy_resolver) { PolicyResolver.new(subject_agent, verb_agent, object_agent) }
 
-    before do
-      policy_resolver
-      Gatekeeper.new(
-        subject_type: 'requestor_type',
-        subject_id: 'requestor_id',
-        verb_type: 'Policy',
-        verb_id: nil,
-        object_type: nil,
-        object_id: nil
-      ).save!
+    context 'ignore multiple calls' do
+      before do
+        Gatekeeper.new(
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::POLICY_ANY.client_type,
+          verb_id: PolicyMaker::POLICY_ANY.client_id,
+          object_type: object_agent.client_type,
+          object_id: object_agent.client_id
+        ).save!
+      end
+
+      it do
+        expect(policy_resolver.grant?).to be false
+
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be false
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be false
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+
+        expect(policy_resolver.grant?).to be false
+      end
     end
 
-    it do
-      expect(policy_resolver.grant?).to be false
+    context 'specific to general policies' do
+      let(:object_agent_type) { ObjectPolicyAgent.new(:Object, nil) }
+      let(:object_agent_any) { ObjectPolicyAgent.new(nil, nil) }
 
-      policy_maker.permit!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be true
+      before do
+        Gatekeeper.new(
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::POLICY_ANY.client_type,
+          verb_id: PolicyMaker::POLICY_ANY.client_id,
+          object_type: object_agent_any.client_type,
+          object_id: object_agent_any.client_id
+        ).save!
+      end
 
-      policy_maker.revoke!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be false
+      it do
+        expect(policy_resolver.grant?).to be false
 
-      policy_maker.permit!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be true
-      policy_maker.permit!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent_any)).to be true
+        expect(policy_resolver.grant?).to be true
 
-      policy_maker.revoke!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be false
-      policy_maker.revoke!(subject_agent, verb_agent, object_agent)
-      expect(policy_resolver.grant?).to be false
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_resolver.grant?).to be true
+
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_any)).to be true
+
+        expect(policy_resolver.grant?).to be false
+      end
     end
   end
 end

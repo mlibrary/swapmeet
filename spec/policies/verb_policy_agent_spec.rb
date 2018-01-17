@@ -3,6 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe VerbPolicyAgent do
-  let(:verb_type) { double('verb type') }
-  let(:verb) { double('verb') }
+  subject { described_class.new(nil, nil) }
+  it { is_expected.to be_a(PolicyAgent) }
 end

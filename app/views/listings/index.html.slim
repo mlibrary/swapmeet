@@ -1,48 +1,38 @@
 h1 Office Gear Swap Meet!
 
-
-table
-  thead
-    tr
-      th Title
-      th Newspaper
-      th Owner
-      th Category
-      th
-      th
-      th
-
-  tbody
-    = form_for @filter, as: :f, method: :get, url: listings_path, html: { id: 'filter' } do |form|
-      td
-      td = form.select :newspaper, @newspapers.map { |newspaper| [newspaper.display_name, newspaper.id] }, include_blank: true
-      td = form.select :owner, @owners.map { |owner| [owner.display_name, owner.id] }, include_blank: true
-      td = form.select :category, @categories.map { |category| [category.title, category.id] }, include_blank: true
-      td = form.submit 'Filter'
-      td
-      td
-    - if @listings.empty?
+- if @listings.empty?
+    h2 No Listings
+- else
+    table
+      thead
         tr
+          th Title
+          th Newspaper
+          th Owner
+          th Category
+          th
+          th
+          th
+      tbody
+        = form_for @filter, as: :f, method: :get, url: listings_path, html: { id: 'filter' } do |form|
+          td
+          td = form.select :newspaper, @newspapers.map { |newspaper| [newspaper.display_name, newspaper.id] }, include_blank: true
+          td = form.select :owner, @owners.map { |owner| [owner.display_name, owner.id] }, include_blank: true
+          td = form.select :category, @categories.map { |category| [category.title, category.id] }, include_blank: true
+          td = form.submit 'Filter'
           td
           td
-          td
-          td No listings
-          td
-          td
-          td
-    - else
-      - @listings.each do |listing|
-        tr
-          td = listing.title
-          td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
-          td = user_display_name_link(listing.owner)
-          td = listing.category&.title
-          td = link_to 'Show', listing if @policy.show?
-          td = link_to 'Edit', edit_listing_path(listing) if @policy.edit?
-          td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete if @policy.destroy?
-
+        - @listings.each do |listing|
+            tr
+              td = listing.title
+              td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
+              td = user_display_name_link(listing.owner)
+              td = listing.category&.title
+              td = link_to 'Show', listing if @policy.show?
+              td = link_to 'Edit', edit_listing_path(listing) if @policy.edit_listing?(listing)
+              td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete if @policy.destroy_listing?(listing)
 
 br
 
 - if @policy.new?
-  = link_to 'Make a new listing', new_listing_path
+    = link_to 'New listing', new_listing_path

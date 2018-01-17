@@ -1,18 +1,18 @@
 development:
   root:
-    - me@example.com
+    - root@example.com
   application:
-    - me@example.com
+    - application@example.com
   platform:
-    - me@example.com
+    - platform@example.com
 
 test:
   root:
-    - me@example.com
+    - root@example.com
   application:
-    - me@example.com
+    - application@example.com
   platform:
-    - me@example.com
+    - platform@example.com
 
 production:
   root:

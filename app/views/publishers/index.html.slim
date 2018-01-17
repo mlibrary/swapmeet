@@ -1,33 +1,34 @@
 h1 Listing publishers
 
-table
-  thead
-    tr
-      th Name
-      th Display name
-      th Domain
-      - if @policy.show?
-        th
-      - if @policy.edit?
-        th
-      - if @policy.destroy?
-        th
-
-  tbody
-    - @publishers.each do |publisher|
-      tr
-        td = publisher.name
-        td = publisher.display_name
-        td = link_to publisher.domain&.display_name, domain_path(publisher.domain) if publisher.domain
-        - if @policy.show?
-          td = link_to 'Show', publisher
-        - if @policy.edit?
-          td = link_to 'Edit', edit_publisher_path(publisher)
-        - if @policy.destroy?
-          td = link_to 'Destroy', publisher, data: { confirm: 'Are you sure?' }, method: :delete
-
+- if @publishers.empty?
+    h2 No Publishers
+- else
+    table
+      thead
+        tr
+          th Name
+          th Display name
+          th Domain
+          - if @policy.show?
+              th
+          - if @policy.edit?
+              th
+          - if @policy.destroy?
+              th
+      tbody
+        - @publishers.each do |publisher|
+            tr
+              td = publisher.name
+              td = publisher.display_name
+              td = link_to publisher.domain&.display_name, domain_path(publisher.domain) if publisher.domain
+              - if @policy.show?
+                  td = link_to 'Show', publisher
+              - if @policy.edit?
+                  td = link_to 'Edit', edit_publisher_path(publisher)
+              - if @policy.destroy?
+                  td = link_to 'Destroy', publisher, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 
 - if @policy.new?
-  = link_to 'New Publisher', new_publisher_path
+    = link_to 'New Publisher', new_publisher_path

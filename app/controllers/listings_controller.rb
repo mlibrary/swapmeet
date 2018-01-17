@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ListingsController < ApplicationController
-  before_action :set_listing, only: [:show, :edit, :update, :destroy]
-
   def index
     @policy.authorize! :index?
     @filter = Filter.new
@@ -35,7 +33,7 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @policy.authorize! :show?, @listing
+    @policy.authorize! :show?
   end
 
   def new
@@ -50,12 +48,17 @@ class ListingsController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :edit?, @listing
+    if params[:newspaper_id].present?
+      @newspaper = Newspaper.find(params[:newspaper_id])
+      @policy.authorize! :edit?, @newspaper
+    else
+      @policy.authorize! :edit?
+    end
   end
 
   def create
     @newspaper = Newspaper.find(listing_params[:newspaper_id]) if listing_params[:newspaper_id].present?
-    @policy.authorize! :create?, @newspaper
+    @policy.authorize! :create?
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
     respond_to do |format|
@@ -70,7 +73,7 @@ class ListingsController < ApplicationController
   end
 
   def update
-    @policy.authorize! :update?, @listing
+    @policy.authorize! :update?
     respond_to do |format|
       if @listing.update(listing_params)
         format.html { redirect_to @listing, notice: 'Listing was successfully updated.' }
@@ -83,7 +86,7 @@ class ListingsController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?, @listing
+    @policy.authorize! :destroy?
     @listing.destroy
     respond_to do |format|
       format.html { redirect_to listings_url, notice: 'Listing was successfully destroyed.' }
@@ -94,13 +97,11 @@ class ListingsController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Listing, @listing))
+      @listing = Listing.find(params[:id]) if params[:id].present?
+      ListingPolicy.new(UserPolicyAgent.new(current_user), ListingPolicyAgent.new(@listing))
     end
 
-    def set_listing
-      @listing = Listing.find(params[:id])
-    end
-
+    # Never trust parameters from the scary internet, only allow the white list through.
     def listing_params
       params.require(:listing).permit(:category_id, :title, :body, :newspaper_id)
     end

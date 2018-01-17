@@ -49,6 +49,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # Authorization Policy
     def new_policy
       ApplicationPolicy.new(nil, nil)
     end

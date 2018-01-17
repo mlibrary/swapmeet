@@ -8,21 +8,19 @@ class ApplicationPolicy
     @object = object
   end
 
-  def new?(parent = nil)
-    create?(parent)
+  def new?
+    create?
   end
 
-  def edit?(obj = nil)
-    update?(obj)
+  def edit?
+    update?
   end
 
-  def authorize!(action, obj = nil, message = nil)
-    permit = if obj
-      send(action, obj)
-    else
-      send(action)
-    end
-    raise NotAuthorizedError.new(message) unless permit
+  def authorize!(action, message = nil)
+    return if send(action)
+    verb = VerbPolicyAgent.new(:Action, action.to_s.chop.to_sym)
+    return if PolicyResolver.new(subject, verb, object).grant?
+    raise NotAuthorizedError.new(message)
   end
 
   def respond_to_missing?(method_name, include_private = false)
@@ -31,7 +29,8 @@ class ApplicationPolicy
   end
 
   def method_missing(method_name, *args, &block)
-    return false if method_name[-1] == '?'
-    super
+    return super if method_name[-1] != '?'
+    verb = VerbPolicyAgent.new(:Action, method_name.to_s.chop.to_sym)
+    PolicyResolver.new(subject, verb, object).grant?
   end
 end
