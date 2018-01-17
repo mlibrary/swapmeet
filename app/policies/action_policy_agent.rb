@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ActionPolicyAgent < VerbPolicyAgent
-  def initialize(client)
-    super(:Action, client)
+  def initialize(action)
+    super(:Action, action)
   end
 end

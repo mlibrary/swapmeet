@@ -2,11 +2,17 @@
 
 class PolicyMaker
   AGENT_ANY = PolicyAgent.new(nil, nil)
+  # Subject Agents
+  SUBJECT_ANY = SubjectPolicyAgent.new(nil, nil)
   USER_ANY = UserPolicyAgent.new(nil)
+  # Verb Agents
+  VERB_ANY = VerbPolicyAgent.new(nil, nil)
   ACTION_ANY = ActionPolicyAgent.new(nil)
   POLICY_ANY = PolicyPolicyAgent.new(nil)
   POLICY_PERMIT = PolicyPolicyAgent.new(:permit)
   POLICY_REVOKE = PolicyPolicyAgent.new(:revoke)
+  # Object Agents
+  OBJECT_ANY = ObjectPolicyAgent.new(nil, nil)
   LISTING_ANY = ListingPolicyAgent.new(nil)
 
   attr_reader :requestor
@@ -15,8 +21,7 @@ class PolicyMaker
     @requestor = requestor
   end
 
-  def permit!(subject, verb, object)
-    return false unless PolicyResolver.new(requestor, POLICY_PERMIT, object).grant?
+  def exist?(subject, verb, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -27,6 +32,12 @@ class PolicyMaker
       next if gatekeeper.object_id != object.client_id
       return true
     end
+    false
+  end
+
+  def permit!(subject, verb, object)
+    return false unless grant?(POLICY_PERMIT, object)
+    return true if exist?(subject, verb, object)
     gatekeeper = Gatekeeper.new
     gatekeeper.subject_type = subject.client_type
     gatekeeper.subject_id = subject.client_id
@@ -38,7 +49,7 @@ class PolicyMaker
   end
 
   def revoke!(subject, verb, object)
-    return false unless PolicyResolver.new(requestor, POLICY_REVOKE, object).grant?
+    return false unless grant?(POLICY_REVOKE, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -54,6 +65,13 @@ class PolicyMaker
   end
 
   private
+
+    def grant?(policy, object)
+      grant = false
+      grant ||= UserPolicyAgent.new(requestor.client).administrator? if requestor.client_type == :User.to_s
+      grant ||= PolicyResolver.new(requestor, policy, object).grant?
+      grant
+    end
 
     def query(subject, verb, object)
       Gatekeeper

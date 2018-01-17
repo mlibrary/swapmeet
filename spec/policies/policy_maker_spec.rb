@@ -6,7 +6,8 @@ RSpec.describe PolicyMaker do
   subject { policy_maker }
 
   let(:policy_maker) { described_class.new(requestor_agent) }
-  let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, :requestor) }
+  let(:requestor_agent) { RequestorPolicyAgent.new(:User, user) }
+  let(:user) { double('user') }
   let(:subject_agent) { SubjectPolicyAgent.new(:Subject, :subject) }
   let(:verb_agent) { VerbPolicyAgent.new(:Verb, :verb) }
   let(:object_agent) { ObjectPolicyAgent.new(:Object, :object) }
@@ -14,8 +15,11 @@ RSpec.describe PolicyMaker do
   context 'requestor' do
     context 'default is to deny' do
       it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
       end
     end
 
@@ -32,8 +36,11 @@ RSpec.describe PolicyMaker do
       end
 
       it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
       end
     end
 
@@ -50,8 +57,11 @@ RSpec.describe PolicyMaker do
       end
 
       it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
       end
     end
 
@@ -68,8 +78,26 @@ RSpec.describe PolicyMaker do
       end
 
       it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+      end
+    end
+
+    context 'administrator' do
+      let(:user_agent) { double('user agent') }
+      before do
+        allow(UserPolicyAgent).to receive(:new).with(user).and_return(user_agent)
+        allow(user_agent).to receive(:administrator?).and_return(true)
+      end
+      it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
       end
     end
   end
@@ -90,27 +118,32 @@ RSpec.describe PolicyMaker do
       end
 
       it do
-        expect(policy_resolver.grant?).to be false
-
-        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_resolver.grant?).to be true
-        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_resolver.grant?).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_resolver.grant?).to be false
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_resolver.grant?).to be false
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
         expect(policy_resolver.grant?).to be true
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
-
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_resolver.grant?).to be false
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_resolver.grant?).to be false
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_resolver.grant?).to be true
+        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
         expect(policy_resolver.grant?).to be false
       end
     end
 
-    context 'specific to general policies' do
+    context 'specific and general policies' do
       let(:object_agent_type) { ObjectPolicyAgent.new(:Object, nil) }
       let(:object_agent_any) { ObjectPolicyAgent.new(nil, nil) }
 
@@ -126,28 +159,52 @@ RSpec.describe PolicyMaker do
       end
 
       it do
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be false
         expect(policy_resolver.grant?).to be false
 
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent)).to be true
+
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be false
         expect(policy_resolver.grant?).to be true
+
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent_type)).to be true
+
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be false
         expect(policy_resolver.grant?).to be true
+
         expect(policy_maker.permit!(subject_agent, verb_agent, object_agent_any)).to be true
+
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be true
         expect(policy_resolver.grant?).to be true
 
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent)).to be true
+
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be true
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be true
         expect(policy_resolver.grant?).to be true
 
+
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
-        expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_type)).to be true
+
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be true
         expect(policy_resolver.grant?).to be true
 
         expect(policy_maker.revoke!(subject_agent, verb_agent, object_agent_any)).to be true
 
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_type)).to be false
+        expect(policy_maker.exist?(subject_agent, verb_agent, object_agent_any)).to be false
         expect(policy_resolver.grant?).to be false
       end
     end
