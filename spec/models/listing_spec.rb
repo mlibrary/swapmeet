@@ -29,4 +29,19 @@ RSpec.describe Listing, type: :model do
       end
     end
   end
+
+  describe '#owner' do
+    subject { listing.owner }
+    context 'nobody' do
+      let(:listing) { create(:listing) }
+      let(:nobody) { User.nobody }
+      before { allow(User).to receive(:nobody).and_return(nobody) }
+      it { is_expected.to be nobody }
+    end
+    context 'owner' do
+      let(:listing) { create(:listing, owner: owner) }
+      let(:owner) { create(:user) }
+      it { is_expected.to be owner }
+    end
+  end
 end

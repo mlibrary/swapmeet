@@ -8,8 +8,8 @@ class Publisher < ApplicationRecord
 
   def administrator?(user)
     policy_resolver = PolicyResolver.new(
-      SubjectPolicyAgent.new(:User, user),
-      VerbPolicyAgent.new(:Role, :administrator),
+      UserPolicyAgent.new(user),
+      RolePolicyAgent.new(:administrator),
       ObjectPolicyAgent.new(:Publisher, self)
     )
     policy_resolver.grant?
