@@ -27,7 +27,8 @@ RSpec.describe RootPolicy, type: :policy do
   end
 
   describe '#method_missing' do
-    subject { described_class.new(nil, nil).method? }
-    it { is_expected.to be true }
+    subject { described_class.new(nil, nil) }
+    it { expect(subject.action?).to be true }
+    it { expect { subject.action }.to raise_error(NoMethodError) }
   end
 end
