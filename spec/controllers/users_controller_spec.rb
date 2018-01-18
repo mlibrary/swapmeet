@@ -5,6 +5,10 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   it_should_behave_like 'policy enforcer', :user, :User
 
+  describe '#new_policy' do
+    it { expect(subject.send(:new_policy)).to be_a(UsersPolicy) }
+  end
+
   context 'authenticate' do
     describe '#login' do
       subject { post :login, params: { id: user.id } }

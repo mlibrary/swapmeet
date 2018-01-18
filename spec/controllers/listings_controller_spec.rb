@@ -12,4 +12,8 @@ RSpec.describe ListingsController, type: :controller do
     end
     it_should_behave_like 'policy enforcer', :listing, :Listing, "body": "body", "category_id": "1", "title": "title"
   end
+
+  describe '#new_policy' do
+    it { expect(subject.send(:new_policy)).to be_a(ListingPolicy) }
+  end
 end

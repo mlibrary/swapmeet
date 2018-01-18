@@ -19,4 +19,51 @@ RSpec.describe ApplicationController, type: :controller do
       expect(response).to be_unauthorized
     end
   end
+
+  context "current user" do
+    let(:user) { create(:user) }
+    it do
+      expect(subject.send(:logged_in?)).to be false
+      expect(subject.send(:current_user).id).to eq User.guest.id
+      expect(subject.send(:auto_login, user)).to be user.id
+      expect(subject.send(:logged_in?)).to be true
+      expect(subject.send(:current_user).id).to eq user.id
+      expect(subject.send(:logout!)).to be nil
+      expect(subject.send(:logged_in?)).to be false
+      expect(subject.send(:current_user).id).to eq User.guest.id
+    end
+  end
+
+  context '#set_policy' do
+    let(:policy) { double('policy') }
+    let(:root_policy) { double('root policy') }
+    before do
+      allow(ApplicationPolicy).to receive(:new).with(nil, nil).and_return(policy)
+      allow(RootPolicy).to receive(:new).with(nil, nil).and_return(root_policy)
+    end
+    it do
+      subject.send(:set_policy)
+      expect(subject.instance_variable_get(:@policy)).to be policy
+    end
+    context 'authenticated' do
+      let(:user) { create(:user) }
+      it do
+        subject.send(:auto_login, user)
+        subject.send(:set_policy)
+        expect(subject.instance_variable_get(:@policy)).to be policy
+      end
+      context 'root administrator' do
+        let(:user) { create(:user, email: Rails.application.config.administrators[:root].first) }
+        it do
+          subject.send(:auto_login, user)
+          subject.send(:set_policy)
+          expect(subject.instance_variable_get(:@policy)).to be root_policy
+        end
+      end
+    end
+  end
+
+  describe '#new_policy' do
+    it { expect(subject.send(:new_policy)).to be_a(ApplicationPolicy) }
+  end
 end

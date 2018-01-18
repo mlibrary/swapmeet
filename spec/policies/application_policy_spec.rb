@@ -15,6 +15,11 @@ RSpec.describe ApplicationPolicy, type: :policy do
     let(:object_agent) { ObjectPolicyAgent.new(:Object, object_client) }
     let(:object_client) { double('object client') }
 
+    it '#respond_to? (a.k.a. #respond_to_missing?)' do
+      expect(subject.respond_to?(:action?)).to be true
+      expect(subject.respond_to?(:action)).to be false
+    end
+
     context 'without permission' do
       it do
         expect(subject.action?).to be false

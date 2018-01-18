@@ -25,4 +25,15 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#known?' do
+    it 'anonymous' do
+      expect(User.nobody.known?).to be false
+      expect(User.guest.known?).to be false
+    end
+    it 'user' do
+      expect(build(:user).known?).to be false
+      expect(create(:user).known?).to be true
+    end
+  end
 end

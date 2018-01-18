@@ -12,18 +12,17 @@ class ApplicationController < ActionController::Base
   protected
 
     def auto_login(user)
+      @current_user = nil
       session[:user_id] = user.id
     end
 
     def logout!
+      @current_user = nil
       session[:user_id] = nil
     end
 
     def current_user
-      unless defined?(@current_user)
-        @current_user = user_from_session || User.guest
-      end
-      @current_user
+      @current_user ||= user_from_session || User.guest
     end
 
     def logged_in?

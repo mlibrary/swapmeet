@@ -26,7 +26,7 @@ class NewspapersController < ApplicationController
   end
 
   def create
-    @publisher = Publisher.find(newspaper_params[:publisher_id])
+    @publisher = Publisher.find(newspaper_params[:publisher_id]) if newspaper_params[:publisher_id].present?
     @policy.authorize! :create?, @publisher
     @newspaper = Newspaper.new(newspaper_params)
     respond_to do |format|
