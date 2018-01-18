@@ -12,7 +12,7 @@ class PolicyAgent
 
   def client_id
     return nil if @client.nil?
-    return @client&.id if @client&.respond_to?(:id)
+    return @client&.id.to_s if @client&.respond_to?(:id)
     @client&.to_s
   end
 

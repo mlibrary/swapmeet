@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ListingPolicyAgent < ObjectPolicyAgent
-  def initialize(client)
-    super(:Listing, client)
+  def initialize(listing)
+    super(:Listing, listing)
   end
 
   def creator?(user)

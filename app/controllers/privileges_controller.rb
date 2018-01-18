@@ -6,24 +6,7 @@ class PrivilegesController < ApplicationController
 
   def permit
     @policy.authorize! :permit?
-    if params[:publisher_id].present?
-      publisher = Publisher.find(params[:publisher_id])
-      user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
-      respond_to do |format|
-        if policy_maker.permit!(
-          SubjectPolicyAgent.new(:User, user),
-          VerbPolicyAgent.new(:Role, :administrator),
-          ObjectPolicyAgent.new(:Publisher, publisher)
-        )
-          format.html { redirect_to publisher_path(publisher), notice: 'Privilege was successfully permitted.' }
-          format.json { head :no_content }
-        else
-          format.html { redirect_to publisher_path(publisher), notice: 'Privilege was NOT successfully permitted.' }
-          format.json { head :no_content }
-        end
-      end
-    elsif params[:newspaper_id].present?
+    if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
       policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
@@ -40,6 +23,39 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         end
       end
+    elsif params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      user = User.find(params[:user_id])
+      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      respond_to do |format|
+        if policy_maker.permit!(
+          UserPolicyAgent.new(user),
+          RolePolicyAgent.new(:administrator),
+          ObjectPolicyAgent.new(:Publisher, publisher)
+        )
+          format.html { redirect_to publisher_path(publisher), notice: 'Privilege was successfully permitted.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to publisher_path(publisher), notice: 'Privilege was NOT successfully permitted.' }
+          format.json { head :no_content }
+        end
+      end
+    elsif params[:user_id].present?
+      user = User.find(params[:user_id])
+      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      respond_to do |format|
+        if policy_maker.permit!(
+          UserPolicyAgent.new(user),
+          RolePolicyAgent.new(:administrator),
+          PolicyMaker::OBJECT_ANY
+        )
+          format.html { redirect_to users_path, notice: 'Privilege was successfully permitted.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to users_path, notice: 'Privilege was NOT successfully permitted.' }
+          format.json { head :no_content }
+        end
+      end
     else
       respond_to do |format|
         format.html { redirect_to root_path, notice: 'Privilege was NOT successfully permitted.' }
@@ -50,7 +66,24 @@ class PrivilegesController < ApplicationController
 
   def revoke
     @policy.authorize! :revoke?
-    if params[:publisher_id].present?
+    if params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      user = User.find(params[:user_id])
+      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      respond_to do |format|
+        if policy_maker.revoke!(
+          SubjectPolicyAgent.new(:User, user),
+          VerbPolicyAgent.new(:Role, :administrator),
+          ObjectPolicyAgent.new(:Newspaper, newspaper)
+        )
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was successfully revoked.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was NOT successfully revoked.' }
+          format.json { head :no_content }
+        end
+      end
+    elsif params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       user = User.find(params[:user_id])
       policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
@@ -67,20 +100,19 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         end
       end
-    elsif params[:newspaper_id].present?
-      newspaper = Newspaper.find(params[:newspaper_id])
+    elsif params[:user_id].present?
       user = User.find(params[:user_id])
       policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.revoke!(
-          SubjectPolicyAgent.new(:User, user),
-          VerbPolicyAgent.new(:Role, :administrator),
-          ObjectPolicyAgent.new(:Newspaper, newspaper)
+          UserPolicyAgent.new(user),
+          RolePolicyAgent.new(:administrator),
+          PolicyMaker::OBJECT_ANY
         )
-          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was successfully revoked.' }
+          format.html { redirect_to users_path, notice: 'Privilege was successfully revoked.' }
           format.json { head :no_content }
         else
-          format.html { redirect_to newspaper_path(newspaper), notice: 'Privilege was NOT successfully revoked.' }
+          format.html { redirect_to users_path, notice: 'Privilege was NOT successfully revoked.' }
           format.json { head :no_content }
         end
       end

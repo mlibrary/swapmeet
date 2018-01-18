@@ -26,9 +26,9 @@ RSpec.describe PolicyAgent do
     context 'entity' do
       it { is_expected.to eq entity.to_s }
       context 'respond_to?(:id)' do
-        let(:id) { double('id') }
+        let(:id) { 1 }
         before { allow(entity).to receive(:id).and_return(id) }
-        it { is_expected.to be id }
+        it { is_expected.to eq id.to_s }
       end
     end
   end

@@ -8,6 +8,7 @@ h1 Listing users
         tr
           th Name
           th Email
+          th Admin
           th Login
           th
           th
@@ -17,6 +18,16 @@ h1 Listing users
           tr
             td = user.display_name
             td = user.email
+            -if @policy.administrator_user?(user)
+              - if @policy.revoke_user?(user)
+                  td = link_to 'Revoke', revoke_user_privilege_path(user, 1), method: :delete
+              - else
+                  td Yes
+            - else
+              - if @policy.permit_user?(user)
+                  td = link_to 'Permit', permit_user_privilege_path(user, 1), method: :patch
+              - else
+                  td No
             td = link_to 'Login', login_path(user), method: :post
             - if @policy.show_user?(user)
                 td = link_to 'Show', user
