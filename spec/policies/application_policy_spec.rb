@@ -19,6 +19,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
       it do
         expect(subject.action?).to be false
         expect { subject.authorize!(:action?, nil) }.to raise_error(NotAuthorizedError)
+        expect { subject.authorize!(:action, nil) }.to raise_error(NoMethodError)
       end
     end
 
@@ -43,6 +44,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
       it do
         expect(subject.action?).to be true
         expect { subject.authorize!(:action?, nil) }.not_to raise_error
+        expect { subject.authorize!(:action, nil) }.to raise_error(NoMethodError)
       end
     end
   end
