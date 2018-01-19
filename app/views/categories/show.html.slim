@@ -12,8 +12,8 @@ p
   strong Title:&nbsp
   = @category.title
 
-- if @policy.edit?
-  => link_to 'Edit', edit_category_path(@category)
+- if @category.edit?
+  => link_to 'Edit', edit_category_path(@category.model)
   '|
 =< link_to 'Back', categories_path
 
@@ -23,4 +23,4 @@ p
   ul
     - @category.listings.each do |listing|
       li
-        = link_to listing.title, listing_path(listing)
+        = link_to listing.label, listing.model

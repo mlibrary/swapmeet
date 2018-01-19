@@ -10,10 +10,10 @@ p
   = @domain.display_name
 p
   strong Parent:&nbsp
-  = link_to @domain.parent&.display_name, domain_path(@domain.parent) if @domain.parent
+  = link_to @domain.parent.label, @domain.parent.model if @domain.parent.model.present?
 
-- if @policy.edit?
-  => link_to 'Edit', edit_domain_path(@domain)
+- if @domain.edit?
+  => link_to 'Edit', edit_domain_path(@domain.model)
   '|
 =< link_to 'Back', domains_path
 
@@ -23,7 +23,7 @@ p
   ul
   - @domain.children.each do |child|
     li
-      = link_to child.display_name, domain_path(child)
+      = link_to child.label, child.model
 
 - unless @domain.publishers.empty?
   hr
@@ -31,4 +31,4 @@ p
   ul
   - @domain.publishers.each do |publisher|
     li
-      = link_to publisher.display_name, publisher_path(publisher)
+      = link_to publisher.label, publisher.model

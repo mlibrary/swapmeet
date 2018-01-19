@@ -4,19 +4,23 @@ class PublishersController < ApplicationController
   def index
     @policy.authorize! :index?
     @publishers = Publisher.all
+    @publishers = @publishers.map { |publisher| PublisherPresenter.new(current_user, @policy, publisher) }
   end
 
   def show
     @policy.authorize! :show?
+    @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
   end
 
   def new
     @policy.authorize! :new?
     @publisher = Publisher.new
+    # @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
   end
 
   def edit
     @policy.authorize! :edit?
+    # @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
   end
 
   def create
@@ -27,7 +31,10 @@ class PublishersController < ApplicationController
         format.html { redirect_to @publisher, notice: 'Publisher was successfully created.' }
         format.json { render :show, status: :created, location: @publisher }
       else
-        format.html { render :new }
+        format.html do
+          # @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
+          render :new
+        end
         format.json { render json: @publisher.errors, status: :unprocessable_entity }
       end
     end
@@ -40,7 +47,10 @@ class PublishersController < ApplicationController
         format.html { redirect_to @publisher, notice: 'Publisher was successfully updated.' }
         format.json { render :show, status: :ok, location: @publisher }
       else
-        format.html { render :edit }
+        format.html do
+          # @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
+          render :edit
+        end
         format.json { render json: @publisher.errors, status: :unprocessable_entity }
       end
     end

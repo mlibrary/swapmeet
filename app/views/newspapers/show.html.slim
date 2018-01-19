@@ -10,10 +10,10 @@ p
   = @newspaper.display_name
 p
   strong Publisher:&nbsp
-  = link_to @newspaper.publisher&.display_name, publisher_path(@newspaper.publisher) if @newspaper.publisher
+  = link_to @newspaper.publisher.label, publisher_path(@newspaper.publisher.model)
 
-- if @policy.edit?
-  => link_to 'Edit', edit_newspaper_path(@newspaper)
+- if @newspaper.edit?
+  => link_to 'Edit', edit_newspaper_path(@newspaper.model)
   '|
 =< link_to 'Back', newspapers_path
 
@@ -23,25 +23,25 @@ h2 Listings
 ul
 - @newspaper.listings.each do |listing|
   li
-    = link_to listing.title, newspaper_listing_path(@newspaper, listing)
-= link_to 'Create Listing', new_newspaper_listing_path(@newspaper)
+    = link_to listing.label, newspaper_listing_path(@newspaper.model, listing.model)
+= link_to 'Create Listing', new_newspaper_listing_path(@newspaper.model)
 
 hr
 h2 Groups
 ul
 - @newspaper.groups.each do |group|
   li
-    = link_to group.display_name, group_path(group)
-= link_to 'Mange Groups', newspaper_groups_path(@newspaper)
+    = link_to group.label, group.model
+= link_to 'Mange Groups', newspaper_groups_path(@newspaper.model)
 
 hr
 h2 Users
 table
   thead
     tr
-      th Name
-      th Email
+      th User
       th Administrator
+      th
   tbody
   - if @newspaper.users.empty?
     tr
@@ -51,11 +51,10 @@ table
   - else
     - @newspaper.users.each do |user|
       tr
-        td = user.display_name
-        td = link_to user.email, user_path(user)
+        td = link_to user.label, user.model
         - if @newspaper.administrator?(user.id)
-          td = link_to 'revoke', revoke_newspaper_user_privilege_path(@newspaper, user, 1), method: :delete
+          td = link_to 'revoke', revoke_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :delete
         - else
-          td = link_to 'permit', permit_newspaper_user_privilege_path(@newspaper, user, 1), method: :patch
+          td = link_to 'permit', permit_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :patch
 
-= link_to 'Manage Users', newspaper_users_path(@newspaper)
+= link_to 'Manage Users', newspaper_users_path(@newspaper.model)

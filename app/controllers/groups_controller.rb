@@ -5,37 +5,44 @@ class GroupsController < ApplicationController
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
       @groups = Group.all
+      @groups = @groups.map { |group| GroupPresenter.new(current_user, @policy, group) }
       render "publishers/groups"
     else
       @policy.authorize! :index?
       @groups = Group.all
+      @groups = @groups.map { |group| GroupPresenter.new(current_user, @policy, group) }
       render
     end
   end
 
   def show
     @policy.authorize! :show?
+    @group = GroupPresenter.new(current_user, @policy, @group)
   end
 
   def new
     @policy.authorize! :new?
     @group = Group.new
+    # @group = GroupPresenter.new(current_user, @policy, @group)
   end
 
   def edit
     @policy.authorize! :edit?
+    # @group = GroupPresenter.new(current_user, @policy, @group)
   end
 
   def create
     @policy.authorize! :create?
     @group = Group.new(group_params)
-
     respond_to do |format|
       if @group.save
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render :show, status: :created, location: @group }
       else
-        format.html { render :new }
+        format.html do
+          # @group = GroupPresenter.new(current_user, @policy, @group)
+          render :new
+        end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
@@ -48,7 +55,10 @@ class GroupsController < ApplicationController
         format.html { redirect_to @group, notice: 'Group was successfully updated.' }
         format.json { render :show, status: :ok, location: @group }
       else
-        format.html { render :edit }
+        format.html do
+          # @group = GroupPresenter.new(current_user, @policy, @group)
+          render :edit
+        end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end

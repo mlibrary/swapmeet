@@ -24,54 +24,54 @@ RSpec.describe UsersPolicy, type: :policy do
       expect(subject.leave?).to be false
     end
 
-    context 'Recursion' do
-      let(:agent) { double('agent') }
-      let(:policy) { double('policy') }
-      let(:boolean) { double('boolean') }
-
-      before do
-        allow(UserPolicyAgent).to receive(:new).with(user).and_call_original
-        allow(UserPolicyAgent).to receive(:new).with(entity).and_return(agent)
-        allow(UsersPolicy).to receive(:new).with(entity_agent, user_agent).and_call_original
-        allow(UsersPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-      end
-
-      describe '#show_user?' do
-        before { allow(policy).to receive(:show?).and_return(boolean) }
-        it { expect(subject.show_user?(entity)).to eq boolean }
-      end
-
-      describe '#edit_user?' do
-        before { allow(policy).to receive(:edit?).and_return(boolean) }
-        it { expect(subject.edit_user?(entity)).to eq boolean }
-      end
-
-      describe '#destroy_user?' do
-        before { allow(policy).to receive(:destroy?).and_return(boolean) }
-        it { expect(subject.destroy_user?(entity)).to eq boolean }
-      end
-
-      describe '#administrator_user?' do
-        before { allow(agent).to receive(:administrator?).and_return(boolean) }
-        it { expect(subject.administrator_user?(entity)).to eq boolean }
-      end
-
-      describe '#permit_user?' do
-        before do
-          allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-          allow(policy).to receive(:permit?).and_return(boolean)
-        end
-        it { expect(subject.permit_user?(entity)).to eq boolean }
-      end
-
-      describe '#revoke_user?' do
-        before do
-          allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-          allow(policy).to receive(:revoke?).and_return(boolean)
-        end
-        it { expect(subject.revoke_user?(entity)).to eq boolean }
-      end
-    end
+    # context 'Recursion' do
+    #   let(:agent) { double('agent') }
+    #   let(:policy) { double('policy') }
+    #   let(:boolean) { double('boolean') }
+    #
+    #   before do
+    #     allow(UserPolicyAgent).to receive(:new).with(user).and_call_original
+    #     allow(UserPolicyAgent).to receive(:new).with(entity).and_return(agent)
+    #     allow(UsersPolicy).to receive(:new).with(entity_agent, user_agent).and_call_original
+    #     allow(UsersPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
+    #   end
+    #
+    #   describe '#show_user?' do
+    #     before { allow(policy).to receive(:show?).and_return(boolean) }
+    #     it { expect(subject.show_user?(entity)).to eq boolean }
+    #   end
+    #
+    #   describe '#edit_user?' do
+    #     before { allow(policy).to receive(:edit?).and_return(boolean) }
+    #     it { expect(subject.edit_user?(entity)).to eq boolean }
+    #   end
+    #
+    #   describe '#destroy_user?' do
+    #     before { allow(policy).to receive(:destroy?).and_return(boolean) }
+    #     it { expect(subject.destroy_user?(entity)).to eq boolean }
+    #   end
+    #
+    #   describe '#administrator_user?' do
+    #     before { allow(agent).to receive(:administrator?).and_return(boolean) }
+    #     it { expect(subject.administrator_user?(entity)).to eq boolean }
+    #   end
+    #
+    #   describe '#permit_user?' do
+    #     before do
+    #       allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
+    #       allow(policy).to receive(:permit?).and_return(boolean)
+    #     end
+    #     it { expect(subject.permit_user?(entity)).to eq boolean }
+    #   end
+    #
+    #   describe '#revoke_user?' do
+    #     before do
+    #       allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
+    #       allow(policy).to receive(:revoke?).and_return(boolean)
+    #     end
+    #     it { expect(subject.revoke_user?(entity)).to eq boolean }
+    #   end
+    # end
   end
 
   context 'User' do

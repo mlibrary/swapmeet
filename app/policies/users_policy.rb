@@ -34,31 +34,31 @@ class UsersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), object).grant?
   end
 
-  def show_user?(user)
-    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).show?
-  end
-
-  def edit_user?(user)
-    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).edit?
-  end
-
-  def destroy_user?(user)
-    UsersPolicy.new(@subject, UserPolicyAgent.new(user)).destroy?
-  end
-
-  def administrator_user?(user)
-    UserPolicyAgent.new(user).administrator?
-  end
-
-  def permit_user?(user)
-    return true if @subject.administrator?
-    PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).permit?
-  end
-
-  def revoke_user?(user)
-    return true if @subject.administrator?
-    PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).revoke?
-  end
+  # def show_user?(user)
+  #   UsersPolicy.new(@subject, UserPolicyAgent.new(user)).show?
+  # end
+  #
+  # def edit_user?(user)
+  #   UsersPolicy.new(@subject, UserPolicyAgent.new(user)).edit?
+  # end
+  #
+  # def destroy_user?(user)
+  #   UsersPolicy.new(@subject, UserPolicyAgent.new(user)).destroy?
+  # end
+  #
+  # def administrator_user?(user)
+  #   UserPolicyAgent.new(user).administrator?
+  # end
+  #
+  # def permit_user?(user)
+  #   return true if @subject.administrator?
+  #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).permit?
+  # end
+  #
+  # def revoke_user?(user)
+  #   return true if @subject.administrator?
+  #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).revoke?
+  # end
 
   def join?
     return false unless @subject.client_type == :User.to_s
