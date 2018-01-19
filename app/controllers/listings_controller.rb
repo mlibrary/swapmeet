@@ -30,10 +30,12 @@ class ListingsController < ApplicationController
     end
 
     @listings ||= Listing.all
+    @listings = @listings.map { |listing| ListingPresenter.new(current_user, @policy, listing) }
   end
 
   def show
     @policy.authorize! :show?
+    @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def new
@@ -45,6 +47,7 @@ class ListingsController < ApplicationController
       @policy.authorize! :new?
       @listing = Listing.new
     end
+    @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def edit
@@ -54,6 +57,7 @@ class ListingsController < ApplicationController
     else
       @policy.authorize! :edit?
     end
+    @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def create
@@ -66,7 +70,10 @@ class ListingsController < ApplicationController
         format.html { redirect_to @listing, notice: 'Listing was successfully created.' }
         format.json { render :show, status: :created, location: @listing }
       else
-        format.html { render :new }
+        format.html do
+          @listing = ListingPresenter.new(current_user, @policy, @listing)
+          render :new
+        end
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
@@ -79,7 +86,10 @@ class ListingsController < ApplicationController
         format.html { redirect_to @listing, notice: 'Listing was successfully updated.' }
         format.json { render :show, status: :ok, location: @listing }
       else
-        format.html { render :edit }
+        format.html do
+          @listing = ListingPresenter.new(current_user, @policy, @listing)
+          render :edit
+        end
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end

@@ -2,10 +2,8 @@
 
 class Listing < ApplicationRecord
   belongs_to :owner, class_name: 'User'
-  belongs_to :newspaper, optional: true
+  belongs_to :newspaper
   belongs_to :category
-
-  def owner
-    super || User.nobody
-  end
+  validates :title, presence: true, allow_blank: false
+  validates :body, presence: true, allow_blank: false
 end
