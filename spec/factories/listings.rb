@@ -5,5 +5,7 @@ FactoryBot.define do
     title "title"
     body "body"
     category { create(:category) }
+    newspaper { create(:newspaper) }
+    owner { create(:user) }
   end
 end

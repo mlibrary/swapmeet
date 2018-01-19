@@ -22,15 +22,15 @@ h1 Office Gear Swap Meet!
           td = form.submit 'Filter'
           td
           td
-        - @listings.each do |listing|
+          - @listings.each do |listing|
             tr
-              td = listing.title
-              td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
-              td = user_display_name_link(listing.owner)
-              td = listing.category&.title
-              td = link_to 'Show', listing if @policy.show?
-              td = link_to 'Edit', edit_listing_path(listing) if @policy.edit_listing?(listing)
-              td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete if @policy.destroy_listing?(listing)
+              td = link_to listing.label, listing.model
+              td = link_to listing.newspaper.label, newspaper_path(listing.newspaper.model)
+              td = link_to_if listing.owner.show?, listing.owner.label, controller: 'users', action: 'show', id: listing.owner.model
+              td = listing.category.label
+              td = link_to 'Show', listing.model if listing.show?
+              td = link_to 'Edit', edit_listing_path(listing.model) if listing.edit?
+              td = link_to 'Destroy', listing.model, data: { confirm: 'Are you sure?' }, method: :delete if listing.destroy?
 
 br
 
