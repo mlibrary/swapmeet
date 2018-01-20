@@ -10,5 +10,5 @@ RSpec.describe ApplicationPresenter do
   let(:policy) { double('policy') }
   let(:model) { double('model') }
 
-  it { is_expected.not_to be_nil }
+  it { is_expected.to be_a(described_class) }
 end

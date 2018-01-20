@@ -6,8 +6,7 @@ h1 Listing domains
     table
       thead
         tr
-          th Name
-          th Display name
+          th Domain
           th Parent
           th
           th
@@ -16,15 +15,11 @@ h1 Listing domains
       tbody
         - @domains.each do |domain|
             tr
-              td = domain.name
-              td = domain.display_name
-              td = link_to domain.parent&.display_name, domain_path(domain.parent) if domain.parent
-              - if @policy.show?
-                  td = link_to 'Show', domain
-              - if @policy.edit?
-                  td = link_to 'Edit', edit_domain_path(domain)
-              - if @policy.destroy?
-                  td = link_to 'Destroy', domain, data: { confirm: 'Are you sure?' }, method: :delete
+              td = link_to domain.label, domain.model if domain.show?
+              td = link_to domain.parent.label, domain.parent.model if domain.parent.model.present?
+              td = link_to 'Show', domain.model if domain.show?
+              td = link_to 'Edit', edit_domain_path(domain.model) if domain.edit?
+              td = link_to 'Destroy', domain.model, data: { confirm: 'Are you sure?' }, method: :delete if domain.destroy?
 
 br
 

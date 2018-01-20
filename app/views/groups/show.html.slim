@@ -10,13 +10,13 @@ p
   = @group.display_name
 p
   strong Parent:&nbsp
-  = link_to @group.parent&.display_name, group_path(@group.parent) if @group.parent
+  = link_to @group.parent.label, @group.parent.model if @group.parent.model.present?
 
-- if @policy.edit?
-  => link_to 'Edit', edit_group_path(@group)
+- if @group.edit?
+  => link_to 'Edit', edit_group_path(@group.model)
   '|
-- if @policy.destroy?
-  =<> link_to 'Delete', @group, data: { confirm: 'Are you sure?' }, method: :delete
+- if @group.destroy?
+  =<> link_to 'Delete', @group.model, data: { confirm: 'Are you sure?' }, method: :delete
   '|
 =< link_to 'Back', groups_path
 
@@ -26,7 +26,7 @@ p
   ul
   - @group.children.each do |child|
       li
-        = link_to child.display_name, group_path(child)
+        = link_to child.label, child.model
 
 - unless @group.users.empty?
   hr
@@ -34,7 +34,7 @@ p
   ul
   - @group.users.each do |user|
       li
-        = link_to user.display_name, user_path(user)
+        = link_to user.label, user.model
 
 - unless @group.publishers.empty?
   hr
@@ -42,7 +42,7 @@ p
   ul
   - @group.publishers.each do |publisher|
     li
-      => link_to publisher.display_name, publisher_path(publisher)
-      - if @policy.remove?
+      => link_to publisher.label, publisher.model
+      - if @group.remove?
         =<> ' '
-        =< link_to 'Remove', remove_publisher_group_path(publisher, @group), method: :delete
+        =< link_to 'Remove', remove_publisher_group_path(publisher.model, @group.model), method: :delete

@@ -4,19 +4,23 @@ class DomainsController < ApplicationController
   def index
     @policy.authorize! :index?
     @domains = Domain.all
+    @domains = @domains.map { |domain| DomainPresenter.new(current_user, @policy, domain) }
   end
 
   def show
     @policy.authorize! :show?
+    @domain = DomainPresenter.new(current_user, @policy, @domain)
   end
 
   def new
     @policy.authorize! :new?
     @domain = Domain.new
+    # @domain = DomainPresenter.new(current_user, @policy, @domain)
   end
 
   def edit
     @policy.authorize! :edit?
+    # @domain = DomainPresenter.new(current_user, @policy, @domain)
   end
 
   def create
@@ -27,7 +31,10 @@ class DomainsController < ApplicationController
         format.html { redirect_to @domain, notice: 'Domain was successfully created.' }
         format.json { render :show, status: :created, location: @domain }
       else
-        format.html { render :new }
+        format.html do
+          # @domain = DomainPresenter.new(current_user, @policy, @domain)
+          render :new
+        end
         format.json { render json: @domain.errors, status: :unprocessable_entity }
       end
     end
@@ -40,7 +47,10 @@ class DomainsController < ApplicationController
         format.html { redirect_to @domain, notice: 'Domain was successfully updated.' }
         format.json { render :show, status: :ok, location: @domain }
       else
-        format.html { render :edit }
+        format.html do
+          # @domain = DomainPresenter.new(current_user, @policy, @domain)
+          render :edit
+        end
         format.json { render json: @domain.errors, status: :unprocessable_entity }
       end
     end

@@ -5,29 +5,35 @@ class UsersController < ApplicationController
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
       @users = User.order(email: :asc)
+      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
       render "publishers/users"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
       @users = User.order(email: :asc)
+      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
       render "newspapers/users"
     else
       @policy.authorize! :index?
       @users = User.order(email: :asc)
+      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
       render
     end
   end
 
   def show
     @policy.authorize! :show?
+    @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def new
     @policy.authorize! :new?
     @user = User.new
+    # @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def edit
     @policy.authorize! :edit?
+    # @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def create
@@ -38,7 +44,10 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+        format.html do
+          # @user = UserPresenter.new(current_user, @policy, @user)
+          render :new
+        end
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -51,7 +60,10 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
-        format.html { render :edit }
+        format.html do
+          # @user = UserPresenter.new(current_user, @policy, @user)
+          render :edit
+        end
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

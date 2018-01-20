@@ -25,8 +25,8 @@ h1 Office Gear Swap Meet!
           - @listings.each do |listing|
             tr
               td = link_to listing.label, listing.model
-              td = link_to listing.newspaper.label, newspaper_path(listing.newspaper.model)
-              td = link_to_if listing.owner.show?, listing.owner.label, controller: 'users', action: 'show', id: listing.owner.model
+              td = link_to listing.newspaper.label, listing.newspaper.model
+              td = link_to_if listing.owner.show?, listing.owner.label, listing.owner.model
               td = listing.category.label
               td = link_to 'Show', listing.model if listing.show?
               td = link_to 'Edit', edit_listing_path(listing.model) if listing.edit?

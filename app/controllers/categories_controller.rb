@@ -4,19 +4,23 @@ class CategoriesController < ApplicationController
   def index
     @policy.authorize! :index?
     @categories = Category.all
+    @categories = @categories.map { |category| CategoryPresenter.new(current_user, @policy, category) }
   end
 
   def show
     @policy.authorize! :show?
+    @category = CategoryPresenter.new(current_user, @policy, @category)
   end
 
   def new
     @policy.authorize! :new?
     @category = Category.new
+    # @category = CategoryPresenter.new(current_user, @policy, @category)
   end
 
   def edit
     @policy.authorize! :edit?
+    # @category = CategoryPresenter.new(current_user, @policy, @category)
   end
 
   def create
@@ -27,7 +31,10 @@ class CategoriesController < ApplicationController
         format.html { redirect_to @category, notice: 'Category was successfully created.' }
         format.json { render :show, status: :created, location: @category }
       else
-        format.html { render :new }
+        format.html do
+          # @category = CategoryPresenter.new(current_user, @policy, @category)
+          render :new
+        end
         format.json { render json: @category.errors, status: :unprocessable_entity }
       end
     end
@@ -40,7 +47,10 @@ class CategoriesController < ApplicationController
         format.html { redirect_to @category, notice: 'Category was successfully updated.' }
         format.json { render :show, status: :ok, location: @category }
       else
-        format.html { render :edit }
+        format.html do
+          # @category = CategoryPresenter.new(current_user, @policy, @category)
+          render :edit
+        end
         format.json { render json: @category.errors, status: :unprocessable_entity }
       end
     end
