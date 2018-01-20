@@ -26,25 +26,6 @@ RSpec.describe Publisher, type: :model do
     end
   end
 
-  describe '#administrator?' do
-    subject { publisher.administrator?(user) }
-    let(:publisher) { described_class.new }
-    let(:user) { double('user') }
-    let(:policy_resolver) { double('policy_resolver') }
-    let(:user_agent) { double('user_agent') }
-    let(:role_agent) { double('role agent') }
-    let(:publisher_agent) { double('publisher_agent') }
-    let(:boolean) { double('boolean') }
-    before do
-      allow(PolicyResolver).to receive(:new).with(user_agent, role_agent, publisher_agent).and_return(policy_resolver)
-      allow(UserPolicyAgent).to receive(:new).with(user).and_return(user_agent)
-      allow(RolePolicyAgent).to receive(:new).with(:administrator).and_return(role_agent)
-      allow(ObjectPolicyAgent).to receive(:new).with(:Publisher, publisher).and_return(publisher_agent)
-      allow(policy_resolver).to receive(:grant?).and_return(boolean)
-    end
-    it { is_expected.to be boolean }
-  end
-
   describe '#user?' do
     subject { publisher.user?(user) }
     let(:publisher) { described_class.new }

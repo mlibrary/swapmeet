@@ -4,7 +4,11 @@ class DomainsController < ApplicationController
   def index
     @policy.authorize! :index?
     @domains = Domain.all
-    @domains = @domains.map { |domain| DomainPresenter.new(current_user, @policy, domain) }
+    @domains = @domains.map do |domain|
+      DomainPresenter.new(current_user,
+                          DomainsPolicy.new(@policy.subject, DomainPolicyAgent.new(domain)),
+                          domain)
+    end
   end
 
   def show
@@ -69,7 +73,7 @@ class DomainsController < ApplicationController
     # Authorization Policy
     def new_policy
       @domain = Domain.find(params[:id]) if params[:id].present?
-      DomainsPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Doamin, @domain))
+      DomainsPolicy.new(SubjectPolicyAgent.new(:User, current_user), DomainPolicyAgent.new(@domain))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

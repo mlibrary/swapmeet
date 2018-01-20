@@ -1,18 +1,23 @@
 # frozen_string_literal: true
 
 class PolicyMaker
+  # Agent
   AGENT_ANY = PolicyAgent.new(nil, nil)
-  # Subject Agents
+
+  # Subject Agent
   SUBJECT_ANY = SubjectPolicyAgent.new(nil, nil)
-  USER_ANY = UserPolicyAgent.new(nil)
+
   # Verb Agents
   VERB_ANY = VerbPolicyAgent.new(nil, nil)
   ACTION_ANY = ActionPolicyAgent.new(nil)
   POLICY_ANY = PolicyPolicyAgent.new(nil)
   POLICY_PERMIT = PolicyPolicyAgent.new(:permit)
   POLICY_REVOKE = PolicyPolicyAgent.new(:revoke)
+  ROLE_ADMINISTRATOR = RolePolicyAgent.new(:administrator)
+
   # Object Agents
   OBJECT_ANY = ObjectPolicyAgent.new(nil, nil)
+  USER_ANY = UserPolicyAgent.new(nil)
   LISTING_ANY = ListingPolicyAgent.new(nil)
 
   attr_reader :requestor
@@ -68,7 +73,8 @@ class PolicyMaker
 
     def grant?(policy, object)
       grant = false
-      grant ||= UserPolicyAgent.new(requestor.client).administrator? if requestor.client_type == :User.to_s
+      # grant ||= SubjectPolicyAgent.new(requestor.client_type, requestor.client).administrator?
+      grant ||= PolicyResolver.new(requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
       grant ||= PolicyResolver.new(requestor, policy, object).grant?
       grant
     end

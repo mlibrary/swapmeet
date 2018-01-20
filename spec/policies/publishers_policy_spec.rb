@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe PublishersPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
-  let(:publisher_agent) { ObjectPolicyAgent.new(:Publisher, publisher) }
+  let(:publisher_agent) { PublisherPolicyAgent.new(publisher) }
   let(:publisher) { double('publisher') }
 
   context 'Entity' do
@@ -26,7 +26,7 @@ RSpec.describe PublishersPolicy, type: :policy do
   context 'User' do
     subject { described_class.new(user_agent, publisher_agent) }
 
-    let(:user_agent) { UserPolicyAgent.new(user) }
+    let(:user_agent) { SubjectPolicyAgent.new(:User, user) }
     let(:user) { double('user') }
 
     before do
@@ -55,7 +55,7 @@ RSpec.describe PublishersPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
         let(:requestor) { double('requestor') }
 
         before do

@@ -6,8 +6,7 @@ RSpec.describe PolicyMaker do
   subject { policy_maker }
 
   let(:policy_maker) { described_class.new(requestor_agent) }
-  let(:requestor_agent) { RequestorPolicyAgent.new(:User, user) }
-  let(:user) { double('user') }
+  let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, :requestor) }
   let(:subject_agent) { SubjectPolicyAgent.new(:Subject, :subject) }
   let(:verb_agent) { VerbPolicyAgent.new(:Verb, :verb) }
   let(:object_agent) { ObjectPolicyAgent.new(:Object, :object) }
@@ -87,10 +86,15 @@ RSpec.describe PolicyMaker do
     end
 
     context 'administrator' do
-      let(:user_agent) { double('user agent') }
       before do
-        allow(UserPolicyAgent).to receive(:new).with(user).and_return(user_agent)
-        allow(user_agent).to receive(:administrator?).and_return(true)
+        Gatekeeper.new(
+          subject_type: requestor_agent.client_type,
+          subject_id: requestor_agent.client_id,
+          verb_type: PolicyMaker::ROLE_ADMINISTRATOR.client_type,
+          verb_id: PolicyMaker::ROLE_ADMINISTRATOR.client_id,
+          object_type: PolicyMaker::OBJECT_ANY.client_type,
+          object_id: PolicyMaker::OBJECT_ANY.client_id
+        ).save!
       end
       it do
         expect(policy_maker.exist?(subject_agent, verb_agent, object_agent)).to be false

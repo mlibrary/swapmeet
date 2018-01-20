@@ -11,14 +11,14 @@ class DomainPresenter < ApplicationPresenter
 
   def parent
     DomainPresenter.new(user, DomainsPolicy.new(policy.subject,
-                                              ObjectPolicyAgent.new(:Domain, model.parent)),
+                                              DomainPolicyAgent.new(model.parent)),
                        model.parent)
   end
 
   def children
     model.children.map do |child|
       DomainPresenter.new(user, DomainsPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Domain, child)),
+                                                DomainPolicyAgent.new(child)),
                          child)
     end
   end
@@ -26,7 +26,7 @@ class DomainPresenter < ApplicationPresenter
   def publishers
     model.publishers.map do |publisher|
       PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        ObjectPolicyAgent.new(:Publisher, publisher)),
+                                                        PublisherPolicyAgent.new(publisher)),
                              publisher)
     end
   end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe GroupsPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
-  let(:group_agent) { ObjectPolicyAgent.new(:Group, group) }
+  let(:group_agent) { GroupPolicyAgent.new(group) }
   let(:group) { double('group') }
 
   context 'Entity' do
@@ -28,7 +28,7 @@ RSpec.describe GroupsPolicy, type: :policy do
   context 'User' do
     subject { described_class.new(user_agent, group_agent) }
 
-    let(:user_agent) { UserPolicyAgent.new(user) }
+    let(:user_agent) { SubjectPolicyAgent.new(:User, user) }
     let(:user) { double('user') }
 
     before do
@@ -61,7 +61,7 @@ RSpec.describe GroupsPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
         let(:requestor) { double('requestor') }
 
         before do

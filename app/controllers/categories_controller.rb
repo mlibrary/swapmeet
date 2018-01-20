@@ -4,7 +4,11 @@ class CategoriesController < ApplicationController
   def index
     @policy.authorize! :index?
     @categories = Category.all
-    @categories = @categories.map { |category| CategoryPresenter.new(current_user, @policy, category) }
+    @categories = @categories.map do |category|
+      CategoryPresenter.new(current_user,
+                            CategoriesPolicy.new(@policy.subject, CategoryPolicyAgent.new(category)),
+                            category)
+    end
   end
 
   def show
@@ -69,7 +73,7 @@ class CategoriesController < ApplicationController
     # Authorization Policy
     def new_policy
       @category = Category.find(params[:id]) if params[:id].present?
-      CategoriesPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Category, @category))
+      CategoriesPolicy.new(SubjectPolicyAgent.new(:User, current_user), CategoryPolicyAgent.new(@category))
     end
 
     # # Never trust parameters from the scary internet, only allow the white list through.

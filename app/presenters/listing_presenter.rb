@@ -11,14 +11,14 @@ class ListingPresenter < ApplicationPresenter
   def category
     CategoryPresenter.new(user,
                           CategoriesPolicy.new(policy.subject,
-                                               ObjectPolicyAgent.new(:Category, model.category)),
+                                               CategoryPolicyAgent.new(model.category)),
                           model.category)
   end
 
   def newspaper
     NewspaperPresenter.new(user,
                            NewspapersPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Newspaper, model.newspaper)),
+                                                NewspaperPolicyAgent.new(model.newspaper)),
                            model.newspaper)
   end
 

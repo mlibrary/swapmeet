@@ -1,22 +1,26 @@
 # frozen_string_literal: true
 
 class UserPresenter < ApplicationPresenter
+  def administrator?
+    policy.object.administrator?
+  end
+
+  def permit?
+    return true if policy.subject.administrator?
+    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).permit?
+    false
+  end
+
+  def revoke?
+    return true if policy.subject.administrator?
+    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).revoke?
+    false
+  end
+
   def label
     return display_name if display_name.present?
     'USER'
   end
-
-  delegate :administrator?, :permit?, :revoke?, to: :policy
-
-  # def permit?
-  #   return true if policy.subject.administrator?
-  #   PrivilegesPolicy.new(policy.subject, policy.object).permit?
-  # end
-  #
-  # def revoke?
-  #   return true if policy.subject.administrator?
-  #   PrivilegesPolicy.new(policy.subject, policy.object).revoke?
-  # end
 
   delegate :username, :display_name, :email, to: :model
 
@@ -31,7 +35,7 @@ class UserPresenter < ApplicationPresenter
   def publishers
     model.publishers.map do |publisher|
       PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        ObjectPolicyAgent.new(:Publisher, publisher)),
+                                                        PublisherPolicyAgent.new(publisher)),
                              publisher)
     end
   end
@@ -39,7 +43,7 @@ class UserPresenter < ApplicationPresenter
   def newspapers
     model.newspapers.map do |newspaper|
       NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                        ObjectPolicyAgent.new(:Newspaper, newspaper)),
+                                                        NewspaperPolicyAgent.new(newspaper)),
                              newspaper)
     end
   end
@@ -47,7 +51,7 @@ class UserPresenter < ApplicationPresenter
   def groups
     model.groups.map do |group|
       GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Group, group)),
+                                                GroupPolicyAgent.new(group)),
                          group)
     end
   end

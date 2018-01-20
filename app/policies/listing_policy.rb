@@ -21,21 +21,15 @@ class ListingPolicy < ApplicationPolicy
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @object.creator?(@subject.client)
-    PolicyResolver.new(subject, ActionPolicyAgent.new(:update), object).grant?
+    return true if @subject.administrator?
+    PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
 
   def destroy?
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @object.creator?(@subject.client)
-    PolicyResolver.new(subject, ActionPolicyAgent.new(:destroy), object).grant?
-  end
-
-  def edit_listing?(listing)
-    ListingPolicy.new(@subject, ListingPolicyAgent.new(listing)).edit?
-  end
-
-  def destroy_listing?(listing)
-    ListingPolicy.new(@subject, ListingPolicyAgent.new(listing)).destroy?
+    return true if @subject.administrator?
+    PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), @object).grant?
   end
 end

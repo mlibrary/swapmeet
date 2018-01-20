@@ -4,13 +4,24 @@ class GroupsController < ApplicationController
   def index
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
+      @publisher = PublisherPresenter.new(current_user,
+                                          PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(@publisher)),
+                                          @publisher)
       @groups = Group.all
-      @groups = @groups.map { |group| GroupPresenter.new(current_user, @policy, group) }
+      @groups = @groups.map do |group|
+        GroupPresenter.new(current_user,
+                            GroupsPolicy.new(@policy.subject, GroupPolicyAgent.new(group)),
+                            group)
+      end
       render "publishers/groups"
     else
       @policy.authorize! :index?
       @groups = Group.all
-      @groups = @groups.map { |group| GroupPresenter.new(current_user, @policy, group) }
+      @groups = @groups.map do |group|
+        GroupPresenter.new(current_user,
+                            GroupsPolicy.new(@policy.subject, GroupPolicyAgent.new(group)),
+                            group)
+      end
       render
     end
   end
@@ -109,7 +120,7 @@ class GroupsController < ApplicationController
     # Authorization Policy
     def new_policy
       @group = Group.find(params[:id]) if params[:id].present?
-      GroupsPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Group, @group))
+      GroupsPolicy.new(SubjectPolicyAgent.new(:User, current_user), GroupPolicyAgent.new(@group))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

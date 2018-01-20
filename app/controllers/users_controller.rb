@@ -5,17 +5,29 @@ class UsersController < ApplicationController
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
       @users = User.order(email: :asc)
-      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
+      @users = @users.map do |user|
+        UserPresenter.new(current_user,
+                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
+                          user)
+      end
       render "publishers/users"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
       @users = User.order(email: :asc)
-      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
+      @users = @users.map do |user|
+        UserPresenter.new(current_user,
+                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
+                          user)
+      end
       render "newspapers/users"
     else
       @policy.authorize! :index?
       @users = User.order(email: :asc)
-      @users = @users.map { |user| UserPresenter.new(current_user, @policy, user) }
+      @users = @users.map do |user|
+        UserPresenter.new(current_user,
+                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
+                          user)
+      end
       render
     end
   end
@@ -169,7 +181,7 @@ class UsersController < ApplicationController
     # Authorization Policy
     def new_policy
       @user = User.find(params[:id]) if params[:id].present?
-      UsersPolicy.new(UserPolicyAgent.new(current_user), UserPolicyAgent.new(@user))
+      UsersPolicy.new(SubjectPolicyAgent.new(:User, current_user), UserPolicyAgent.new(@user))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

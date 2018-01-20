@@ -28,7 +28,7 @@ RSpec.describe PrivilegesPolicy, type: :policy do
   context 'User' do
     subject { described_class.new(user_agent, priviliege_agent) }
 
-    let(:user_agent) { UserPolicyAgent.new(user) }
+    let(:user_agent) { SubjectPolicyAgent.new(:User, user) }
     let(:user) { double('user') }
 
     before do
@@ -61,7 +61,7 @@ RSpec.describe PrivilegesPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
         let(:requestor) { double('requestor') }
 
         before do

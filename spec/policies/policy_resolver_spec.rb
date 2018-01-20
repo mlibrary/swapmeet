@@ -29,7 +29,7 @@ RSpec.describe PolicyResolver do
 
     context 'non-empty table without null row gives selective access' do
       let(:policy_maker) { PolicyMaker.new(requestor) }
-      let(:requestor) { RequestorPolicyAgent.new(:Requestor, :requestor) }
+      let(:requestor) { SubjectPolicyAgent.new(:Requestor, :requestor) }
       let(:any) { PolicyAgent.new(nil, nil) }
 
       before do

@@ -77,7 +77,7 @@ RSpec.describe UsersPolicy, type: :policy do
   context 'User' do
     subject { described_class.new(current_user_agent, user_agent) }
 
-    let(:current_user_agent) { UserPolicyAgent.new(current_user) }
+    let(:current_user_agent) { SubjectPolicyAgent.new(:User, current_user) }
     let(:current_user) { double('current user') }
 
     before do
@@ -110,7 +110,7 @@ RSpec.describe UsersPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
         let(:requestor) { double('requestor') }
 
         before do

@@ -10,14 +10,14 @@ class GroupPresenter < ApplicationPresenter
 
   def parent
     GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                              ObjectPolicyAgent.new(:Group, model.parent)),
+                                              GroupPolicyAgent.new(model.parent)),
                        model.parent)
   end
 
   def children
     model.children.map do |child|
       GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Group, child)),
+                                                GroupPolicyAgent.new(child)),
                          child)
     end
   end
@@ -25,7 +25,7 @@ class GroupPresenter < ApplicationPresenter
   def publishers
     model.publishers.map do |publisher|
       PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        ObjectPolicyAgent.new(:Publisher, publisher)),
+                                                        PublisherPolicyAgent.new(publisher)),
                              publisher)
     end
   end
@@ -33,7 +33,7 @@ class GroupPresenter < ApplicationPresenter
   def newspapers
     model.newspapers.map do |newspaper|
       NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                        ObjectPolicyAgent.new(:Newspaper, newspaper)),
+                                                        NewspaperPolicyAgent.new(newspaper)),
                              newspaper)
     end
   end

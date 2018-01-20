@@ -33,23 +33,13 @@ RSpec.describe ListingPolicy, type: :policy do
         allow(ListingPolicy).to receive(:new).with(entity_agent, listing_agent).and_call_original
         allow(ListingPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
       end
-
-      describe '#edit_listing?' do
-        before { allow(policy).to receive(:edit?).and_return(boolean) }
-        it { expect(subject.edit_listing?(entity)).to eq boolean }
-      end
-
-      describe '#destroy_listing?' do
-        before { allow(policy).to receive(:destroy?).and_return(boolean) }
-        it { expect(subject.destroy_listing?(entity)).to eq boolean }
-      end
     end
   end
 
   context 'User' do
     subject { described_class.new(user_agent, listing_agent) }
 
-    let(:user_agent) { UserPolicyAgent.new(user) }
+    let(:user_agent) { SubjectPolicyAgent.new(:User, user) }
     let(:user) { double('user') }
 
     before do
@@ -93,7 +83,7 @@ RSpec.describe ListingPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
         let(:requestor) { double('requestor') }
 
         before do
