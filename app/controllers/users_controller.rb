@@ -2,18 +2,21 @@
 
 class UsersController < ApplicationController
   def index
+    @policy.authorize! :index?
+
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(@publisher)), @publisher)
       @users = User.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
       render "publishers/users"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
+      @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new(@policy.subject, NewspaperPolicyAgent.new(@newspaper)), @newspaper)
       @users = User.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
       render "newspapers/users"
     else
-      @policy.authorize! :index?
       @users = User.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
       render
@@ -81,8 +84,8 @@ class UsersController < ApplicationController
   def add
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
-      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-      publisher_policy.authorize! :add?, publisher
+      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(publisher))
+      publisher_policy.authorize! :add?
       publisher.users << @user
       respond_to do |format|
         format.html { redirect_to publisher_users_path(publisher), notice: 'User was successfully added..' }
@@ -90,8 +93,8 @@ class UsersController < ApplicationController
       end
     elsif params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
-      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
-      newspaper_policy.authorize! :add?, newspaper
+      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), NewspaperPolicyAgent.new(newspaper))
+      newspaper_policy.authorize! :add?
       newspaper.users << @user
       respond_to do |format|
         format.html { redirect_to newspaper_users_path(newspaper), notice: 'User was successfully added..' }

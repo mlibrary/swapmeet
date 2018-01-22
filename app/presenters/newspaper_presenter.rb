@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class NewspaperPresenter < ApplicationPresenter
+  def administrator?(user)
+    policy.administrator?(user.policy.object)
+  end
+
+  def permit?(user)
+    policy.revoke?(user.policy.object)
+  end
+
+  def revoke?(user)
+    policy.revoke?(user.policy.object)
+  end
+
   def label
     return display_name if display_name.present?
     'NEWSPAPER'
@@ -37,5 +49,9 @@ class NewspaperPresenter < ApplicationPresenter
                                                UserPolicyAgent.new(usr)),
                         usr)
     end
+  end
+
+  def has_user?(user)
+    model.has_user?(user.model)
   end
 end

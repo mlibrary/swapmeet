@@ -40,6 +40,7 @@ table
   thead
     tr
       th User
+      th Email
       th Administrator
       th
   tbody
@@ -52,9 +53,16 @@ table
     - @newspaper.users.each do |user|
       tr
         td = link_to user.label, user.model
-        - if @newspaper.administrator?(user.id)
-          td = link_to 'revoke', revoke_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :delete
+        td = user.email
+        - if @newspaper.administrator?(user)
+          - if @newspaper.revoke?(user)
+            td = link_to 'revoke', revoke_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :delete
+          - else
+            td Yes
         - else
-          td = link_to 'permit', permit_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :patch
+          - if @newspaper.permit?(user)
+            td = link_to 'permit', permit_newspaper_user_privilege_path(@newspaper.model, user.model, 1), method: :patch
+          - else
+            td No
 
 = link_to 'Manage Users', newspaper_users_path(@newspaper.model)
