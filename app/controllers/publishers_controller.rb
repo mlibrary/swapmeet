@@ -4,11 +4,7 @@ class PublishersController < ApplicationController
   def index
     @policy.authorize! :index?
     @publishers = Publisher.all
-    @publishers = @publishers.map do |publisher|
-      PublisherPresenter.new(current_user,
-                          PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(publisher)),
-                          publisher)
-    end
+    @publishers = PublishersPresenter.new(current_user, @policy, @publishers)
   end
 
   def show

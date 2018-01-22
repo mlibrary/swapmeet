@@ -30,9 +30,9 @@ h1 Listing users
                   td No
             td = link_to 'Login', login_path(user.model), method: :post
             td = link_to 'Show', user.model if user.show?
-            td = link_to 'Edit', edit_user_path(user.model) if @policy.edit?
+            td = link_to 'Edit', edit_user_path(user.model) if user.edit?
             td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
 br
 
-- if @policy.new?
+- if @users.new?
     = link_to 'New User', new_user_path
