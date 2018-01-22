@@ -9,7 +9,7 @@ class PrivilegesController < ApplicationController
     if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.permit!(
           SubjectPolicyAgent.new(:User, user),
@@ -26,10 +26,10 @@ class PrivilegesController < ApplicationController
     elsif params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.permit!(
-          UserPolicyAgent.new(user),
+          SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           ObjectPolicyAgent.new(:Publisher, publisher)
         )
@@ -42,10 +42,10 @@ class PrivilegesController < ApplicationController
       end
     elsif params[:user_id].present?
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.permit!(
-          UserPolicyAgent.new(user),
+          SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PolicyMaker::OBJECT_ANY
         )
@@ -69,7 +69,7 @@ class PrivilegesController < ApplicationController
     if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.revoke!(
           SubjectPolicyAgent.new(:User, user),
@@ -86,7 +86,7 @@ class PrivilegesController < ApplicationController
     elsif params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.revoke!(
           SubjectPolicyAgent.new(:User, user),
@@ -102,10 +102,10 @@ class PrivilegesController < ApplicationController
       end
     elsif params[:user_id].present?
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(RequestorPolicyAgent.new(:User, current_user))
+      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
         if policy_maker.revoke!(
-          UserPolicyAgent.new(user),
+          SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PolicyMaker::OBJECT_ANY
         )
@@ -128,7 +128,7 @@ class PrivilegesController < ApplicationController
     # Authorization Policy
     def new_policy
       @privilege = Privilege.new(id: params[:id], requestor: current_user)
-      PrivilegesPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
+      PrivilegesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

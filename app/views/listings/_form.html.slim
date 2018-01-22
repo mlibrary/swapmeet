@@ -8,19 +8,18 @@
 
   .field
     = f.label :category
-    = f.collection_select :category_id, Category.all, :id, :name, prompt: "Select a Category"
+    = f.select :category_id, @filter.categories, prompt: "Select a Category"
   .field
     = f.label :title
-    = f.text_field :title, id: :listing_title
+    = f.text_field :title
   .field
     = f.label :body
-    = f.text_field :body, id: :listing_body
+    = f.text_field :body
   .field
     = f.label :newspaper
-    - if @newspaper.present?
-      - @listing.newspaper_id = @newspaper.id
-      = f.collection_select :newspaper_id, Newspaper.all, :id, :name, {}, disabled: true
-      = f.hidden_field :newspaper_id, value: @newspaper.id
+    - if @listing.newspaper.present?
+      = f.select :newspaper_id, @filter.newspapers, {}, disabled: @listing.persisted?
+      = f.hidden_field :newspaper_id, value: @listing.newspaper.id
     - else
-      = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+      = f.select :newspaper_id, @filter.newspapers, prompt: "Select a Newspaper"
   .actions = f.submit

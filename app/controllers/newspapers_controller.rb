@@ -4,7 +4,11 @@ class NewspapersController < ApplicationController
   def index
     @policy.authorize! :index?
     @newspapers = Newspaper.all
-    @newspapers = @newspapers.map { |newspaper| NewspaperPresenter.new(current_user, @policy, newspaper) }
+    @newspapers = @newspapers.map do |newspaper|
+      NewspaperPresenter.new(current_user,
+                          NewspapersPolicy.new(@policy.subject, NewspaperPolicyAgent.new(newspaper)),
+                          newspaper)
+    end
   end
 
   def show

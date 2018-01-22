@@ -11,14 +11,14 @@ class PublisherPresenter < ApplicationPresenter
   def domain
     DomainPresenter.new(user,
                         DomainsPolicy.new(policy.subject,
-                                          ObjectPolicyAgent.new(:Domain, model.domain)),
+                                          DomainPolicyAgent.new(model.domain)),
                         model.domain)
   end
 
   def newspapers
     model.newspapers.map do |newspaper|
       NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                   ObjectPolicyAgent.new(:Newspaper, newspaper)),
+                                                   NewspaperPolicyAgent.new(newspaper)),
                            newspaper)
     end
   end
@@ -26,7 +26,7 @@ class PublisherPresenter < ApplicationPresenter
   def groups
     model.groups.map do |group|
       GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Group, group)),
+                                                GroupPolicyAgent.new(group)),
                          group)
     end
   end

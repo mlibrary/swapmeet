@@ -16,9 +16,9 @@ h1 Office Gear Swap Meet!
       tbody
         = form_for @filter, as: :f, method: :get, url: listings_path, html: { id: 'filter' } do |form|
           td
-          td = form.select :newspaper, @newspapers.map { |newspaper| [newspaper.display_name, newspaper.id] }, include_blank: true
-          td = form.select :owner, @owners.map { |owner| [owner.display_name, owner.id] }, include_blank: true
-          td = form.select :category, @categories.map { |category| [category.title, category.id] }, include_blank: true
+          td = form.select :newspaper, @filter.newspapers, include_blank: true
+          td = form.select :owner, @filter.owners, include_blank: true
+          td = form.select :category, @filter.categories, include_blank: true
           td = form.submit 'Filter'
           td
           td
@@ -34,5 +34,5 @@ h1 Office Gear Swap Meet!
 
 br
 
-- if @policy.new?
+- if @listings.new?
     = link_to 'New listing', new_listing_path

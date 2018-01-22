@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class ListingsController < ApplicationController
+  before_action :set_filter, only: [:index, :new, :create, :edit, :update]
+
   def index
     @policy.authorize! :index?
-    @filter = Filter.new
-    @newspapers = Newspaper.all
-    @owners = User.all
-    @categories = Category.all
 
     if params[:f].present?
       @filter.newspaper = params[:f][:newspaper]
@@ -30,7 +28,7 @@ class ListingsController < ApplicationController
     end
 
     @listings ||= Listing.all
-    @listings = @listings.map { |listing| ListingPresenter.new(current_user, @policy, listing) }
+    @listings = ListingsPresenter.new(current_user, @policy, @listings)
   end
 
   def show
@@ -39,20 +37,18 @@ class ListingsController < ApplicationController
   end
 
   def new
-    @newspaper = Newspaper.find(params[:newspaper_id]) if params[:newspaper_id].present?
     @policy.authorize! :new?
     @listing = Listing.new
+    @listing.newspaper = Newspaper.find(params[:newspaper_id]) if params[:newspaper_id].present?
     # @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def edit
-    @newspaper = Newspaper.find(params[:newspaper_id]) if params[:newspaper_id].present?
     @policy.authorize! :edit?
     # @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def create
-    @newspaper = Newspaper.find(listing_params[:newspaper_id]) if listing_params[:newspaper_id].present?
     @policy.authorize! :create?
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
@@ -96,10 +92,14 @@ class ListingsController < ApplicationController
   end
 
   private
+    def set_filter
+      @filter = Filter.new(Newspaper.all, User.all, Category.all)
+    end
+
     # Authorization Policy
     def new_policy
       @listing = Listing.find(params[:id]) if params[:id].present?
-      ListingPolicy.new(UserPolicyAgent.new(current_user), ListingPolicyAgent.new(@listing))
+      ListingPolicy.new(SubjectPolicyAgent.new(:User, current_user), ListingPolicyAgent.new(@listing))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

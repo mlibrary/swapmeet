@@ -11,7 +11,7 @@ class NewspaperPresenter < ApplicationPresenter
   def publisher
     PublisherPresenter.new(user,
                            PublishersPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Publisher, model.publisher)),
+                                                PublisherPolicyAgent.new(model.publisher)),
                            model.publisher)
   end
 
@@ -26,7 +26,7 @@ class NewspaperPresenter < ApplicationPresenter
   def groups
     model.groups.map do |group|
       GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                ObjectPolicyAgent.new(:Group, group)),
+                                                GroupPolicyAgent.new(group)),
                          group)
     end
   end

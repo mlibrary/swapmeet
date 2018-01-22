@@ -7,7 +7,7 @@ RSpec.describe DomainPresenter do
 
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
-  let(:policy) { DomainsPolicy.new(UserPolicyAgent.new(user), ObjectPolicyAgent.new(:Domain, model)) }
+  let(:policy) { DomainsPolicy.new(SubjectPolicyAgent.new(:User, user), DomainPolicyAgent.new(model)) }
   let(:model) { build(:domain, parent: parent, children: children, publishers: publishers) }
   let(:parent) { build(:domain) }
   let(:children) do
@@ -42,7 +42,7 @@ RSpec.describe DomainPresenter do
       expect(subject.user).to be user
       expect(subject.policy).to be_a(DomainsPolicy)
       expect(subject.policy.subject).to be policy.subject
-      expect(subject.policy.object).to be_a(PolicyAgent)
+      expect(subject.policy.object).to be_a(DomainPolicyAgent)
       expect(subject.policy.object.client_type).to eq :Domain.to_s
       expect(subject.policy.object.client).to be model.parent
       expect(subject.model).to be model.parent
@@ -59,7 +59,7 @@ RSpec.describe DomainPresenter do
         expect(domain.user).to be user
         expect(domain.policy).to be_a(DomainsPolicy)
         expect(domain.policy.subject).to be policy.subject
-        expect(domain.policy.object).to be_a(PolicyAgent)
+        expect(domain.policy.object).to be_a(DomainPolicyAgent)
         expect(domain.policy.object.client_type).to eq :Domain.to_s
         expect(domain.policy.object.client).to be children[index]
         expect(domain.model).to be children[index]
@@ -77,7 +77,7 @@ RSpec.describe DomainPresenter do
         expect(publisher.user).to be user
         expect(publisher.policy).to be_a(PublishersPolicy)
         expect(publisher.policy.subject).to be policy.subject
-        expect(publisher.policy.object).to be_a(PolicyAgent)
+        expect(publisher.policy.object).to be_a(PublisherPolicyAgent)
         expect(publisher.policy.object.client_type).to eq :Publisher.to_s
         expect(publisher.policy.object.client).to be publishers[index]
         expect(publisher.model).to be publishers[index]

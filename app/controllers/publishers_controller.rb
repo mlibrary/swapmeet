@@ -4,7 +4,11 @@ class PublishersController < ApplicationController
   def index
     @policy.authorize! :index?
     @publishers = Publisher.all
-    @publishers = @publishers.map { |publisher| PublisherPresenter.new(current_user, @policy, publisher) }
+    @publishers = @publishers.map do |publisher|
+      PublisherPresenter.new(current_user,
+                          PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(publisher)),
+                          publisher)
+    end
   end
 
   def show
@@ -69,11 +73,11 @@ class PublishersController < ApplicationController
     # Authorization Policy
     def new_policy
       @publisher = Publisher.find(params[:id]) if params[:id].present?
-      PublishersPolicy.new(UserPolicyAgent.new(current_user), ObjectPolicyAgent.new(:Publisher, @publisher))
+      PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(@publisher))
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def publisher_params
-      params.require(:publisher).permit(:name, :display_name, :domain_id)
+      params.require(:publisher).permit(:name, :display_name, :publisher_id)
     end
 end

@@ -43,12 +43,12 @@ class ApplicationController < ActionController::Base
     def set_policy
       @policy = new_policy
       if current_user.respond_to?(:email) && Rails.application.config.administrators[:root].include?(current_user.email)
-        @policy = RootPolicy.new(nil, nil)
+        @policy = RootPolicy.new(@policy.subject, @policy.object)
       end
     end
 
     # Authorization Policy
     def new_policy
-      ApplicationPolicy.new(nil, nil)
+      ApplicationPolicy.new(SubjectPolicyAgent.new(:User, current_user), nil)
     end
 end

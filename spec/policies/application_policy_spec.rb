@@ -29,7 +29,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     end
 
     context 'with permission' do
-      let(:requestor_agent) { RequestorPolicyAgent.new(:Requestor, requestor) }
+      let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
       let(:requestor) { double('requestor') }
 
       before do

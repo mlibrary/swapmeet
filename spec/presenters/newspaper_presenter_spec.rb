@@ -7,7 +7,7 @@ RSpec.describe NewspaperPresenter do
 
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
-  let(:policy) { NewspapersPolicy.new(UserPolicyAgent.new(user), PolicyAgent.new(:Newspaper, model)) }
+  let(:policy) { NewspapersPolicy.new(SubjectPolicyAgent.new(:User, user), NewspaperPolicyAgent.new(model)) }
   let(:model) { build(:newspaper, listings: listings, groups: groups, users: users) }
   let(:listings) do
     [
@@ -48,7 +48,7 @@ RSpec.describe NewspaperPresenter do
       expect(subject.user).to be user
       expect(subject.policy).to be_a(PublishersPolicy)
       expect(subject.policy.subject).to be policy.subject
-      expect(subject.policy.object).to be_a(PolicyAgent)
+      expect(subject.policy.object).to be_a(PublisherPolicyAgent)
       expect(subject.policy.object.client_type).to eq :Publisher.to_s
       expect(subject.policy.object.client).to be model.publisher
       expect(subject.model).to be model.publisher
@@ -65,7 +65,7 @@ RSpec.describe NewspaperPresenter do
         expect(listing.user).to be user
         expect(listing.policy).to be_a(ListingPolicy)
         expect(listing.policy.subject).to be policy.subject
-        expect(listing.policy.object).to be_a(PolicyAgent)
+        expect(listing.policy.object).to be_a(ListingPolicyAgent)
         expect(listing.policy.object.client_type).to eq :Listing.to_s
         expect(listing.policy.object.client).to be listings[index]
         expect(listing.model).to be listings[index]
@@ -83,7 +83,7 @@ RSpec.describe NewspaperPresenter do
         expect(group.user).to be user
         expect(group.policy).to be_a(GroupsPolicy)
         expect(group.policy.subject).to be policy.subject
-        expect(group.policy.object).to be_a(PolicyAgent)
+        expect(group.policy.object).to be_a(GroupPolicyAgent)
         expect(group.policy.object.client_type).to eq :Group.to_s
         expect(group.policy.object.client).to be groups[index]
         expect(group.model).to be groups[index]
@@ -101,7 +101,7 @@ RSpec.describe NewspaperPresenter do
         expect(usr.user).to be user
         expect(usr.policy).to be_a(UsersPolicy)
         expect(usr.policy.subject).to be policy.subject
-        expect(usr.policy.object).to be_a(PolicyAgent)
+        expect(usr.policy.object).to be_a(UserPolicyAgent)
         expect(usr.policy.object.client_type).to eq :User.to_s
         expect(usr.policy.object.client).to be users[index]
         expect(usr.model).to be users[index]
