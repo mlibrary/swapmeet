@@ -4,11 +4,7 @@ class DomainsController < ApplicationController
   def index
     @policy.authorize! :index?
     @domains = Domain.all
-    @domains = @domains.map do |domain|
-      DomainPresenter.new(current_user,
-                          DomainsPolicy.new(@policy.subject, DomainPolicyAgent.new(domain)),
-                          domain)
-    end
+    @domains = DomainsPresenter.new(current_user, @policy, @domains)
   end
 
   def show

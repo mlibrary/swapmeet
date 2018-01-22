@@ -5,29 +5,17 @@ class UsersController < ApplicationController
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
       @users = User.order(email: :asc)
-      @users = @users.map do |user|
-        UserPresenter.new(current_user,
-                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
-                          user)
-      end
+      @users = UsersPresenter.new(current_user, @policy, @users)
       render "publishers/users"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
       @users = User.order(email: :asc)
-      @users = @users.map do |user|
-        UserPresenter.new(current_user,
-                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
-                          user)
-      end
+      @users = UsersPresenter.new(current_user, @policy, @users)
       render "newspapers/users"
     else
       @policy.authorize! :index?
       @users = User.order(email: :asc)
-      @users = @users.map do |user|
-        UserPresenter.new(current_user,
-                          UsersPolicy.new(@policy.subject, UserPolicyAgent.new(user)),
-                          user)
-      end
+      @users = UsersPresenter.new(current_user, @policy, @users)
       render
     end
   end

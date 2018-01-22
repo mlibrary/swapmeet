@@ -4,11 +4,7 @@ class CategoriesController < ApplicationController
   def index
     @policy.authorize! :index?
     @categories = Category.all
-    @categories = @categories.map do |category|
-      CategoryPresenter.new(current_user,
-                            CategoriesPolicy.new(@policy.subject, CategoryPolicyAgent.new(category)),
-                            category)
-    end
+    @categories = CategoriesPresenter.new(current_user, @policy, @categories)
   end
 
   def show
