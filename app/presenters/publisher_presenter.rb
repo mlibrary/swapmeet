@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 class PublisherPresenter < ApplicationPresenter
-  def administrator?
-    policy.administrator?
-  end
+  delegate :permit?, :revoke?, to: :policy
 
-  def permit?(user)
-    policy.revoke?(user.policy.object)
-  end
-
-  def revoke?(user)
-    policy.revoke?(user.policy.object)
+  def privilege?(user)
+    policy.privilege?(user.policy.object)
   end
 
   def label
@@ -20,26 +14,25 @@ class PublisherPresenter < ApplicationPresenter
 
   delegate :name, :display_name, to: :model
 
+  def domain?
+    model.domain.present?
+  end
+
   def domain
     DomainPresenter.new(user,
-                        DomainsPolicy.new(policy.subject,
-                                          DomainPolicyAgent.new(model.domain)),
+                        DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.domain)),
                         model.domain)
   end
 
   def newspapers
-    NewspapersPresenter.new(user, policy, model.newspapers)
+    NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
   end
 
   def groups
-    GroupsPresenter.new(user, policy, model.groups)
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 
   def users
-    UsersPresenter.new(user, policy, model.users)
-  end
-
-  def has_user?(user)
-    model.has_user?(user.model)
+    UsersPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), model.users)
   end
 end

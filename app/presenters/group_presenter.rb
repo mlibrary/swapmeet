@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupPresenter < ApplicationPresenter
+  delegate :join?, :leave?, to: :policy
+
   def label
     return display_name if display_name.present?
     'GROUP'
@@ -8,41 +10,33 @@ class GroupPresenter < ApplicationPresenter
 
   delegate :name, :display_name, to: :model
 
+  def parent?
+    model.parent.present?
+  end
+
   def parent
-    GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                              GroupPolicyAgent.new(model.parent)),
+    GroupPresenter.new(user,
+                       GroupsPolicy.new(policy.subject, GroupPolicyAgent.new(model.parent)),
                        model.parent)
   end
 
   def children
-    model.children.map do |child|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(child)),
-                         child)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.children)
   end
 
   def publishers
-    model.publishers.map do |publisher|
-      PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        PublisherPolicyAgent.new(publisher)),
-                             publisher)
-    end
+    PublishersPresenter.new(user, PublishersPolicy.new(policy.subject, policy.object), model.publishers)
   end
 
   def newspapers
-    model.newspapers.map do |newspaper|
-      NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                        NewspaperPolicyAgent.new(newspaper)),
-                             newspaper)
-    end
+    NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
+  end
+
+  def member?
+    model.users.exists?(user.id)
   end
 
   def users
-    model.users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new(policy.subject,
-                                              UserPolicyAgent.new(usr)),
-                        usr)
-    end
+    UsersPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), model.users)
   end
 end

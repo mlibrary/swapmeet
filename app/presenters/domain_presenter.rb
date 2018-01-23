@@ -8,26 +8,21 @@ class DomainPresenter < ApplicationPresenter
 
   delegate :name, :display_name, to: :model
 
+  def parent?
+    model.parent.present?
+  end
 
   def parent
-    DomainPresenter.new(user, DomainsPolicy.new(policy.subject,
-                                              DomainPolicyAgent.new(model.parent)),
-                       model.parent)
+    DomainPresenter.new(user,
+                        DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.parent)),
+                        model.parent)
   end
 
   def children
-    model.children.map do |child|
-      DomainPresenter.new(user, DomainsPolicy.new(policy.subject,
-                                                DomainPolicyAgent.new(child)),
-                         child)
-    end
+    DomainsPresenter.new(user, DomainsPolicy.new(policy.subject, policy.object), model.children)
   end
 
   def publishers
-    model.publishers.map do |publisher|
-      PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        PublisherPolicyAgent.new(publisher)),
-                             publisher)
-    end
+    PublishersPresenter.new(user, PublishersPolicy.new(policy.subject, policy.object), model.publishers)
   end
 end

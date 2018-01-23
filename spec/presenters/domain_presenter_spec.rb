@@ -52,7 +52,11 @@ RSpec.describe DomainPresenter do
   describe '#children' do
     subject { presenter.children }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(DomainsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(DomainsPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq children.count
       subject.each.with_index do |domain, index|
         expect(domain).to be_a(DomainPresenter)
@@ -70,7 +74,11 @@ RSpec.describe DomainPresenter do
   describe '#publishers' do
     subject { presenter.publishers }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(PublishersPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(PublishersPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq publishers.count
       subject.each.with_index do |publisher, index|
         expect(publisher).to be_a(PublisherPresenter)

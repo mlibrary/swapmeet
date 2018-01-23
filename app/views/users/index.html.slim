@@ -4,34 +4,34 @@ h1 Listing users
     h2 No Users
 - else
     table
-      thead
-        tr
-          th User
-          th Email
-          th Admin
-          th Login
-          th
-          th
-          th
-      tbody
-        - @users.each do |user|
-          tr
-            td = user.label
-            td = user.email
-            - if user.administrator?(user)
-              - if user.revoke?(user)
-                  td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete
-              - else
-                  td Yes
-            - else
-              - if user.permit?(user)
-                  td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch
-              - else
-                  td No
-            td = link_to 'Login', login_path(user.model), method: :post
-            td = link_to 'Show', user.model if user.show?
-            td = link_to 'Edit', edit_user_path(user.model) if user.edit?
-            td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
+        thead
+            tr
+                th User
+                th Email
+                th Admin
+                th Login
+                th
+                th
+                th
+        tbody
+            - @users.each do |user|
+                tr
+                    td = user.label
+                    td = user.email
+                    - if user.administrator?
+                        - if user.revoke?
+                            td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete
+                        - else
+                            td Yes
+                    - else
+                        - if user.permit?
+                            td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch
+                        - else
+                            td No
+                    td = link_to 'Login', login_path(user.model), method: :post
+                    td = link_to 'Show', user.model if user.show?
+                    td = link_to 'Edit', edit_user_path(user.model) if user.edit?
+                    td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
 br
 
 - if @users.new?

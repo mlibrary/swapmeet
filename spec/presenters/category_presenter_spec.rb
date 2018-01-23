@@ -30,7 +30,11 @@ RSpec.describe CategoryPresenter do
   describe '#listings' do
     subject { presenter.listings }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(ListingsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(ListingPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)

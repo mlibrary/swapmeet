@@ -51,7 +51,11 @@ RSpec.describe UserPresenter do
   describe '#listings' do
     subject { presenter.listings }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(ListingsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(ListingPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)
@@ -69,7 +73,11 @@ RSpec.describe UserPresenter do
   describe '#publishers' do
     subject { presenter.publishers }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(PublishersPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(PublishersPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq publishers.count
       subject.each.with_index do |publisher, index|
         expect(publisher).to be_a(PublisherPresenter)
@@ -87,7 +95,11 @@ RSpec.describe UserPresenter do
   describe '#newspapers' do
     subject { presenter.newspapers }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(NewspapersPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(NewspapersPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq newspapers.count
       subject.each.with_index do |newspaper, index|
         expect(newspaper).to be_a(NewspaperPresenter)
@@ -105,7 +117,11 @@ RSpec.describe UserPresenter do
   describe '#groups' do
     subject { presenter.groups }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(GroupsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(GroupsPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq groups.count
       subject.each.with_index do |group, index|
         expect(group).to be_a(GroupPresenter)

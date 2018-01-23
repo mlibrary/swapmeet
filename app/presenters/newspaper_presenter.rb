@@ -22,36 +22,19 @@ class NewspaperPresenter < ApplicationPresenter
 
   def publisher
     PublisherPresenter.new(user,
-                           PublishersPolicy.new(policy.subject,
-                                                PublisherPolicyAgent.new(model.publisher)),
+                           PublishersPolicy.new(policy.subject, PublisherPolicyAgent.new(model.publisher)),
                            model.publisher)
   end
 
   def listings
-    model.listings.map do |listing|
-      ListingPresenter.new(user, ListingPolicy.new(policy.subject,
-                                                   ListingPolicyAgent.new(listing)),
-                           listing)
-    end
+    ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 
   def users
-    model.users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new(policy.subject,
-                                               UserPolicyAgent.new(usr)),
-                        usr)
-    end
-  end
-
-  def has_user?(user)
-    model.has_user?(user.model)
+    UsersPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), model.users)
   end
 end
