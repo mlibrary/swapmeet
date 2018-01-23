@@ -59,7 +59,7 @@ RSpec.describe PublisherPresenter do
   describe '#newspapers' do
     subject { presenter.newspapers }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(NewspapersPresenter)
       expect(subject.count).to eq newspapers.count
       subject.each.with_index do |newspaper, index|
         expect(newspaper).to be_a(NewspaperPresenter)
@@ -77,7 +77,7 @@ RSpec.describe PublisherPresenter do
   describe '#groups' do
     subject { presenter.groups }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(GroupsPresenter)
       expect(subject.count).to eq groups.count
       subject.each.with_index do |group, index|
         expect(group).to be_a(GroupPresenter)
@@ -95,7 +95,7 @@ RSpec.describe PublisherPresenter do
   describe '#users' do
     subject { presenter.users }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(UsersPresenter)
       expect(subject.count).to eq users.count
       subject.each.with_index do |usr, index|
         expect(usr).to be_a(UserPresenter)

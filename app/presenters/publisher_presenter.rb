@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PublisherPresenter < ApplicationPresenter
-  def administrator?(user)
-    policy.administrator?(user.policy.object)
+  def administrator?
+    policy.administrator?
   end
 
   def permit?(user)
@@ -28,27 +28,15 @@ class PublisherPresenter < ApplicationPresenter
   end
 
   def newspapers
-    model.newspapers.map do |newspaper|
-      NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                   NewspaperPolicyAgent.new(newspaper)),
-                           newspaper)
-    end
+    NewspapersPresenter.new(user, policy, model.newspapers)
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, policy, model.groups)
   end
 
   def users
-    model.users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new(policy.subject,
-                                              UserPolicyAgent.new(usr)),
-                        usr)
-    end
+    UsersPresenter.new(user, policy, model.users)
   end
 
   def has_user?(user)
