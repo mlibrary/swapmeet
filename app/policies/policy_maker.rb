@@ -40,8 +40,16 @@ class PolicyMaker
     false
   end
 
+  def permit?(subject, verb, object)
+    grant = false
+    # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
+    grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
+    grant ||= PolicyResolver.new(@requestor, POLICY_PERMIT, object).grant?
+    grant
+  end
+
   def permit!(subject, verb, object)
-    return false unless grant?(POLICY_PERMIT, object)
+    return false unless permit?(subject, verb, object)
     return true if exist?(subject, verb, object)
     gatekeeper = Gatekeeper.new
     gatekeeper.subject_type = subject.client_type
@@ -53,8 +61,16 @@ class PolicyMaker
     gatekeeper.save!
   end
 
+  def revoke?(subject, verb, object)
+    grant = false
+    # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
+    grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
+    grant ||= PolicyResolver.new(@requestor, POLICY_REVOKE, object).grant?
+    grant
+  end
+
   def revoke!(subject, verb, object)
-    return false unless grant?(POLICY_REVOKE, object)
+    return false unless revoke?(subject, verb, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -71,13 +87,13 @@ class PolicyMaker
 
   private
 
-    def grant?(policy, object)
-      grant = false
-      # grant ||= SubjectPolicyAgent.new(requestor.client_type, requestor.client).administrator?
-      grant ||= PolicyResolver.new(requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-      grant ||= PolicyResolver.new(requestor, policy, object).grant?
-      grant
-    end
+    # def grant?(policy, object)
+    #   grant = false
+    #   # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
+    #   grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
+    #   grant ||= PolicyResolver.new(@requestor, policy, object).grant?
+    #   grant
+    # end
 
     def query(subject, verb, object)
       Gatekeeper

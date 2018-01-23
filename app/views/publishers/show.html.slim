@@ -52,10 +52,16 @@ table
     - @publisher.users.each do |user|
       tr
         td = link_to user.label, user.model
-        td = link_to user.email
-        - if @publisher.administrator?(user.id)
-          td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete
+        td = user.email
+        - if @publisher.administrator?(user)
+          - if @publisher.revoke?(user)
+            td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete
+          - else
+            td Yes
         - else
-          td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch
+          - if @publisher.permit?(user)
+            td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch
+          - else
+            td No
 
 = link_to 'Manage Users', publisher_users_path(@publisher.model)

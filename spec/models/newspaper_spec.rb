@@ -26,8 +26,8 @@ RSpec.describe Newspaper, type: :model do
     end
   end
 
-  describe '#user?' do
-    subject { newspaper.user?(user) }
+  describe '#has_user?' do
+    subject { newspaper.has_user?(user) }
     let(:newspaper) { described_class.new }
     let(:user) { double('user') }
     let(:users) { double('users') }

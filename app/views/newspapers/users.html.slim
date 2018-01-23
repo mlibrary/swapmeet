@@ -9,9 +9,9 @@ table
   tbody
     - @users.each do |user|
       tr
-        td = user.display_name
-        td = link_to user.email, user
-        - if @newspaper.users.exists?(user.id)
-          td = link_to 'Remove', remove_newspaper_user_path(@newspaper, user), method: :delete
+        td = link_to user.label, user.model
+        td = user.email
+        - if @newspaper.has_user?(user)
+          td = link_to 'Remove', remove_newspaper_user_path(@newspaper.model, user.model), method: :delete
         - else
-          td = link_to 'Add', add_newspaper_user_path(@newspaper, user), method: :patch
+          td = link_to 'Add', add_newspaper_user_path(@newspaper.model, user.model), method: :patch

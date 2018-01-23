@@ -6,7 +6,7 @@ class Newspaper < ApplicationRecord
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :users
 
-  def user?(user)
+  def has_user?(user)
     users.exists?(user.id)
   end
 end
