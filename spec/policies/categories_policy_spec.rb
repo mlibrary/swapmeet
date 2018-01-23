@@ -42,10 +42,7 @@ RSpec.describe CategoriesPolicy, type: :policy do
     end
 
     context 'Authenticated' do
-      before do
-        allow(user_agent).to receive(:authenticated?).and_return(true)
-      end
-
+      before { allow(user_agent).to receive(:authenticated?).and_return(true) }
       it do
         expect(subject.index?).to be true
         expect(subject.show?).to be true
@@ -55,23 +52,7 @@ RSpec.describe CategoriesPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
-        let(:requestor) { double('requestor') }
-
-        before do
-          # Allow requestor to create any subject, any verb, any object policies
-          Gatekeeper.new(
-            subject_type: requestor_agent.client_type,
-            subject_id: requestor_agent.client_id,
-            verb_type: PolicyMaker::AGENT_ANY.client_type,
-            verb_id: PolicyMaker::AGENT_ANY.client_id,
-            object_type: PolicyMaker::AGENT_ANY.client_type,
-            object_id: PolicyMaker::AGENT_ANY.client_id
-          ).save!
-          policy_maker = PolicyMaker.new(requestor_agent)
-          policy_maker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY)
-        end
-
+        before { PolicyMaker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY) }
         it do
           expect(subject.index?).to be true
           expect(subject.show?).to be true

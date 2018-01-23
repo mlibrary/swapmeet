@@ -23,55 +23,6 @@ RSpec.describe UsersPolicy, type: :policy do
       expect(subject.join?).to be false
       expect(subject.leave?).to be false
     end
-
-    # context 'Recursion' do
-    #   let(:agent) { double('agent') }
-    #   let(:policy) { double('policy') }
-    #   let(:boolean) { double('boolean') }
-    #
-    #   before do
-    #     allow(UserPolicyAgent).to receive(:new).with(user).and_call_original
-    #     allow(UserPolicyAgent).to receive(:new).with(entity).and_return(agent)
-    #     allow(UsersPolicy).to receive(:new).with(entity_agent, user_agent).and_call_original
-    #     allow(UsersPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-    #   end
-    #
-    #   describe '#show_user?' do
-    #     before { allow(policy).to receive(:show?).and_return(boolean) }
-    #     it { expect(subject.show_user?(entity)).to eq boolean }
-    #   end
-    #
-    #   describe '#edit_user?' do
-    #     before { allow(policy).to receive(:edit?).and_return(boolean) }
-    #     it { expect(subject.edit_user?(entity)).to eq boolean }
-    #   end
-    #
-    #   describe '#destroy_user?' do
-    #     before { allow(policy).to receive(:destroy?).and_return(boolean) }
-    #     it { expect(subject.destroy_user?(entity)).to eq boolean }
-    #   end
-    #
-    #   describe '#administrator_user?' do
-    #     before { allow(agent).to receive(:administrator?).and_return(boolean) }
-    #     it { expect(subject.administrator_user?(entity)).to eq boolean }
-    #   end
-    #
-    #   describe '#permit_user?' do
-    #     before do
-    #       allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-    #       allow(policy).to receive(:permit?).and_return(boolean)
-    #     end
-    #     it { expect(subject.permit_user?(entity)).to eq boolean }
-    #   end
-    #
-    #   describe '#revoke_user?' do
-    #     before do
-    #       allow(PrivilegesPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
-    #       allow(policy).to receive(:revoke?).and_return(boolean)
-    #     end
-    #     it { expect(subject.revoke_user?(entity)).to eq boolean }
-    #   end
-    # end
   end
 
   context 'User' do
@@ -80,10 +31,7 @@ RSpec.describe UsersPolicy, type: :policy do
     let(:current_user_agent) { SubjectPolicyAgent.new(:User, current_user) }
     let(:current_user) { double('current user') }
 
-    before do
-      allow(current_user_agent).to receive(:authenticated?).and_return(false)
-    end
-
+    before { allow(current_user_agent).to receive(:authenticated?).and_return(false) }
     it do
       expect(subject.index?).to be true
       expect(subject.show?).to be false
@@ -95,10 +43,7 @@ RSpec.describe UsersPolicy, type: :policy do
     end
 
     context 'Authenticated' do
-      before do
-        allow(current_user_agent).to receive(:authenticated?).and_return(true)
-      end
-
+      before { allow(current_user_agent).to receive(:authenticated?).and_return(true) }
       it do
         expect(subject.index?).to be true
         expect(subject.show?).to be true
@@ -110,23 +55,7 @@ RSpec.describe UsersPolicy, type: :policy do
       end
 
       context 'Grant' do
-        let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
-        let(:requestor) { double('requestor') }
-
-        before do
-          # Allow requestor to create any subject, any verb, any object policies
-          Gatekeeper.new(
-            subject_type: requestor_agent.client_type,
-            subject_id: requestor_agent.client_id,
-            verb_type: PolicyMaker::AGENT_ANY.client_type,
-            verb_id: PolicyMaker::AGENT_ANY.client_id,
-            object_type: PolicyMaker::AGENT_ANY.client_type,
-            object_id: PolicyMaker::AGENT_ANY.client_id
-          ).save!
-          policy_maker = PolicyMaker.new(requestor_agent)
-          policy_maker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY)
-        end
-
+        before { PolicyMaker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY) }
         it do
           expect(subject.index?).to be true
           expect(subject.show?).to be true

@@ -11,9 +11,8 @@ class PrivilegesController < ApplicationController
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
       privilege = params[:id]
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.permit!(
+        if PolicyMaker.permit!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator), # privilege 1
           NewspaperPolicyAgent.new(newspaper)
@@ -28,9 +27,8 @@ class PrivilegesController < ApplicationController
     elsif params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.permit!(
+        if PolicyMaker.permit!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PublisherPolicyAgent.new(publisher)
@@ -44,9 +42,8 @@ class PrivilegesController < ApplicationController
       end
     elsif params[:user_id].present?
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.permit!(
+        if PolicyMaker.permit!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PolicyMaker::OBJECT_ANY
@@ -72,9 +69,8 @@ class PrivilegesController < ApplicationController
     if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.revoke!(
+        if PolicyMaker.revoke!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           NewspaperPolicyAgent.new(newspaper)
@@ -89,9 +85,8 @@ class PrivilegesController < ApplicationController
     elsif params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.revoke!(
+        if PolicyMaker.revoke!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PublisherPolicyAgent.new(publisher)
@@ -105,9 +100,8 @@ class PrivilegesController < ApplicationController
       end
     elsif params[:user_id].present?
       user = User.find(params[:user_id])
-      policy_maker = PolicyMaker.new(SubjectPolicyAgent.new(:User, current_user))
       respond_to do |format|
-        if policy_maker.revoke!(
+        if PolicyMaker.revoke!(
           SubjectPolicyAgent.new(:User, user),
           RolePolicyAgent.new(:administrator),
           PolicyMaker::OBJECT_ANY
