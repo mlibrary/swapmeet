@@ -12,8 +12,8 @@ p
   strong Owner:&nbsp
   = user_display_name_link(@listing.owner)
 p
-  strong Newspaper:&nbsp
-  = link_to @listing.newspaper&.display_name, newspaper_path(@listing.newspaper) if @listing.newspaper
+/  strong Newspaper:&nbsp
+/  = link_to @listing.newspaper&.display_name, newspaper_path(@listing.newspaper) if @listing.newspaper
 
 - if @policy.edit?
   =<> link_to 'Edit', edit_listing_path(@listing)

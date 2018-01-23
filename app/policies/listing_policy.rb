@@ -1,26 +1,27 @@
 # frozen_string_literal: true
 
-class ListingPolicy < ApplicationPolicy
+class ListingPolicy < ResourcePolicy
+  def index?
+    true
+  end
+
+  def show?
+    true
+  end
+
   def create?
     return true if subject.root?
     subject.known?
   end
 
-  def destroy?(listing = nil)
+  def update?
     return true if subject.root?
-    subject.client == object.client&.owner
+    subject == object.owner
   end
 
-  def index?
-    true
-  end
-
-  def show?(listing = nil)
-    true
-  end
-
-  def update?(listing = nil)
+  def destroy?
     return true if subject.root?
-    subject.client == object.client&.owner
+    subject == object.owner
   end
+
 end

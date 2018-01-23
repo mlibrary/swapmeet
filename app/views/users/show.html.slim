@@ -17,16 +17,16 @@ p
   '|
 =< link_to 'Back', users_path
 
-- unless @user.groups.empty?
-  hr
-  h2 Groups
-  ul
-  - @user.groups.each do |group|
-    li
-      => link_to group.display_name, group_path(group)
-      - if @policy.leave?
-      =<> ' '
-      =< link_to 'Leave', leave_group_user_path(group, @user), method: :delete
+/ - unless @user.groups.empty?
+/   hr
+/   h2 Groups
+/   ul
+/   - @user.groups.each do |group|
+/     li
+/       => link_to group.display_name, group_path(group)
+/       - if @policy.leave?
+/       =<> ' '
+/       =< link_to 'Leave', leave_group_user_path(group, @user), method: :delete
 
 - unless @user.listings.empty?
   hr

@@ -7,7 +7,7 @@ h1 Office Gear Swap Meet!
       thead
         tr
           th Title
-          th Newspaper
+          / th Newspaper
           th Owner
           th
           th
@@ -17,7 +17,7 @@ h1 Office Gear Swap Meet!
         - @listings.each do |listing|
           tr
             td = listing.title
-            td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
+            / td = link_to listing.newspaper&.display_name, newspaper_path(listing.newspaper) if listing.newspaper
             td = user_display_name_link(listing.owner)
 
             td = link_to 'Show', listing if @policy.show?

@@ -2,9 +2,5 @@
 
 class Listing < ApplicationRecord
   belongs_to :owner, class_name: 'User'
-  belongs_to :newspaper, optional: true
-
-  def owner
-    super || User.nobody
-  end
+  belongs_to :category
 end

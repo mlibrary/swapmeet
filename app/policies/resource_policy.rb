@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ApplicationPolicy
+class ResourcePolicy
   attr_reader :subject, :object
 
   def initialize(subject, object)
@@ -8,16 +8,22 @@ class ApplicationPolicy
     @object = object
   end
 
+  def show?
+    return true if subject.root?
+    false
+  end
+
   def create?
     return true if subject.root?
     false
   end
 
-  def edit?(obj = nil)
-    update?(obj)
+  def update?
+    return true if subject.root?
+    false
   end
 
-  def destroy?(obj = nil)
+  def destroy?
     return true if subject.root?
     false
   end
@@ -31,14 +37,8 @@ class ApplicationPolicy
     create?
   end
 
-  def show?(obj = nil)
-    return true if subject.root?
-    false
-  end
-
-  def update?(obj = nil)
-    return true if subject.root?
-    false
+  def edit?
+    update?
   end
 
   def authorize!(action, message = nil)

@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe ListingPolicy do
   subject { policy }
 
-  let(:policy) { ListingPolicy.new(PolicyAgent.new(:User, user), PolicyAgent.new(:Listing, listing)) }
-  let(:user)       { User.new }
-  let(:other_user) { User.new }
-  let(:listing_owner)      { double('Listing Owner') }
-  let(:listing) { create(:listing, owner: listing_owner) }
+  let(:policy)        { ListingPolicy.new(user, listing) }
+  let(:user)          { User.new }
+  let(:other_user)    { User.new }
+  let(:listing)       { create(:listing, owner: listing_owner) }
+  let(:listing_owner) { double('Listing Owner') }
 
   context "when user is a guest" do
     let(:user) { User.guest }
@@ -113,27 +113,4 @@ RSpec.describe ListingPolicy do
     end
   end
 
-  context "when nil owns the listing (should never happen, but might)" do
-    let(:listing_owner) { nil }
-
-    it "denies create" do
-      expect(policy.create?).to be false
-    end
-
-    it "denies destroy" do
-      expect(policy.destroy?).to be false
-    end
-
-    it "allows index" do
-      expect(policy.index?).to be true
-    end
-
-    it "allows show" do
-      expect(policy.show?).to be true
-    end
-
-    it "denies update" do
-      expect(policy.update?).to be false
-    end
-  end
 end

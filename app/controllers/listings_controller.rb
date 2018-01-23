@@ -66,10 +66,10 @@ class ListingsController < ApplicationController
     end
 
     def set_policy
-      @policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, @listing))
+      @policy = ListingPolicy.new(current_user, @listing)
     end
 
     def listing_params
-      params.require(:listing).permit(:title, :body, :newspaper_id)
+      params.require(:listing).permit(:title, :body)
     end
 end

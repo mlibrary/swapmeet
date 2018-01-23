@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :logged_in?
 
-  before_action :set_policies
-
   rescue_from NotAuthorizedError, with: :render_unauthorized
 
   def indexes
@@ -46,15 +44,4 @@ class ApplicationController < ActionController::Base
       end
     end
 
-  private
-
-    def set_policies
-      @domains_policy = DomainsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Domain, nil))
-      @gatekeepers_policy = GatekeepersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Gatekeeper, nil))
-      @groups_policy = GroupsPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Group, nil))
-      @listings_policy = ListingPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Listing, nil))
-      @newspapers_policy = NewspapersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Newspaper, nil))
-      @publishers_policy = PublishersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:Publisher, nil))
-      @users_policy = UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, nil))
-    end
 end
