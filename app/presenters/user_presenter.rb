@@ -1,20 +1,32 @@
 # frozen_string_literal: true
 
 class UserPresenter < ApplicationPresenter
-  def administrator?
-    policy.object.administrator?
+  def join?(object)
+    policy.leave?(object.policy.object)
   end
 
-  def permit?
-    return true if policy.subject.administrator?
-    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).permit?
-    false
+  def leave?(object)
+    policy.leave?(object.policy.object)
   end
 
-  def revoke?
-    return true if policy.subject.administrator?
-    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).revoke?
-    false
+  def add?(object)
+    policy.add?(object.policy.object)
+  end
+
+  def remove?(object)
+    policy.remove?(object.policy.object)
+  end
+
+  def administrator?(user)
+    policy.administrator?(user.policy.object)
+  end
+
+  def permit?(user)
+    policy.revoke?(user.policy.object)
+  end
+
+  def revoke?(user)
+    policy.revoke?(user.policy.object)
   end
 
   def label

@@ -24,7 +24,7 @@ p
   - @user.groups.each do |group|
     li
       => link_to group.label, group.model
-      - if @user.leave?
+      - if @user.leave?(group)
         =<> ' '
         =< link_to 'Leave', leave_group_user_path(group.model, @user.model), method: :delete
 
@@ -42,7 +42,7 @@ p
   - @user.newspapers.each do |newspaper|
     li
       => link_to newspaper.label, newspaper.model
-      - if @user.leave?
+      - if @user.remove?(newspaper)
         =<> ' '
         =< link_to 'Remove', remove_newspaper_user_path(newspaper.model, @user.model), method: :delete
 
@@ -53,6 +53,6 @@ p
   - @user.publishers.each do |publisher|
     li
       => link_to publisher.label, publisher.model
-      - if @user.leave?
+      - if @user.remove?(publisher)
         =<> ' '
         =< link_to 'Remove', remove_publisher_user_path(publisher.model, @user.model), method: :delete

@@ -18,13 +18,13 @@ h1 Listing users
           tr
             td = user.label
             td = user.email
-            - if user.administrator?
-              - if user.revoke?
+            - if user.administrator?(user)
+              - if user.revoke?(user)
                   td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete
               - else
                   td Yes
             - else
-              - if user.permit?
+              - if user.permit?(user)
                   td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch
               - else
                   td No
