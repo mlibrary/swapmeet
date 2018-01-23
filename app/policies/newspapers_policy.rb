@@ -55,10 +55,10 @@ class NewspapersPolicy < ApplicationPolicy
   end
 
   def permit?(user)
-    PolicyMaker.permit?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 
   def revoke?(user)
-    PolicyMaker.revoke?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 end
