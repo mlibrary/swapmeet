@@ -29,23 +29,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     end
 
     context 'with permission' do
-      let(:requestor_agent) { SubjectPolicyAgent.new(:Requestor, requestor) }
-      let(:requestor) { double('requestor') }
-
-      before do
-        # Allow requestor_agent.client to create any policy for object_agent.client
-        Gatekeeper.new(
-          subject_type: requestor_agent.client_type,
-          subject_id: requestor_agent.client_id,
-          verb_type: PolicyMaker::POLICY_ANY.client_type,
-          verb_id: PolicyMaker::POLICY_ANY.client_id,
-          object_type: object_agent.client_type,
-          object_id: object_agent.client_id
-        ).save!
-        policy_maker = PolicyMaker.new(requestor_agent)
-        policy_maker.permit!(subject_agent, ActionPolicyAgent.new(:action), object_agent)
-      end
-
+      before { PolicyMaker.permit!(subject_agent, ActionPolicyAgent.new(:action), object_agent) }
       it do
         expect(subject.action?).to be true
         expect { subject.authorize!(:action?, nil) }.not_to raise_error

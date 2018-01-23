@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PolicyMaker
+module PolicyMaker
   # Agent
   AGENT_ANY = PolicyAgent.new(nil, nil)
 
@@ -20,13 +20,7 @@ class PolicyMaker
   USER_ANY = UserPolicyAgent.new(nil)
   LISTING_ANY = ListingPolicyAgent.new(nil)
 
-  attr_reader :requestor
-
-  def initialize(requestor)
-    @requestor = requestor
-  end
-
-  def exist?(subject, verb, object)
+  def self.exist?(subject, verb, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -40,16 +34,7 @@ class PolicyMaker
     false
   end
 
-  def permit?(subject, verb, object)
-    grant = false
-    # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
-    grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-    grant ||= PolicyResolver.new(@requestor, POLICY_PERMIT, object).grant?
-    grant
-  end
-
-  def permit!(subject, verb, object)
-    return false unless permit?(subject, verb, object)
+  def self.permit!(subject, verb, object)
     return true if exist?(subject, verb, object)
     gatekeeper = Gatekeeper.new
     gatekeeper.subject_type = subject.client_type
@@ -61,16 +46,7 @@ class PolicyMaker
     gatekeeper.save!
   end
 
-  def revoke?(subject, verb, object)
-    grant = false
-    # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
-    grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-    grant ||= PolicyResolver.new(@requestor, POLICY_REVOKE, object).grant?
-    grant
-  end
-
-  def revoke!(subject, verb, object)
-    return false unless revoke?(subject, verb, object)
+  def self.revoke!(subject, verb, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -87,15 +63,7 @@ class PolicyMaker
 
   private
 
-    # def grant?(policy, object)
-    #   grant = false
-    #   # grant ||= SubjectPolicyAgent.new(@requestor.client_type, @requestor.client).administrator?
-    #   grant ||= PolicyResolver.new(@requestor, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-    #   grant ||= PolicyResolver.new(@requestor, policy, object).grant?
-    #   grant
-    # end
-
-    def query(subject, verb, object)
+    def self.query(subject, verb, object)
       Gatekeeper
         .where('subject_type is NULL or subject_type = "" or subject_type = ?', subject.client_type)
         .where('subject_id is NULL or subject_id = "" or subject_id = ?', subject.client_id)
