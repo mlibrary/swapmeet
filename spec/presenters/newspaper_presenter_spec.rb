@@ -58,7 +58,11 @@ RSpec.describe NewspaperPresenter do
   describe '#listings' do
     subject { presenter.listings }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(ListingsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(ListingPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)
@@ -76,7 +80,11 @@ RSpec.describe NewspaperPresenter do
   describe '#groups' do
     subject { presenter.groups }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(GroupsPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(GroupsPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq groups.count
       subject.each.with_index do |group, index|
         expect(group).to be_a(GroupPresenter)
@@ -94,7 +102,11 @@ RSpec.describe NewspaperPresenter do
   describe '#users' do
     subject { presenter.users }
     it do
-      is_expected.to be_a(Array)
+      is_expected.to be_a(UsersPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(UsersPolicy)
+      expect(subject.policy.subject).to be policy.subject
+      expect(subject.policy.object).to be policy.object
       expect(subject.count).to eq users.count
       subject.each.with_index do |usr, index|
         expect(usr).to be_a(UserPresenter)

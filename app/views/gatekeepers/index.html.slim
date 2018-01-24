@@ -4,32 +4,29 @@ h1 Listing gatekeepers
     h2 No Gatekeepers
 - else
     table
-      thead
-        tr
-          th Subject
-          th
-          th Verb
-          th
-          th Object
-          th
-          th
-          th
-          th
-      tbody
-        - @gatekeepers.each do |gatekeeper|
+        thead
             tr
-              td = gatekeeper.subject_type
-              td = gatekeeper.subject_id
-              td = gatekeeper.verb_type
-              td = gatekeeper.verb_id
-              td = gatekeeper.object_type
-              td = gatekeeper.object_id
-              - if @policy.show?
-                  td = link_to 'Show', gatekeeper
-              - if @policy.edit?
-                  td = link_to 'Edit', edit_gatekeeper_path(gatekeeper)
-              - if @policy.destroy?
-                  td = link_to 'Destroy', gatekeeper, data: { confirm: 'Are you sure?' }, method: :delete
+                th Subject
+                th
+                th Verb
+                th
+                th Object
+                th
+                th
+                th
+                th
+        tbody
+            - @gatekeepers.each do |gatekeeper|
+                tr
+                    td = gatekeeper.subject_type
+                    td = gatekeeper.subject_id
+                    td = gatekeeper.verb_type
+                    td = gatekeeper.verb_id
+                    td = gatekeeper.object_type
+                    td = gatekeeper.object_id
+                    td = link_to 'Show', gatekeeper if @policy.show?
+                    td = link_to 'Edit', edit_gatekeeper_path(gatekeeper) if @policy.edit?
+                    td = link_to 'Destroy', gatekeeper, data: { confirm: 'Are you sure?' }, method: :delete if @policy.destroy?
 
 br
 

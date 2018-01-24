@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 class PublisherPresenter < ApplicationPresenter
-  def administrator?(user)
-    policy.administrator?(user.policy.object)
-  end
+  delegate :permit?, :revoke?, to: :policy
 
-  def permit?(user)
-    policy.revoke?(user.policy.object)
-  end
-
-  def revoke?(user)
-    policy.revoke?(user.policy.object)
+  def privilege?(user)
+    policy.privilege?(user.policy.object)
   end
 
   def label
@@ -20,38 +14,25 @@ class PublisherPresenter < ApplicationPresenter
 
   delegate :name, :display_name, to: :model
 
+  def domain?
+    model.domain.present?
+  end
+
   def domain
     DomainPresenter.new(user,
-                        DomainsPolicy.new(policy.subject,
-                                          DomainPolicyAgent.new(model.domain)),
+                        DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.domain)),
                         model.domain)
   end
 
   def newspapers
-    model.newspapers.map do |newspaper|
-      NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                   NewspaperPolicyAgent.new(newspaper)),
-                           newspaper)
-    end
+    NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 
   def users
-    model.users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new(policy.subject,
-                                              UserPolicyAgent.new(usr)),
-                        usr)
-    end
-  end
-
-  def has_user?(user)
-    model.has_user?(user.model)
+    UsersPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), model.users)
   end
 end

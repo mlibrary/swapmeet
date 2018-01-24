@@ -10,22 +10,19 @@ class ListingPresenter < ApplicationPresenter
 
   def category
     CategoryPresenter.new(user,
-                          CategoriesPolicy.new(policy.subject,
-                                               CategoryPolicyAgent.new(model.category)),
+                          CategoriesPolicy.new(policy.subject, CategoryPolicyAgent.new(model.category)),
                           model.category)
   end
 
   def newspaper
     NewspaperPresenter.new(user,
-                           NewspapersPolicy.new(policy.subject,
-                                                NewspaperPolicyAgent.new(model.newspaper)),
+                           NewspapersPolicy.new(policy.subject, NewspaperPolicyAgent.new(model.newspaper)),
                            model.newspaper)
   end
 
   def owner
     UserPresenter.new(user,
-                      UsersPolicy.new(policy.subject,
-                                      UserPolicyAgent.new(model.owner)),
+                      UsersPolicy.new(policy.subject, UserPolicyAgent.new(model.owner)),
                       model.owner)
   end
 end

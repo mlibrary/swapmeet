@@ -9,10 +9,6 @@ class CategoryPresenter < ApplicationPresenter
   delegate :name, :display_name, :title, to: :model
 
   def listings
-    model.listings.map do |listing|
-      ListingPresenter.new(user, ListingPolicy.new(policy.subject,
-                                                   ListingPolicyAgent.new(listing)),
-                           listing)
-    end
+    ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
   end
 end

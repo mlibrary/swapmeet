@@ -15,6 +15,7 @@ class NewspapersPolicy < ApplicationPolicy
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:create), @object).grant?
   end
 

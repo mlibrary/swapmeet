@@ -4,21 +4,21 @@ h1 Listing newspapers
     h2 No Newspapers
 - else
     table
-      thead
-        tr
-          th Newspaper
-          th Publisher
-          th
-          th
-          th
-      tbody
-        - @newspapers.each do |newspaper|
-          tr
-            td = link_to newspaper.label, newspaper.model
-            td = link_to newspaper.publisher.label, newspaper.publisher.model
-            td = link_to 'Show', newspaper.model if newspaper.show?
-            td = link_to 'Edit', edit_newspaper_path(newspaper.model) if newspaper.edit?
-            td = link_to 'Destroy', newspaper.model, data: { confirm: 'Are you sure?' }, method: :delete if newspaper.destroy?
+        thead
+            tr
+                th Newspaper
+                th Publisher
+                th
+                th
+                th
+        tbody
+            - @newspapers.each do |newspaper|
+                tr
+                    td = link_to_if newspaper.show?, newspaper.label, newspaper.model
+                    td = link_to_if newspaper.publisher.show?, newspaper.publisher.label, newspaper.publisher.model
+                    td = link_to 'Show', newspaper.model if newspaper.show?
+                    td = link_to 'Edit', edit_newspaper_path(newspaper.model) if newspaper.edit?
+                    td = link_to 'Destroy', newspaper.model, data: { confirm: 'Are you sure?' }, method: :delete if newspaper.destroy?
 
 br
 

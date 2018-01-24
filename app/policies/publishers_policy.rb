@@ -22,6 +22,7 @@ class PublishersPolicy < ApplicationPolicy
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
 
@@ -48,15 +49,15 @@ class PublishersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
   end
 
-  def administrator?(user)
+  def privilege?(user)
     PolicyResolver.new(user, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 
-  def permit?(_user)
+  def permit?
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 
-  def revoke?(_user)
+  def revoke?
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 end

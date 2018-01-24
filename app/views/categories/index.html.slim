@@ -4,19 +4,19 @@ h1 Listing categories
     h2 No Categories
 - else
     table
-      thead
-        tr
-          th Category
-          th
-          th
-          th
-      tbody
-        - @categories.each do |category|
+        thead
             tr
-              td = link_to category.label, category.model if category.show?
-              td = link_to 'Show', category.model if category.show?
-              td = link_to 'Edit', edit_category_path(category.model) if category.edit?
-              td = link_to 'Destroy', category.model, data: { confirm: 'Are you sure?' }, method: :delete if category.destroy?
+                th Category
+                th
+                th
+                th
+        tbody
+            - @categories.each do |category|
+                tr
+                    td = link_to_if category.show?, category.label, category.model
+                    td = link_to 'Show', category.model if category.show?
+                    td = link_to 'Edit', edit_category_path(category.model) if category.edit?
+                    td = link_to 'Destroy', category.model, data: { confirm: 'Are you sure?' }, method: :delete if category.destroy?
 
 br
 

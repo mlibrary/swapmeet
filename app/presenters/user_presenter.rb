@@ -17,16 +17,16 @@ class UserPresenter < ApplicationPresenter
     policy.remove?(object.policy.object)
   end
 
-  def administrator?(user)
-    policy.administrator?(user.policy.object)
+  def administrator?
+    policy.administrator?
   end
 
-  def permit?(user)
-    policy.revoke?(user.policy.object)
+  def permit?
+    policy.permit?
   end
 
-  def revoke?(user)
-    policy.revoke?(user.policy.object)
+  def revoke?
+    policy.revoke?
   end
 
   def label
@@ -37,34 +37,18 @@ class UserPresenter < ApplicationPresenter
   delegate :username, :display_name, :email, to: :model
 
   def listings
-    model.listings.map do |listing|
-      ListingPresenter.new(user, ListingPolicy.new(policy.subject,
-                                                   ListingPolicyAgent.new(listing)),
-                           listing)
-    end
+    ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
   end
 
   def publishers
-    model.publishers.map do |publisher|
-      PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        PublisherPolicyAgent.new(publisher)),
-                             publisher)
-    end
+    PublishersPresenter.new(user, PublishersPolicy.new(policy.subject, policy.object), model.publishers)
   end
 
   def newspapers
-    model.newspapers.map do |newspaper|
-      NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                        NewspaperPolicyAgent.new(newspaper)),
-                             newspaper)
-    end
+    NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 end
