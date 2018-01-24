@@ -10,25 +10,38 @@ p
   = @domain.display_name
 p
   strong Parent:&nbsp
-  = link_to @domain.parent.label, @domain.parent.model if @domain.parent.model.present?
+  = link_to_if @domain.parent.show?, @domain.parent.label, @domain.parent.model if @domain.parent?
 
 - if @domain.edit?
   => link_to 'Edit', edit_domain_path(@domain.model)
   '|
+- if @domain.destroy?
+  =<> link_to 'Delete', @domain.model, data: { confirm: 'Are you sure?' }, method: :delete
+  '|
 =< link_to 'Back', domains_path
 
-- unless @domain.children.empty?
-  hr
-  h2 Children
-  ul
-  - @domain.children.each do |child|
+hr
+h2 Children
+ul
+  - if @domain.children.empty?
     li
-      = link_to child.label, child.model
+      No Children
+  - else
+    - @domain.children.each do |child|
+      li
+        = link_to_if child.show?, child.label, child.model
+- if @domain.children.manage?
+  = link_to 'Manage Children', domain_domains_path(@domain.model)
 
-- unless @domain.publishers.empty?
-  hr
-  h2 Publishers
-  ul
-  - @domain.publishers.each do |publisher|
+hr
+h2 Publishers
+ul
+  - if @domain.publishers.empty?
     li
-      = link_to publisher.label, publisher.model
+      No Publishers
+  - else
+    - @domain.publishers.each do |publisher|
+      li
+        = link_to_if publisher.show?, publisher.label, publisher.model
+- if @domain.publishers.manage?
+  = link_to 'Manage Publishers', domain_publishers_path(@domain.model)

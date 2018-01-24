@@ -9,4 +9,6 @@ class DomainsPresenter < ApplicationsPresenter
     end
     super(user, policy, domains, presenters)
   end
+
+  delegate :manage?, to: :policy
 end

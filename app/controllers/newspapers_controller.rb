@@ -16,13 +16,13 @@ class NewspapersController < ApplicationController
     @publisher = Publisher.find(params[:publisher_id]) if params[:publisher_id].present?
     @policy.authorize! :new?
     @newspaper = Newspaper.new
-    # @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+    @newspaper = NewspaperEditor.new(current_user, @policy, @newspaper)
   end
 
   def edit
     @publisher = Publisher.find(params[:publisher_id]) if params[:publisher_id].present?
     @policy.authorize! :edit?
-    # @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+    @newspaper = NewspaperEditor.new(current_user, @policy, @newspaper)
   end
 
   def create
@@ -35,7 +35,7 @@ class NewspapersController < ApplicationController
         format.json { render :show, status: :created, location: @newspaper }
       else
         format.html do
-          # @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+          @newspaper = NewspaperEditor.new(current_user, @policy, @newspaper)
           render :new
         end
         format.json { render json: @newspaper.errors, status: :unprocessable_entity }
@@ -51,7 +51,7 @@ class NewspapersController < ApplicationController
         format.json { render :show, status: :ok, location: @newspaper }
       else
         format.html do
-          # @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+          @newspaper = NewspaperEditor.new(current_user, @policy, @newspaper)
           render :edit
         end
         format.json { render json: @newspaper.errors, status: :unprocessable_entity }

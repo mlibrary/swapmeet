@@ -15,27 +15,36 @@ p
 - if @publisher.edit?
   => link_to 'Edit', edit_publisher_path(@publisher.model)
   '|
+- if @publisher.destroy?
+  =<> link_to 'Delete', @publisher.model, data: { confirm: 'Are you sure?' }, method: :delete
+  '|
 =< link_to 'Back', publishers_path
 
-- unless @publisher.newspapers.empty?
-  hr
-  h2 Newspapers
-  ul
-  - @publisher.newspapers.each do |newspaper|
+hr
+h2 Newspapers
+ul
+  - if @publisher.newspapers.empty?
     li
-      = link_to_if newspaper.show?, newspaper.label, publisher_newspaper_path(@publisher.model, newspaper.model)
-  - if @publisher.newspapers.new?
-    = link_to 'Create Newspaper', new_publisher_newspaper_path(@publisher.model)
+      No Newspapers
+  - else
+    - @publisher.newspapers.each do |newspaper|
+      li
+        = link_to_if newspaper.show?, newspaper.label, publisher_newspaper_path(@publisher.model, newspaper.model)
+- if @publisher.newspapers.manage?
+  = link_to 'Manage Newspapers', publisher_newspapers_path(@publisher.model)
 
-- unless @publisher.groups.empty?
-  hr
-  h2 Groups
-  ul
+hr
+h2 Groups
+ul
+  - if @publisher.groups.empty?
+    li
+      No Groups
+  - else
     - @publisher.groups.each do |group|
       li
         = link_to_if group.show?, group.label, group.model
-  - if @publisher.groups.new?
-    = link_to 'Mange Groups', publisher_groups_path(@publisher.model)
+- if @publisher.groups.manage?
+  = link_to 'Manage Groups', publisher_groups_path(@publisher.model)
 
 hr
 h2 Users
@@ -45,6 +54,7 @@ table
       th Name
       th Email
       th Administrator
+      th
   tbody
   - if @publisher.users.empty?
     tr
@@ -57,15 +67,14 @@ table
         td = link_to_if user.show?, user.label, user.model
         td = user.email
         - if @publisher.privilege?(user)
-          - if @publisher.revoke?
+          - if @publisher.revoke?(user)
             td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete
           - else
             td Yes
         - else
-          - if @publisher.permit?
+          - if @publisher.permit?(user)
             td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch
           - else
             td No
-
-- if @publisher.users.new?
+- if @publisher.users.manage?
   = link_to 'Manage Users', publisher_users_path(@publisher.model)
