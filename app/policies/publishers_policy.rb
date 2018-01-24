@@ -60,4 +60,9 @@ class PublishersPolicy < ApplicationPolicy
   def revoke?
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
+
+  def manage?
+    # TODO: link_to 'Manage Publishers', user_publishers_path(@user.model)
+    false
+  end
 end

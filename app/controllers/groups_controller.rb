@@ -26,12 +26,12 @@ class GroupsController < ApplicationController
   def new
     @policy.authorize! :new?
     @group = Group.new
-    # @group = GroupPresenter.new(current_user, @policy, @group)
+    @group = GroupEditor.new(current_user, @policy, @group)
   end
 
   def edit
     @policy.authorize! :edit?
-    # @group = GroupPresenter.new(current_user, @policy, @group)
+    @group = GroupEditor.new(current_user, @policy, @group)
   end
 
   def create
@@ -43,7 +43,7 @@ class GroupsController < ApplicationController
         format.json { render :show, status: :created, location: @group }
       else
         format.html do
-          # @group = GroupPresenter.new(current_user, @policy, @group)
+          @group = GroupEditor.new(current_user, @policy, @group)
           render :new
         end
         format.json { render json: @group.errors, status: :unprocessable_entity }
@@ -59,7 +59,7 @@ class GroupsController < ApplicationController
         format.json { render :show, status: :ok, location: @group }
       else
         format.html do
-          # @group = GroupPresenter.new(current_user, @policy, @group)
+          @group = GroupEditor.new(current_user, @policy, @group)
           render :edit
         end
         format.json { render json: @group.errors, status: :unprocessable_entity }

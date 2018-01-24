@@ -9,4 +9,6 @@ class ListingsPresenter < ApplicationsPresenter
     end
     super(user, policy, listings, presenters)
   end
+
+  delegate :manage?, to: :policy
 end

@@ -9,4 +9,6 @@ class PublishersPresenter < ApplicationsPresenter
     end
     super(user, policy, publishers, presenters)
   end
+
+  delegate :manage?, to: :policy
 end

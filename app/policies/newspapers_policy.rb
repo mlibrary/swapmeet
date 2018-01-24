@@ -62,4 +62,9 @@ class NewspapersPolicy < ApplicationPolicy
   def revoke?(user)
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
+
+  def manage?
+    # TODO: link_to 'Manage Newspapers', user_newspapers_path(@user.model)
+    false
+  end
 end

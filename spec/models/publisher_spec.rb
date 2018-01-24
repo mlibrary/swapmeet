@@ -26,7 +26,7 @@ RSpec.describe Publisher, type: :model do
     end
   end
 
-  describe '#has_user?' do
+  xdescribe '#has_user?' do
     subject { publisher.has_user?(user) }
     let(:publisher) { described_class.new }
     let(:user) { double('user') }

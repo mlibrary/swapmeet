@@ -8,8 +8,14 @@ table
   tbody
     - @groups.each do |group|
       tr
-        td = link_to group.display_name, group
-        - if @newspaper.groups.exists?(group.id)
-          td = link_to 'Remove', remove_newspaper_group_path(@newspaper, group), method: :delete
+        td = link_to_if group.show?, group.label, group.model
+        - if @newspaper.groups.exists?(group)
+          - if @newspaper.remove?(group)
+            td = link_to 'Remove', remove_newspaper_group_path(@newspaper.model, group.model), method: :delete
+          - else
+            td Yes
         - else
-          td = link_to 'Add', add_newspaper_group_path(@newspaper, group), method: :patch
+          - if @newspaper.add?(group)
+            td = link_to 'Add', add_newspaper_group_path(@newspaper.model, group.model), method: :patch
+          - else
+            td No

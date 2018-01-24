@@ -32,5 +32,8 @@ module Swapmeet
 
     # Add presenters to autoload paths
     config.autoload_paths += %W[#{config.root}/app/presenters]
+
+    # Add editors to autoload paths
+    config.autoload_paths += %W[#{config.root}/app/editors]
   end
 end
