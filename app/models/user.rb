@@ -5,6 +5,9 @@ class User < ApplicationRecord
   has_many :listings, foreign_key: :owner
   has_and_belongs_to_many :publishers
   has_and_belongs_to_many :newspapers
+  validates :username, presence: true, allow_blank: false
+  validates :display_name, presence: true, allow_blank: false
+  validates :email, presence: true, allow_blank: false
 
   def self.nobody
     new(username: '<nobody>', display_name: '(No one)', email: '').tap(&:readonly!)

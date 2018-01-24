@@ -29,12 +29,12 @@ class UserPresenter < ApplicationPresenter
     policy.revoke?
   end
 
+  delegate :username, :display_name, :email, to: :model
+
   def label
-    return display_name if display_name.present?
+    return model.display_name if model.display_name.present?
     'USER'
   end
-
-  delegate :username, :display_name, :email, to: :model
 
   def listings
     ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)

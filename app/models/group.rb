@@ -6,4 +6,6 @@ class Group < ApplicationRecord
   has_and_belongs_to_many :users
   has_and_belongs_to_many :publishers
   has_and_belongs_to_many :newspapers
+  validates :name, presence: true, allow_blank: false
+  validates :display_name, presence: true, allow_blank: false
 end

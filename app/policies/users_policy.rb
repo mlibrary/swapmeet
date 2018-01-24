@@ -93,6 +93,6 @@ class UsersPolicy < ApplicationPolicy
 
   def manage?
     # TODO: link_to 'Manage Users', group_users_path(@group.model)
-    false
+    true
   end
 end

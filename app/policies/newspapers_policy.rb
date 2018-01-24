@@ -51,15 +51,20 @@ class NewspapersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
   end
 
-  def administrator?(user)
-    PolicyResolver.new(user, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  def administrator?
+    return true if @subject.administrator?
+    PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def permit?(user)
+  def administrator_user?(user)
+    PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+  end
+
+  def permit_user?(user)
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 
-  def revoke?(user)
+  def revoke_user?(user)
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   end
 

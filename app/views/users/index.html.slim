@@ -1,38 +1,32 @@
 h1 Listing users
 
 - if @users.empty?
-    h2 No Users
+  h2 No Users
 - else
-    table
-        thead
-            tr
-                th User
-                th Email
-                th Admin
-                th Login
-                th
-                th
-                th
-        tbody
-            - @users.each do |user|
-                tr
-                    td = user.label
-                    td = user.email
-                    - if user.administrator?
-                        - if user.revoke?
-                            td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete
-                        - else
-                            td Yes
-                    - else
-                        - if user.permit?
-                            td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch
-                        - else
-                            td No
-                    td = link_to 'Login', login_path(user.model), method: :post
-                    td = link_to 'Show', user.model if user.show?
-                    td = link_to 'Edit', edit_user_path(user.model) if user.edit?
-                    td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
+  table
+    thead
+      tr
+        th Login
+        th User
+        th Email
+        th Admin
+    tbody
+      - @users.each do |user|
+        tr
+          td = link_to 'Login', login_path(user.model), method: :post
+          td = user.label
+          td = user.email
+          - if user.administrator?
+            td Yes
+            td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete if user.revoke?
+          - else
+            td No
+            td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch if user.permit?
+          td = link_to 'Show', user.model if user.show?
+          td = link_to 'Edit', edit_user_path(user.model) if user.edit?
+          td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
+
 br
 
 - if @users.new?
-    = link_to 'New User', new_user_path
+  = link_to 'New User', new_user_path

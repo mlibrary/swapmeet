@@ -3,12 +3,8 @@
 class ListingsPresenter < ApplicationsPresenter
   def initialize(user, policy, listings)
     presenters = listings.map do |listing|
-      ListingPresenter.new(user,
-                          ListingPolicy.new(policy.subject, ListingPolicyAgent.new(listing)),
-                          listing)
+      ListingPresenter.new(user, ListingPolicy.new(policy.subject, ListingPolicyAgent.new(listing)), listing)
     end
     super(user, policy, listings, presenters)
   end
-
-  delegate :manage?, to: :policy
 end

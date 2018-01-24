@@ -49,16 +49,31 @@ class PublishersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
   end
 
-  def privilege?(user)
-    PolicyResolver.new(user, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  def administrator?
+    return true if @subject.administrator?
+    PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def permit?
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  def administrator_user?(user)
+    PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def revoke?
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  def permit_user?(user)
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.administrator?
+    return false if user.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+    PolicyResolver.new(@subject, PolicyMaker::POLICY_PERMIT, @object).grant?
+  end
+
+  def revoke_user?(user)
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.administrator?
+    return false if user.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+    PolicyResolver.new(@subject, PolicyMaker::POLICY_REVOKE, @object).grant?
   end
 
   def manage?

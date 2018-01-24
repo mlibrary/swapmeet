@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
 class DomainPresenter < ApplicationPresenter
+  delegate :name, :display_name, to: :model
+
   def label
-    return display_name if display_name.present?
+    return model.display_name if model.display_name.present?
     'DOMAIN'
   end
-
-  delegate :name, :display_name, to: :model
 
   def parent?
     model.parent.present?
   end
 
   def parent
-    DomainPresenter.new(user,
-                        DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.parent)),
-                        model.parent)
+    DomainPresenter.new(user, DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.parent)), model.parent)
   end
 
   def children

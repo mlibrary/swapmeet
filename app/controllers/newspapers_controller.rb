@@ -3,8 +3,19 @@
 class NewspapersController < ApplicationController
   def index
     @policy.authorize! :index?
-    @newspapers = Newspaper.all
-    @newspapers = NewspapersPresenter.new(current_user, @policy, @newspapers)
+    if params[:publisher_id].present?
+      @publisher = Publisher.find(params[:publisher_id])
+      @publisher = PublisherPresenter.new(current_user,
+                                          PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(@publisher)),
+                                          @publisher)
+      @newspapers = Newspaper.all
+      @newspapers = NewspapersPresenter.new(current_user, @policy, @newspapers)
+      render "publishers/newspapers"
+    else
+      @newspapers = Newspaper.all
+      @newspapers = NewspapersPresenter.new(current_user, @policy, @newspapers)
+      render
+    end
   end
 
   def show
@@ -65,6 +76,38 @@ class NewspapersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to newspapers_url, notice: 'Newspaper was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def add
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.newspapers << @newspaper
+      respond_to do |format|
+        format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully added..' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to newspapers_path, notice: 'Newspaper was not successfully added.' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  def remove
+    if params[:publisher_id].present?
+      publisher = Publisher.find(params[:publisher_id])
+      publisher.newspapers.delete(@newspaper)
+      respond_to do |format|
+        format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully removed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to newspapers_path, notice: 'Newspaper was not successfully removed.' }
+        format.json { head :no_content }
+      end
     end
   end
 

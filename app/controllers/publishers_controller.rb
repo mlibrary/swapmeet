@@ -74,6 +74,6 @@ class PublishersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def publisher_params
-      params.require(:publisher).permit(:name, :display_name, :publisher_id)
+      params.require(:publisher).permit(:name, :display_name, :domain_id)
     end
 end

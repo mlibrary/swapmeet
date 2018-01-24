@@ -23,58 +23,52 @@ p
 hr
 h2 Newspapers
 ul
-  - if @publisher.newspapers.empty?
-    li
-      No Newspapers
-  - else
+  - if @publisher.newspapers?
     - @publisher.newspapers.each do |newspaper|
       li
-        = link_to_if newspaper.show?, newspaper.label, publisher_newspaper_path(@publisher.model, newspaper.model)
-- if @publisher.newspapers.manage?
+        = link_to_if newspaper.show?, newspaper.label, newspaper.model
+  - else
+    li No Newspapers
+- if @publisher.administrator?
   = link_to 'Manage Newspapers', publisher_newspapers_path(@publisher.model)
 
-hr
-h2 Groups
-ul
-  - if @publisher.groups.empty?
-    li
-      No Groups
-  - else
-    - @publisher.groups.each do |group|
-      li
-        = link_to_if group.show?, group.label, group.model
-- if @publisher.groups.manage?
-  = link_to 'Manage Groups', publisher_groups_path(@publisher.model)
+- if @publisher.user?
+  hr
+  h2 Groups
+  ul
+    - if @publisher.groups?
+      - @publisher.groups.each do |group|
+        li
+          = link_to_if group.show?, group.label, group.model
+    - else
+      li No Groups
+  - if @publisher.administrator?
+    = link_to 'Manage Groups', publisher_groups_path(@publisher.model)
 
-hr
-h2 Users
-table
-  thead
-    tr
-      th Name
-      th Email
-      th Administrator
-      th
-  tbody
-  - if @publisher.users.empty?
-    tr
-      td
-      td No Users
-      td
-  - else
-    - @publisher.users.each do |user|
+  hr
+  h2 Users
+  table
+    thead
       tr
-        td = link_to_if user.show?, user.label, user.model
-        td = user.email
-        - if @publisher.privilege?(user)
-          - if @publisher.revoke?(user)
-            td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete
-          - else
+        th Name
+        th Email
+        th Administrator
+    tbody
+    - if @publisher.users?
+      - @publisher.users.each do |user|
+        tr
+          td = link_to_if user.show?, user.label, user.model
+          td = user.email
+          - if @publisher.administrator?(user)
             td Yes
-        - else
-          - if @publisher.permit?(user)
-            td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch
+            td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete if @publisher.revoke?(user)
           - else
             td No
-- if @publisher.users.manage?
-  = link_to 'Manage Users', publisher_users_path(@publisher.model)
+            td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch if @publisher.permit?(user)
+    - else
+      tr
+        td
+        td No Users
+        td
+  - if @publisher.administrator?
+    = link_to 'Manage Users', publisher_users_path(@publisher.model)

@@ -6,10 +6,22 @@ Rails.application.routes.draw do
   resources :gatekeepers
 
   resources :groups do
-    resources :users, only: [] do
+    resources :groups, only: [:index] do
+      member do
+        patch :add
+        delete :remove
+      end
+    end
+    resources :users, only: [:index] do
       member do
         patch :join
         delete :leave
+      end
+    end
+    resources :publishers, only: [:index] do
+      member do
+        patch :add
+        delete :remove
       end
     end
   end
@@ -41,7 +53,12 @@ Rails.application.routes.draw do
   end
 
   resources :publishers do
-    resources :newspapers
+    resources :newspapers, only: [:index] do
+      member do
+        patch :add
+        delete :remove
+      end
+    end
     resources :groups, only: [:index] do
       member do
         patch :add
