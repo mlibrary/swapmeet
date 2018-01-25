@@ -15,6 +15,7 @@ class NewspapersPolicy < ApplicationPolicy
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:create), @object).grant?
   end
 
@@ -50,15 +51,25 @@ class NewspapersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
   end
 
-  def administrator?(user)
-    PolicyResolver.new(user, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  def administrator?
+    return true if @subject.administrator?
+    PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def permit?(user)
-    PolicyMaker.permit?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+  def administrator_user?(user)
+    PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def revoke?(user)
-    PolicyMaker.revoke?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+  def permit_user?(user)
+    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  end
+
+  def revoke_user?(user)
+    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  end
+
+  def manage?
+    # TODO: link_to 'Manage Newspapers', user_newspapers_path(@user.model)
+    false
   end
 end

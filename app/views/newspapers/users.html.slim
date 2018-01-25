@@ -1,5 +1,7 @@
 h1 Newspaper users
 
+p#notice = notice
+
 table
   thead
     tr
@@ -9,9 +11,11 @@ table
   tbody
     - @users.each do |user|
       tr
-        td = link_to user.label, user.model
+        td = link_to_if user.show?, user.label, user.model
         td = user.email
-        - if @newspaper.has_user?(user)
-          td = link_to 'Remove', remove_newspaper_user_path(@newspaper.model, user.model), method: :delete
+        - if @newspaper.user?(user)
+          td Yes
+          td = link_to 'Remove', remove_newspaper_user_path(@newspaper.model, user.model), method: :delete if @newspaper.remove?
         - else
-          td = link_to 'Add', add_newspaper_user_path(@newspaper.model, user.model), method: :patch
+          td No
+          td = link_to 'Add', add_newspaper_user_path(@newspaper.model, user.model), method: :patch if @newspaper.add?

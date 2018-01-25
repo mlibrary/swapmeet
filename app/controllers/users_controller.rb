@@ -31,12 +31,12 @@ class UsersController < ApplicationController
   def new
     @policy.authorize! :new?
     @user = User.new
-    # @user = UserPresenter.new(current_user, @policy, @user)
+    @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def edit
     @policy.authorize! :edit?
-    # @user = UserPresenter.new(current_user, @policy, @user)
+    @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def create
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
         format.json { render :show, status: :created, location: @user }
       else
         format.html do
-          # @user = UserPresenter.new(current_user, @policy, @user)
+          @user = UserPresenter.new(current_user, @policy, @user)
           render :new
         end
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
         format.json { render :show, status: :ok, location: @user }
       else
         format.html do
-          # @user = UserPresenter.new(current_user, @policy, @user)
+          @user = UserPresenter.new(current_user, @policy, @user)
           render :edit
         end
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -177,6 +177,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:display_name, :email)
+      params.require(:user).permit(:username, :display_name, :email)
     end
 end

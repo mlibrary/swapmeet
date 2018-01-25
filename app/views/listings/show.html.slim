@@ -3,10 +3,6 @@ h1 Listing
 p#notice = notice
 
 p
-  strong Category:&nbsp
-  = link_to @listing.category.label, category_path(@listing.category.model)
-
-p
   strong Title:&nbsp
   = @listing.title
 p
@@ -14,10 +10,13 @@ p
   = @listing.body
 p
   strong Owner:&nbsp
-  = link_to_if @listing.owner.show?, @listing.owner.label, controller: 'users', action: 'show', id: @listing.owner.model
+  = link_to_if @listing.owner.show?, @listing.owner.label, @listing.owner.model
+p
+  strong Category:&nbsp
+  = link_to_if @listing.category.show?, @listing.category.label, @listing.category.model
 p
   strong Newspaper:&nbsp
-  = link_to @listing.newspaper.label, newspaper_path(@listing.newspaper.model)
+  = link_to @listing.newspaper.label, @listing.newspaper.model
 
 - if @listing.edit?
   =<> link_to 'Edit', edit_listing_path(@listing.model)

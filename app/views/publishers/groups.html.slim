@@ -1,5 +1,7 @@
 h1 Publisher groups
 
+p#notice = notice
+
 table
   thead
     tr
@@ -8,8 +10,11 @@ table
   tbody
     - @groups.each do |group|
       tr
-        td = link_to group.label, group.model
-        - if @publisher.model.groups.exists?(group.model.id)
-          td = link_to 'Remove', remove_publisher_group_path(@publisher.model, group.model), method: :delete
+        td = link_to_if group.show?, group.label, group.model
+        - if @publisher.group?(group)
+          td Yes
+          td = link_to 'Remove', remove_publisher_group_path(@publisher.model, group.model), method: :delete if @publisher.remove?
         - else
-          td = link_to 'Add', add_publisher_group_path(@publisher.model, group.model), method: :patch
+          td No
+          td = link_to 'Add', add_publisher_group_path(@publisher.model, group.model), method: :patch if @publisher.add?
+

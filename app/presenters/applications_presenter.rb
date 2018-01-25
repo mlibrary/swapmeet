@@ -12,5 +12,5 @@ class ApplicationsPresenter
 
   delegate :index?, :show?, :new?, :create?, :edit?, :update?, :destroy?, to: :policy
 
-  delegate :empty?, :each, to: :presenters
+  delegate :empty?, :count, :each, to: :presenters
 end

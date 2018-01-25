@@ -5,8 +5,6 @@ class Newspaper < ApplicationRecord
   has_many :listings
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :users
-
-  def has_user?(user)
-    users.exists?(user.id)
-  end
+  validates :name, presence: true, allow_blank: false
+  validates :display_name, presence: true, allow_blank: false
 end

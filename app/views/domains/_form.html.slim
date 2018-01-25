@@ -1,4 +1,4 @@
-= form_for @domain do |f|
+= form_for @domain.model do |f|
   - if @domain.errors.any?
     #error_explanation
       h2 = "#{pluralize(@domain.errors.count, "error")} prohibited this domain from being saved:"
@@ -14,5 +14,5 @@
     = f.text_field :display_name
   .field
     = f.label :parent
-    = f.collection_select :parent_id, Domain.all, :id, :name, prompt: "Select a Parent"
+    = f.select :parent_id, @domain.domains, prompt: "Select a Parent"
   .actions = f.submit

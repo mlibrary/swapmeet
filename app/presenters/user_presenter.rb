@@ -1,58 +1,67 @@
 # frozen_string_literal: true
 
 class UserPresenter < ApplicationPresenter
-  def administrator?
-    policy.object.administrator?
+  def join?(object)
+    policy.leave?(object.policy.object)
+  end
+
+  def leave?(object)
+    policy.leave?(object.policy.object)
+  end
+
+  def add?(object)
+    policy.add?(object.policy.object)
+  end
+
+  def remove?(object)
+    policy.remove?(object.policy.object)
   end
 
   def permit?
-    return true if policy.subject.administrator?
-    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).permit?
-    false
+    policy.permit?
   end
 
   def revoke?
-    return true if policy.subject.administrator?
-    #   PrivilegesPolicy.new(@subject, UserPolicyAgent.new(user)).revoke?
-    false
-  end
-
-  def label
-    return display_name if display_name.present?
-    'USER'
+    policy.revoke?
   end
 
   delegate :username, :display_name, :email, to: :model
+  # delegate :username, :display_name, :email, :listings, :newspapers, :publishers, :groups, to: :model
+
+  def label
+    return model.display_name if model.display_name.present?
+    'USER'
+  end
+
+  def listings?
+    !model.listings.empty?
+  end
 
   def listings
-    model.listings.map do |listing|
-      ListingPresenter.new(user, ListingPolicy.new(policy.subject,
-                                                   ListingPolicyAgent.new(listing)),
-                           listing)
-    end
+    ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
+  end
+
+  def publishers?
+    !model.publishers.empty?
   end
 
   def publishers
-    model.publishers.map do |publisher|
-      PublisherPresenter.new(user, PublishersPolicy.new(policy.subject,
-                                                        PublisherPolicyAgent.new(publisher)),
-                             publisher)
-    end
+    PublishersPresenter.new(user, PublishersPolicy.new(policy.subject, policy.object), model.publishers)
+  end
+
+  def newspapers?
+    !model.newspapers.empty?
   end
 
   def newspapers
-    model.newspapers.map do |newspaper|
-      NewspaperPresenter.new(user, NewspapersPolicy.new(policy.subject,
-                                                        NewspaperPolicyAgent.new(newspaper)),
-                             newspaper)
-    end
+    NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
+  end
+
+  def groups?
+    !model.groups.empty?
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 end

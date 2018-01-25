@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class NewspaperPresenter < ApplicationPresenter
-  def administrator?(user)
-    policy.administrator?(user.policy.object)
-  end
+  attr_reader :publishers
+
+  delegate :add?, :remove?, to: :policy
 
   def permit?(user)
     policy.revoke?(user.policy.object)
@@ -13,45 +13,52 @@ class NewspaperPresenter < ApplicationPresenter
     policy.revoke?(user.policy.object)
   end
 
+  delegate :name, :display_name, to: :model
+
   def label
-    return display_name if display_name.present?
+    return model.display_name if model.display_name.present?
     'NEWSPAPER'
   end
 
-  delegate :name, :display_name, to: :model
+  def publisher?
+    model.publisher.present?
+  end
 
   def publisher
-    PublisherPresenter.new(user,
-                           PublishersPolicy.new(policy.subject,
-                                                PublisherPolicyAgent.new(model.publisher)),
-                           model.publisher)
+    PublisherPresenter.new(user, PublishersPolicy.new(policy.subject, PublisherPolicyAgent.new(model.publisher)), model.publisher)
+  end
+
+  def publishers
+    @publishers ||= Publisher.all.map { |publisher| [publisher.display_name, publisher.id] }
+  end
+
+  def listings?
+    !model.listings.empty?
   end
 
   def listings
-    model.listings.map do |listing|
-      ListingPresenter.new(user, ListingPolicy.new(policy.subject,
-                                                   ListingPolicyAgent.new(listing)),
-                           listing)
-    end
+    ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
+  end
+
+  def groups?
+    !model.groups.empty?
   end
 
   def groups
-    model.groups.map do |group|
-      GroupPresenter.new(user, GroupsPolicy.new(policy.subject,
-                                                GroupPolicyAgent.new(group)),
-                         group)
-    end
+    GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
+  end
+
+  def user?(user = nil)
+    return true if administrator?(user)
+    return model.users.exists?(user.model.id) if user.present?
+    model.users.exists?(self.user.id)
+  end
+
+  def users?
+    !model.users.empty?
   end
 
   def users
-    model.users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new(policy.subject,
-                                               UserPolicyAgent.new(usr)),
-                        usr)
-    end
-  end
-
-  def has_user?(user)
-    model.has_user?(user.model)
+    UsersPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), model.users)
   end
 end

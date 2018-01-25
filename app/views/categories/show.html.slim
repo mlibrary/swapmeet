@@ -15,12 +15,19 @@ p
 - if @category.edit?
   => link_to 'Edit', edit_category_path(@category.model)
   '|
+- if @category.destroy?
+  =<> link_to 'Delete', @category.model, data: { confirm: 'Are you sure?' }, method: :delete
+  '|
 =< link_to 'Back', categories_path
 
-- unless @category.listings.empty?
-  hr
-  h2 Listings
-  ul
+hr
+h2 Listings
+ul
+  - if @category.listings?
     - @category.listings.each do |listing|
       li
-        = link_to listing.label, listing.model
+        = link_to_if listing.show?, listing.label, listing.model
+  - else
+    li No Listings
+- if @category.administrator?
+  = link_to 'Manage Listings', category_listings_path(@category.model)
