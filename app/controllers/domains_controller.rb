@@ -15,12 +15,12 @@ class DomainsController < ApplicationController
   def new
     @policy.authorize! :new?
     @domain = Domain.new
-    @domain = DomainEditor.new(current_user, @policy, @domain)
+    @domain = DomainPresenter.new(current_user, @policy, @domain)
   end
 
   def edit
     @policy.authorize! :edit?
-    @domain = DomainEditor.new(current_user, @policy, @domain)
+    @domain = DomainPresenter.new(current_user, @policy, @domain)
   end
 
   def create
@@ -32,7 +32,7 @@ class DomainsController < ApplicationController
         format.json { render :show, status: :created, location: @domain }
       else
         format.html do
-          @domain = DomainEditor.new(current_user, @policy, @domain)
+          @domain = DomainPresenter.new(current_user, @policy, @domain)
           render :new
         end
         format.json { render json: @domain.errors, status: :unprocessable_entity }
@@ -48,7 +48,7 @@ class DomainsController < ApplicationController
         format.json { render :show, status: :ok, location: @domain }
       else
         format.html do
-          @domain = DomainEditor.new(current_user, @policy, @domain)
+          @domain = DomainPresenter.new(current_user, @policy, @domain)
           render :edit
         end
         format.json { render json: @domain.errors, status: :unprocessable_entity }

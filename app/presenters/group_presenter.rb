@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 class GroupPresenter < ApplicationPresenter
-  delegate :join?, :leave?, to: :policy
+  attr_reader :groups
 
-  def administrator?(user = nil)
-    policy.administrator_user?(user.policy.object) if user.present?
-    policy.administrator?
-  end
+  delegate :join?, :leave?, to: :policy
 
   delegate :name, :display_name, to: :model
 
@@ -21,6 +18,10 @@ class GroupPresenter < ApplicationPresenter
 
   def parent
     GroupPresenter.new(user, GroupsPolicy.new(policy.subject, GroupPolicyAgent.new(model.parent)), model.parent)
+  end
+
+  def groups
+    @groups ||= Group.all.map { |group| [group.display_name, group.id] }
   end
 
   def children?
@@ -40,7 +41,7 @@ class GroupPresenter < ApplicationPresenter
   end
 
   def newspapers?
-    !model.newspapers.emtpy?
+    !model.newspapers.empty?
   end
 
   def newspapers

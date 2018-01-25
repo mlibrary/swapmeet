@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 class PublisherPresenter < ApplicationPresenter
-  delegate :add?, :remove?, to: :policy
+  attr_reader :domains
 
-  def administrator?(user = nil)
-    return policy.administrator_user?(user.policy.object) if user.present?
-    policy.administrator?
-  end
+  delegate :add?, :remove?, to: :policy
 
   def permit?(user)
     policy.permit_user?(user.policy.object)
@@ -29,6 +26,10 @@ class PublisherPresenter < ApplicationPresenter
 
   def domain
     DomainPresenter.new(user, DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.domain)), model.domain)
+  end
+
+  def domains
+    @domains = Domain.all.map { |domain| [domain.display_name, domain.id] }
   end
 
   def newspaper?(newspaper = nil)

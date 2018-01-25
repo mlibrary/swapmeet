@@ -31,12 +31,12 @@ class UsersController < ApplicationController
   def new
     @policy.authorize! :new?
     @user = User.new
-    @user = UserEditor.new(current_user, @policy, @user)
+    @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def edit
     @policy.authorize! :edit?
-    @user = UserEditor.new(current_user, @policy, @user)
+    @user = UserPresenter.new(current_user, @policy, @user)
   end
 
   def create
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
         format.json { render :show, status: :created, location: @user }
       else
         format.html do
-          @user = UserEditor.new(current_user, @policy, @user)
+          @user = UserPresenter.new(current_user, @policy, @user)
           render :new
         end
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
         format.json { render :show, status: :ok, location: @user }
       else
         format.html do
-          @user = UserEditor.new(current_user, @policy, @user)
+          @user = UserPresenter.new(current_user, @policy, @user)
           render :edit
         end
         format.json { render json: @user.errors, status: :unprocessable_entity }

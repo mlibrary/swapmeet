@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 class NewspaperPresenter < ApplicationPresenter
-  delegate :add?, :remove?, to: :policy
+  attr_reader :publishers
 
-  def administrator?(user = nil)
-    return policy.administrator_user?(user.policy.object) if user.present?
-    policy.administrator?
-  end
+  delegate :add?, :remove?, to: :policy
 
   def permit?(user)
     policy.revoke?(user.policy.object)
@@ -29,6 +26,10 @@ class NewspaperPresenter < ApplicationPresenter
 
   def publisher
     PublisherPresenter.new(user, PublishersPolicy.new(policy.subject, PublisherPolicyAgent.new(model.publisher)), model.publisher)
+  end
+
+  def publishers
+    @publishers ||= Publisher.all.map { |publisher| [publisher.display_name, publisher.id] }
   end
 
   def listings?

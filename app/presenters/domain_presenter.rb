@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DomainPresenter < ApplicationPresenter
+  attr_reader :domains
+
   delegate :name, :display_name, to: :model
 
   def label
@@ -16,8 +18,20 @@ class DomainPresenter < ApplicationPresenter
     DomainPresenter.new(user, DomainsPolicy.new(policy.subject, DomainPolicyAgent.new(model.parent)), model.parent)
   end
 
+  def domains
+    @domains ||= Domain.all.map { |domain| [domain.display_name, domain.id] }
+  end
+
+  def children?
+    !model.children.empty?
+  end
+
   def children
     DomainsPresenter.new(user, DomainsPolicy.new(policy.subject, policy.object), model.children)
+  end
+
+  def publishers?
+    !model.publishers.empty?
   end
 
   def publishers

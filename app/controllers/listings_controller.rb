@@ -40,12 +40,12 @@ class ListingsController < ApplicationController
     @policy.authorize! :new?
     @listing = Listing.new
     @listing.newspaper = Newspaper.find(params[:newspaper_id]) if params[:newspaper_id].present?
-    @listing = ListingEditor.new(current_user, @policy, @listing)
+    @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def edit
     @policy.authorize! :edit?
-    @listing = ListingEditor.new(current_user, @policy, @listing)
+    @listing = ListingPresenter.new(current_user, @policy, @listing)
   end
 
   def create
@@ -58,7 +58,7 @@ class ListingsController < ApplicationController
         format.json { render :show, status: :created, location: @listing }
       else
         format.html do
-          @listing = ListingEditor.new(current_user, @policy, @listing)
+          @listing = ListingPresenter.new(current_user, @policy, @listing)
           render :new
         end
         format.json { render json: @listing.errors, status: :unprocessable_entity }
@@ -74,7 +74,7 @@ class ListingsController < ApplicationController
         format.json { render :show, status: :ok, location: @listing }
       else
         format.html do
-          @listing = ListingEditor.new(current_user, @policy, @listing)
+          @listing = ListingPresenter.new(current_user, @policy, @listing)
           render :edit
         end
         format.json { render json: @listing.errors, status: :unprocessable_entity }

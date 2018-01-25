@@ -8,6 +8,10 @@ class CategoryPresenter < ApplicationPresenter
     'CATEGORY'
   end
 
+  def listings?
+    !model.listings.empty?
+  end
+
   def listings
     ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
   end
