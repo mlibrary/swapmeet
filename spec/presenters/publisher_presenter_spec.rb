@@ -9,30 +9,38 @@ RSpec.describe PublisherPresenter do
   let(:user) { build(:user) }
   let(:policy) { PublishersPolicy.new(SubjectPolicyAgent.new(:User, user), PublisherPolicyAgent.new(model)) }
   let(:model) { build(:publisher, domain: domain, newspapers: newspapers, groups: groups, users: users) }
-  let(:domain) { build(:domain) }
-  let(:newspapers) do
-    [
-        build(:newspaper),
-        build(:newspaper),
-        build(:newspaper)
-    ]
-  end
-  let(:groups) do
-    [
-        build(:group),
-        build(:group),
-        build(:group)
-    ]
-  end
-  let(:users) do
-    [
-        build(:user),
-        build(:user),
-        build(:user)
-    ]
-  end
+  let(:domain) { nil }
+  let(:newspapers) { [] }
+  let(:groups) { [] }
+  let(:users) { [] }
 
   it { is_expected.to be_a(described_class) }
+
+  context 'user delegation' do
+    before do
+    end
+    it do
+      expect(subject.user).to be user
+    end
+  end
+
+  context 'policy delegation' do
+    before do
+    end
+    it do
+      expect(subject.policy).to be policy
+    end
+  end
+
+  context 'model delegation' do
+    before do
+    end
+    it do
+      expect(subject.model).to be model
+      expect(subject.name).to be model.name
+      expect(subject.display_name).to be model.display_name
+    end
+  end
 
   describe '#label' do
     subject { presenter.label }
@@ -42,8 +50,21 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#domain?' do
+    subject { presenter.domain? }
+    context 'blank' do
+      let(:domain) { nil }
+      it { is_expected.to be false }
+    end
+    context 'present' do
+      let(:domain) { build(:domain) }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#domain' do
     subject { presenter.domain }
+    let(:domain) { build(:domain) }
     it do
       is_expected.to be_a(DomainPresenter)
       expect(subject.user).to be user
@@ -56,8 +77,34 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#domains' do
+    subject { presenter.domains }
+    it do
+      is_expected.to be_a(Array)
+    end
+  end
+
+  describe '#newspapers?' do
+    subject { presenter.newspapers? }
+    context 'empty' do
+      let(:newspapers) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:newspapers) { [build(:newspaper)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#newspapers' do
     subject { presenter.newspapers }
+    let(:newspapers) do
+      [
+          build(:newspaper),
+          build(:newspaper),
+          build(:newspaper)
+      ]
+    end
     it do
       is_expected.to be_a(NewspapersPresenter)
       expect(subject.user).to be user
@@ -78,8 +125,27 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#groups?' do
+    subject { presenter.groups? }
+    context 'empty' do
+      let(:groups) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:groups) { [build(:group)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#groups' do
     subject { presenter.groups }
+    let(:groups) do
+      [
+          build(:group),
+          build(:group),
+          build(:group)
+      ]
+    end
     it do
       is_expected.to be_a(GroupsPresenter)
       expect(subject.user).to be user
@@ -100,8 +166,27 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#users?' do
+    subject { presenter.users? }
+    context 'empty' do
+      let(:users) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:users) { [build(:user)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#users' do
     subject { presenter.users }
+    let(:users) do
+      [
+          build(:user),
+          build(:user),
+          build(:user)
+      ]
+    end
     it do
       is_expected.to be_a(UsersPresenter)
       expect(subject.user).to be user

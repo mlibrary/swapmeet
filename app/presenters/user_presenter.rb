@@ -17,10 +17,6 @@ class UserPresenter < ApplicationPresenter
     policy.remove?(object.policy.object)
   end
 
-  def administrator?
-    policy.administrator?
-  end
-
   def permit?
     policy.permit?
   end
@@ -29,23 +25,40 @@ class UserPresenter < ApplicationPresenter
     policy.revoke?
   end
 
+  delegate :username, :display_name, :email, to: :model
+  # delegate :username, :display_name, :email, :listings, :newspapers, :publishers, :groups, to: :model
+
   def label
-    return display_name if display_name.present?
+    return model.display_name if model.display_name.present?
     'USER'
   end
 
-  delegate :username, :display_name, :email, to: :model
+  def listings?
+    !model.listings.empty?
+  end
 
   def listings
     ListingsPresenter.new(user, ListingPolicy.new(policy.subject, policy.object), model.listings)
+  end
+
+  def publishers?
+    !model.publishers.empty?
   end
 
   def publishers
     PublishersPresenter.new(user, PublishersPolicy.new(policy.subject, policy.object), model.publishers)
   end
 
+  def newspapers?
+    !model.newspapers.empty?
+  end
+
   def newspapers
     NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
+  end
+
+  def groups?
+    !model.groups.empty?
   end
 
   def groups

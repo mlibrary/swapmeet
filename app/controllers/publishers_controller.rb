@@ -15,12 +15,12 @@ class PublishersController < ApplicationController
   def new
     @policy.authorize! :new?
     @publisher = Publisher.new
-    @publisher = PublisherEditor.new(current_user, @policy, @publisher)
+    @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
   end
 
   def edit
     @policy.authorize! :edit?
-    @publisher = PublisherEditor.new(current_user, @policy, @publisher)
+    @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
   end
 
   def create
@@ -32,7 +32,7 @@ class PublishersController < ApplicationController
         format.json { render :show, status: :created, location: @publisher }
       else
         format.html do
-          @publisher = PublisherEditor.new(current_user, @policy, @publisher)
+          @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
           render :new
         end
         format.json { render json: @publisher.errors, status: :unprocessable_entity }
@@ -48,7 +48,7 @@ class PublishersController < ApplicationController
         format.json { render :show, status: :ok, location: @publisher }
       else
         format.html do
-          @publisher = PublisherEditor.new(current_user, @policy, @publisher)
+          @publisher = PublisherPresenter.new(current_user, @policy, @publisher)
           render :edit
         end
         format.json { render json: @publisher.errors, status: :unprocessable_entity }
@@ -74,6 +74,6 @@ class PublishersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def publisher_params
-      params.require(:publisher).permit(:name, :display_name, :publisher_id)
+      params.require(:publisher).permit(:name, :display_name, :domain_id)
     end
 end

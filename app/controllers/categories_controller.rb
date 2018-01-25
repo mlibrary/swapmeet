@@ -15,12 +15,12 @@ class CategoriesController < ApplicationController
   def new
     @policy.authorize! :new?
     @category = Category.new
-    @category = CategoryEditor.new(current_user, @policy, @category)
+    @category = CategoryPresenter.new(current_user, @policy, @category)
   end
 
   def edit
     @policy.authorize! :edit?
-    @category = CategoryEditor.new(current_user, @policy, @category)
+    @category = CategoryPresenter.new(current_user, @policy, @category)
   end
 
   def create
@@ -32,7 +32,7 @@ class CategoriesController < ApplicationController
         format.json { render :show, status: :created, location: @category }
       else
         format.html do
-          @category = CategoryEditor.new(current_user, @policy, @category)
+          @category = CategoryPresenter.new(current_user, @policy, @category)
           render :new
         end
         format.json { render json: @category.errors, status: :unprocessable_entity }
@@ -48,7 +48,7 @@ class CategoriesController < ApplicationController
         format.json { render :show, status: :ok, location: @category }
       else
         format.html do
-          @category = CategoryEditor.new(current_user, @policy, @category)
+          @category = CategoryPresenter.new(current_user, @policy, @category)
           render :edit
         end
         format.json { render json: @category.errors, status: :unprocessable_entity }

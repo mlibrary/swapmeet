@@ -9,36 +9,38 @@ RSpec.describe UserPresenter do
   let(:user) { build(:user) }
   let(:policy) { UsersPolicy.new(SubjectPolicyAgent.new(:User, user), UserPolicyAgent.new(model)) }
   let(:model) { build(:user, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
-  let(:listings) do
-    [
-        build(:listing),
-        build(:listing),
-        build(:listing)
-    ]
-  end
-  let(:newspapers) do
-    [
-        build(:newspaper),
-        build(:newspaper),
-        build(:newspaper)
-    ]
-  end
-  let(:publishers) do
-    [
-        build(:publisher),
-        build(:publisher),
-        build(:publisher)
-    ]
-  end
-  let(:groups) do
-    [
-        build(:group),
-        build(:group),
-        build(:group)
-    ]
-  end
+  let(:listings) { [] }
+  let(:publishers) { [] }
+  let(:newspapers) { [] }
+  let(:groups) { [] }
 
   it { is_expected.to be_a(described_class) }
+
+  context 'user delegation' do
+    before do
+    end
+    it do
+      expect(subject.user).to be user
+    end
+  end
+
+  context 'policy delegation' do
+    before do
+    end
+    it do
+      expect(subject.policy).to be policy
+    end
+  end
+
+  context 'model delegation' do
+    before do
+    end
+    it do
+      expect(subject.model).to be model
+      expect(subject.username).to be model.username
+      expect(subject.email).to be model.email
+    end
+  end
 
   describe '#label' do
     subject { presenter.label }
@@ -48,8 +50,27 @@ RSpec.describe UserPresenter do
     end
   end
 
+  describe '#listings?' do
+    subject { presenter.listings? }
+    context 'empty' do
+      let(:listings) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:listings) { [build(:listing)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#listings' do
     subject { presenter.listings }
+    let(:listings) do
+      [
+          build(:listing),
+          build(:listing),
+          build(:listing)
+      ]
+    end
     it do
       is_expected.to be_a(ListingsPresenter)
       expect(subject.user).to be user
@@ -70,8 +91,27 @@ RSpec.describe UserPresenter do
     end
   end
 
+  describe '#publishers?' do
+    subject { presenter.publishers? }
+    context 'empty' do
+      let(:publishers) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:publishers) { [build(:publisher)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#publishers' do
     subject { presenter.publishers }
+    let(:publishers) do
+      [
+          build(:publisher),
+          build(:publisher),
+          build(:publisher)
+      ]
+    end
     it do
       is_expected.to be_a(PublishersPresenter)
       expect(subject.user).to be user
@@ -92,8 +132,27 @@ RSpec.describe UserPresenter do
     end
   end
 
+  describe '#newspapers?' do
+    subject { presenter.newspapers? }
+    context 'empty' do
+      let(:newspapers) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:newspapers) { [build(:newspaper)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#newspapers' do
     subject { presenter.newspapers }
+    let(:newspapers) do
+      [
+          build(:newspaper),
+          build(:newspaper),
+          build(:newspaper)
+      ]
+    end
     it do
       is_expected.to be_a(NewspapersPresenter)
       expect(subject.user).to be user
@@ -114,8 +173,27 @@ RSpec.describe UserPresenter do
     end
   end
 
+  describe '#groups?' do
+    subject { presenter.groups? }
+    context 'empty' do
+      let(:groups) { [] }
+      it { is_expected.to be false }
+    end
+    context '!empty' do
+      let(:groups) { [build(:group)] }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#groups' do
     subject { presenter.groups }
+    let(:groups) do
+      [
+          build(:group),
+          build(:group),
+          build(:group)
+      ]
+    end
     it do
       is_expected.to be_a(GroupsPresenter)
       expect(subject.user).to be user
