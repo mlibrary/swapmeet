@@ -58,10 +58,10 @@ class PublisherPresenter < ApplicationPresenter
     GroupsPresenter.new(user, GroupsPolicy.new(policy.subject, policy.object), model.groups)
   end
 
-  def user?(user = nil)
-    return true if administrator?(user)
-    return model.users.exists?(user.model.id) if user.present?
-    model.users.exists?(self.user.id)
+  def user?(usr = nil)
+    return true if administrator?(usr)
+    return model.users.exists?(usr.model.id) if usr.present?
+    model.users.exists?(user.id)
   end
 
   def users?

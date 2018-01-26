@@ -8,7 +8,8 @@ RSpec.describe CategoryPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { CategoriesPolicy.new(SubjectPolicyAgent.new(:User, user), CategoryPolicyAgent.new(model)) }
-  let(:model) { build(:category, listings: listings) }
+  let(:model) { build(:category, display_name: display_name, listings: listings) }
+  let(:display_name) { nil }
   let(:listings) { [] }
 
   it { is_expected.to be_a(described_class) }
@@ -42,9 +43,14 @@ RSpec.describe CategoryPresenter do
 
   describe '#label' do
     subject { presenter.label }
-    it do
-      is_expected.to be_a(String)
-      is_expected.to eq model.display_name
+    it { is_expected.to be_a(String) }
+    context 'blank' do
+      let(:display_name) { nil }
+      it { is_expected.to eq 'CATEGORY' }
+    end
+    context 'present' do
+      let(:display_name) { 'display_name' }
+      it { is_expected.to eq model.display_name }
     end
   end
 

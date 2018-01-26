@@ -54,8 +54,8 @@ class PublishersPolicy < ApplicationPolicy
     PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
-  def administrator_user?(user)
-    PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+  def administrator_user?(usr)
+    PolicyMaker.exist?(usr, PolicyMaker::ROLE_ADMINISTRATOR, @object)
   end
 
   def permit_user?(user)
@@ -74,10 +74,5 @@ class PublishersPolicy < ApplicationPolicy
     return false if user.administrator?
     return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, PolicyMaker::POLICY_REVOKE, @object).grant?
-  end
-
-  def manage?
-    # TODO: link_to 'Manage Publishers', user_publishers_path(@user.model)
-    false
   end
 end

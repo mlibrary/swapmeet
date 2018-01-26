@@ -8,7 +8,8 @@ RSpec.describe ListingPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { ListingPolicy.new(SubjectPolicyAgent.new(:User, user), ListingPolicyAgent.new(model)) }
-  let(:model) { build(:listing, owner: owner, category: category, newspaper: newspaper) }
+  let(:model) { build(:listing, title: title, owner: owner, category: category, newspaper: newspaper) }
+  let(:title) { nil }
   let(:owner) { nil }
   let(:category) { nil }
   let(:newspaper) { nil }
@@ -43,9 +44,14 @@ RSpec.describe ListingPresenter do
 
   describe '#label' do
     subject { presenter.label }
-    it do
-      is_expected.to be_a(String)
-      is_expected.to eq model.title
+    it { is_expected.to be_a(String) }
+    context 'blank' do
+      let(:title) { nil }
+      it { is_expected.to eq 'LISTING' }
+    end
+    context 'present' do
+      let(:title) { 'title' }
+      it { is_expected.to eq model.title }
     end
   end
 
@@ -78,8 +84,21 @@ RSpec.describe ListingPresenter do
 
   describe '#categories' do
     subject { presenter.categories }
+    let(:categories) do
+      [
+          build(:category, id: 0),
+          build(:category, id: 1),
+          build(:category, id: 2)
+      ]
+    end
+    before { allow(Category).to receive(:all).and_return(categories) }
     it do
       is_expected.to be_a(Array)
+      expect(subject.count).to be categories.count
+      subject.each.with_index do |category, index|
+        expect(category[0]).to be categories[index].display_name
+        expect(category[1]).to be index
+      end
     end
   end
 
@@ -112,8 +131,21 @@ RSpec.describe ListingPresenter do
 
   describe '#newspapers' do
     subject { presenter.newspapers }
+    let(:newspapers) do
+      [
+          build(:newspaper, id: 0),
+          build(:newspaper, id: 1),
+          build(:newspaper, id: 2)
+      ]
+    end
+    before { allow(Newspaper).to receive(:all).and_return(newspapers) }
     it do
       is_expected.to be_a(Array)
+      expect(subject.count).to be newspapers.count
+      subject.each.with_index do |newspaper, index|
+        expect(newspaper[0]).to be newspapers[index].display_name
+        expect(newspaper[1]).to be index
+      end
     end
   end
 

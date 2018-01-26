@@ -11,5 +11,11 @@ RSpec.describe ApplicationsPresenter do
   let(:models) { double('models') }
   let(:presenters) { double('presenters') }
 
-  it { is_expected.to be_a(described_class) }
+  it do
+    is_expected.to be_a(described_class)
+    expect(presenter.user).to be user
+    expect(presenter.policy).to be policy
+    expect(presenter.models).to be models
+    expect(presenter.presenters).to be presenters
+  end
 end

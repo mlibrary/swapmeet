@@ -8,7 +8,8 @@ RSpec.describe GroupPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { GroupsPolicy.new(SubjectPolicyAgent.new(:User, user), GroupPolicyAgent.new(model)) }
-  let(:model) { build(:group, parent: parent, children: children, users: users, publishers: publishers, newspapers: newspapers) }
+  let(:model) { build(:group, display_name: display_name, parent: parent, children: children, users: users, publishers: publishers, newspapers: newspapers) }
+  let(:display_name) { nil }
   let(:parent) { nil }
   let(:children) { [] }
   let(:users) { [] }
@@ -45,9 +46,14 @@ RSpec.describe GroupPresenter do
 
   describe '#label' do
     subject { presenter.label }
-    it do
-      is_expected.to be_a(String)
-      is_expected.to eq model.display_name
+    it { is_expected.to be_a(String) }
+    context 'blank' do
+      let(:display_name) { nil }
+      it { is_expected.to eq 'GROUP' }
+    end
+    context 'present' do
+      let(:display_name) { 'display_name' }
+      it { is_expected.to eq model.display_name }
     end
   end
 
@@ -121,8 +127,21 @@ RSpec.describe GroupPresenter do
 
   describe '#groups' do
     subject { presenter.groups }
+    let(:groups) do
+      [
+          build(:group, id: 0),
+          build(:group, id: 1),
+          build(:group, id: 2)
+      ]
+    end
+    before { allow(Group).to receive(:all).and_return(groups) }
     it do
       is_expected.to be_a(Array)
+      expect(subject.count).to be groups.count
+      subject.each.with_index do |group, index|
+        expect(group[0]).to be groups[index].display_name
+        expect(group[1]).to be index
+      end
     end
   end
 

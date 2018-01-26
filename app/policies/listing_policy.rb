@@ -32,9 +32,4 @@ class ListingPolicy < ApplicationPolicy
     return true if @subject.administrator?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), @object).grant?
   end
-
-  def manage?
-    # TODO: link_to 'Manage Listings', category_listings_path(@category.model)
-    false
-  end
 end
