@@ -8,7 +8,8 @@ RSpec.describe UserPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { UsersPolicy.new(SubjectPolicyAgent.new(:User, user), UserPolicyAgent.new(model)) }
-  let(:model) { build(:user, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
+  let(:model) { build(:user, display_name: display_name, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
+  let(:display_name) { nil }
   let(:listings) { [] }
   let(:publishers) { [] }
   let(:newspapers) { [] }
@@ -44,9 +45,14 @@ RSpec.describe UserPresenter do
 
   describe '#label' do
     subject { presenter.label }
-    it do
-      is_expected.to be_a(String)
-      is_expected.to eq model.display_name
+    it { is_expected.to be_a(String) }
+    context 'blank' do
+      let(:display_name) { nil }
+      it { is_expected.to eq 'USER' }
+    end
+    context 'present' do
+      let(:display_name) { 'display_name' }
+      it { is_expected.to eq model.display_name }
     end
   end
 

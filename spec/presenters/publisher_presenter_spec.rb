@@ -8,7 +8,8 @@ RSpec.describe PublisherPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { PublishersPolicy.new(SubjectPolicyAgent.new(:User, user), PublisherPolicyAgent.new(model)) }
-  let(:model) { build(:publisher, domain: domain, newspapers: newspapers, groups: groups, users: users) }
+  let(:model) { build(:publisher, display_name: display_name, domain: domain, newspapers: newspapers, groups: groups, users: users) }
+  let(:display_name) { nil }
   let(:domain) { nil }
   let(:newspapers) { [] }
   let(:groups) { [] }
@@ -44,9 +45,14 @@ RSpec.describe PublisherPresenter do
 
   describe '#label' do
     subject { presenter.label }
-    it do
-      is_expected.to be_a(String)
-      is_expected.to eq model.display_name
+    it { is_expected.to be_a(String) }
+    context 'blank' do
+      let(:display_name) { nil }
+      it { is_expected.to eq 'PUBLISHER' }
+    end
+    context 'present' do
+      let(:display_name) { 'display_name' }
+      it { is_expected.to eq model.display_name }
     end
   end
 
@@ -79,8 +85,21 @@ RSpec.describe PublisherPresenter do
 
   describe '#domains' do
     subject { presenter.domains }
+    let(:domains) do
+      [
+          build(:domain, id: 0),
+          build(:domain, id: 1),
+          build(:domain, id: 2)
+      ]
+    end
+    before { allow(Domain).to receive(:all).and_return(domains) }
     it do
       is_expected.to be_a(Array)
+      expect(subject.count).to be domains.count
+      subject.each.with_index do |domain, index|
+        expect(domain[0]).to be domains[index].display_name
+        expect(domain[1]).to be index
+      end
     end
   end
 

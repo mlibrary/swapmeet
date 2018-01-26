@@ -86,6 +86,30 @@ Rails.application.routes.draw do
         delete :revoke
       end
     end
+    resources :groups, only: [:index] do
+      member do
+        patch :join
+        delete :leave
+      end
+    end
+    resources :listings, only: [:index] do
+      member do
+        patch :add
+        delete :remove
+      end
+    end
+    resources :newspapers, only: [:index] do
+      member do
+        patch :join
+        delete :leave
+      end
+    end
+    resources :publishers, only: [:index] do
+      member do
+        patch :join
+        delete :leave
+      end
+    end
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

@@ -47,9 +47,4 @@ class GroupsPolicy < ApplicationPolicy
     return true if @subject.administrator?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
-
-  def manage?
-    # TODO: link_to 'Manage Groups', user_groups_path(@user.model)
-    false
-  end
 end

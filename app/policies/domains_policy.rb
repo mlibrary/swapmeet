@@ -33,9 +33,4 @@ class DomainsPolicy < ApplicationPolicy
     return true if @subject.administrator?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), @object).grant?
   end
-
-  def manage?
-    # TODO: link_to 'Manage Children', domain_domains_path(@domain.model)
-    false
-  end
 end

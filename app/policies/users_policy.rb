@@ -90,9 +90,4 @@ class UsersPolicy < ApplicationPolicy
   def revoke?
     PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
   end
-
-  def manage?
-    # TODO: link_to 'Manage Users', group_users_path(@group.model)
-    true
-  end
 end
