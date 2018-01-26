@@ -14,7 +14,7 @@
     = f.text_field :display_name
   .field
     = f.label :publisher
-    - if @newspaper.publisher.present?
+    - if @newspaper.publisher?
       = f.select :publisher_id, @newspaper.publishers, {}, disabled: @newspaper.persisted?
       = f.hidden_field :publisher_id, value: @newspaper.publisher.id
     - else
