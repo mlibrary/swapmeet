@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'subject_resolver'
+require 'agent_resolver'
 
 class FakeDirectory
   def attributes_for(user)
@@ -17,7 +17,7 @@ class FakeDirectory
   end
 end
 
-RSpec.describe SubjectResolver do
+RSpec.describe AgentResolver do
 
   context "with a known user" do
     let(:bill)  { double('User', username: 'bill') }
@@ -25,7 +25,7 @@ RSpec.describe SubjectResolver do
     let(:jane)  { double('User', username: 'jane') }
     let(:guest) { double('User', username: '<guest>') }
     let(:directory)    { FakeDirectory.new }
-    subject(:resolver) { SubjectResolver.new(directory: directory) }
+    subject(:resolver) { AgentResolver.new(directory: directory) }
 
     it "resolves User `bill`'s tokens" do
       expect(resolver.resolve(bill)).to include('account-type:umich', 'user:bill', 'affiliation:faculty')

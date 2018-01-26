@@ -2,7 +2,7 @@
 
 require 'user_directory'
 
-class SubjectResolver
+class AgentResolver
   def initialize(directory: UserDirectory.new)
     @directory = directory
   end
