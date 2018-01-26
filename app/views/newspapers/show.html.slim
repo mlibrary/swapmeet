@@ -32,7 +32,7 @@ ul
 - if @newspaper.administrator?
   = link_to 'Manage Listings', newspaper_listing_path(@newspaper.model)
 
-- if @newspaper.user?
+- if @newspaper.groups.index?
   hr
   h2 Groups
   ul

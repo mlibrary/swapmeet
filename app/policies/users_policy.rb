@@ -26,6 +26,7 @@ class UsersPolicy < ApplicationPolicy
     return false unless @subject.authenticated?
     return true if @subject.client == @object.client
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
 

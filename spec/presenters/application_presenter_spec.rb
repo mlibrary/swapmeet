@@ -55,4 +55,29 @@ RSpec.describe ApplicationPresenter do
       expect(subject.persisted?).to be :persisted?
     end
   end
+
+  describe '#administrator?' do
+    subject { presenter.administrator?(object_presenter) }
+    let(:user) { SubjectPolicyAgent.new(:User, :user) }
+    let(:policy) { ApplicationPolicy.new(user, model) }
+    let(:model) { ObjectPolicyAgent.new(:Model, :model) }
+
+    context 'subject' do
+      let(:object_presenter) { nil }
+      it { is_expected.to be false }
+      context 'administrator' do
+        before {  PolicyMaker.permit!(user, PolicyMaker::ROLE_ADMINISTRATOR, policy.object) }
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'object' do
+      let(:object_presenter) { described_class.new(user, policy, model) }
+      it { is_expected.to be false }
+      context 'administrator' do
+        before {  PolicyMaker.permit!(model, PolicyMaker::ROLE_ADMINISTRATOR, policy.object) }
+        it { is_expected.to be true }
+      end
+    end
+  end
 end

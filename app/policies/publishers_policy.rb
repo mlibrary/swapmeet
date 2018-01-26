@@ -51,7 +51,7 @@ class PublishersPolicy < ApplicationPolicy
 
   def administrator?
     return true if @subject.administrator?
-    PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+    super
   end
 
   def administrator_user?(usr)
