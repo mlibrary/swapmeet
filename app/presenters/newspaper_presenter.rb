@@ -1,23 +1,35 @@
 # frozen_string_literal: true
 
 class NewspaperPresenter < ApplicationPresenter
-  attr_reader :publishers
+  # attr_reader :publishers
 
-  delegate :add?, :remove?, to: :policy
+  # delegate :add?, :remove?, to: :policy
 
-  def permit?(user)
-    policy.revoke?(user.policy.object)
-  end
-
-  def revoke?(user)
-    policy.revoke?(user.policy.object)
-  end
+  # def permit?(user)
+  #   policy.revoke?(user.policy.object)
+  # end
+  #
+  # def revoke?(user)
+  #   policy.revoke?(user.policy.object)
+  # end
 
   delegate :name, :display_name, to: :model
 
   def label
     return model.display_name if model.display_name.present?
     'NEWSPAPER'
+  end
+
+  def newspaper?(object)
+    object.model.newspapers.exists?(policy.object.client.id)
+  end
+
+  def add?(object)
+    object.policy.add?(policy.object)
+  end
+
+  def remove?(object)
+    object.policy.remove?(policy.object)
   end
 
   def publisher?
@@ -49,11 +61,15 @@ class NewspaperPresenter < ApplicationPresenter
   end
 
   def user?(usr = nil)
-    return true if administrator?(usr) if usr.present?
+    # return true if administrator?(usr) if usr.present?
     return model.users.exists?(usr.model.id) if usr.present?
-    return true if PolicyResolver.new(policy.subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(model.publisher))
+    # return true if PolicyResolver.new(policy.subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(model.publisher))
     model.users.exists?(user.id)
   end
+
+  # def usr(usr = nil)
+  #   UserPresenter.new(user, UsersPolicy.new(policy.subject, policy.object), usr)
+  # end
 
   def users?
     !model.users.empty?

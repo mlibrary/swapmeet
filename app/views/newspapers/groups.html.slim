@@ -1,5 +1,7 @@
 h1 Newspaper groups
 
+p#notice = notice
+
 table
   thead
     tr
@@ -9,9 +11,9 @@ table
     - @groups.each do |group|
       tr
         td = link_to_if group.show?, group.label, group.model
-        - if @newspaper.groups.exists?(group)
+        - if group.group?(@newspaper)
           td Yes
-          td = link_to 'Remove', remove_newspaper_group_path(@newspaper.model, group.model), method: :delete if @newspaper.remove?(group)
+          td = link_to 'Remove', remove_newspaper_group_path(@newspaper.model, group.model), method: :delete if group.remove?(@newspaper)
         - else
           td No
-          td = link_to 'Add', add_newspaper_group_path(@newspaper.model, group.model), method: :patch if @newspaper.add?(group)
+          td = link_to 'Add', add_newspaper_group_path(@newspaper.model, group.model), method: :patch if group.add?(@newspaper)

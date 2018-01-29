@@ -13,9 +13,9 @@ table
       tr
         td = link_to_if user.show?, user.label, user.model
         td = user.email
-        - if @newspaper.user?(user)
+        - if user.user?(@newspaper)
           td Yes
-          td = link_to 'Remove', remove_newspaper_user_path(@newspaper.model, user.model), method: :delete if @newspaper.remove?
+          td = link_to 'Remove', remove_newspaper_user_path(@newspaper.model, user.model), method: :delete if user.remove?(@newspaper)
         - else
           td No
-          td = link_to 'Add', add_newspaper_user_path(@newspaper.model, user.model), method: :patch if @newspaper.add?
+          td = link_to 'Add', add_newspaper_user_path(@newspaper.model, user.model), method: :patch if user.add?(@newspaper)

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe UsersPolicy, type: :policy do
+RSpec.describe PublisherUsersPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
   let(:user_agent) { UserPolicyAgent.new(user) }
@@ -25,61 +25,7 @@ RSpec.describe UsersPolicy, type: :policy do
       expect(subject.join?).to be false
       expect(subject.leave?).to be false
     end
-
-    context 'Objects expect User' do
-      let(:policy) { double('policy') }
-      let(:boolean) { double('boolean') }
-      before do
-        allow(user_agent).to receive(:client_type).and_return(client_type)
-        allow(policy).to receive(:index?).and_return(boolean)
-      end
-      context 'Publisher' do
-        let(:client_type) { :Publisher.to_s }
-        before { allow(PublisherUsersPolicy).to receive(:new).with(entity_agent, user_agent).and_return(policy) }
-        it do
-          expect(subject.index?).to be boolean
-          expect(subject.show?).to be false
-          expect(subject.create?).to be false
-          expect(subject.update?).to be false
-          expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
-        end
-      end
-      context 'Newspaper' do
-        let(:client_type) { :Newspaper.to_s }
-        before { allow(NewspaperUsersPolicy).to receive(:new).with(entity_agent, user_agent).and_return(policy) }
-        it do
-          expect(subject.index?).to be boolean
-          expect(subject.show?).to be false
-          expect(subject.create?).to be false
-          expect(subject.update?).to be false
-          expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
-        end
-      end
-      context 'Entity' do
-        let(:client_type) { :Entity.to_s }
-        it do
-          expect(subject.index?).to be false
-          expect(subject.show?).to be false
-          expect(subject.create?).to be false
-          expect(subject.update?).to be false
-          expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
-        end
-      end
-    end
   end
-
 
   context 'User' do
     subject { described_class.new(current_user_agent, user_agent) }
@@ -89,7 +35,7 @@ RSpec.describe UsersPolicy, type: :policy do
 
     before { allow(current_user_agent).to receive(:authenticated?).and_return(false) }
     it do
-      expect(subject.index?).to be true
+      expect(subject.index?).to be false
       expect(subject.show?).to be false
       expect(subject.create?).to be false
       expect(subject.update?).to be false
@@ -103,8 +49,8 @@ RSpec.describe UsersPolicy, type: :policy do
     context 'Authenticated' do
       before { allow(current_user_agent).to receive(:authenticated?).and_return(true) }
       it do
-        expect(subject.index?).to be true
-        expect(subject.show?).to be true
+        expect(subject.index?).to be false
+        expect(subject.show?).to be false
         expect(subject.create?).to be false
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
@@ -117,7 +63,7 @@ RSpec.describe UsersPolicy, type: :policy do
       context 'Grant' do
         before { PolicyMaker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY) }
         it do
-          expect(subject.index?).to be true
+          expect(subject.index?).to be false
           expect(subject.show?).to be true
           expect(subject.create?).to be true
           expect(subject.update?).to be true
@@ -126,6 +72,23 @@ RSpec.describe UsersPolicy, type: :policy do
         xit do
           expect(subject.join?).to be true
           expect(subject.leave?).to be true
+        end
+      end
+
+      context 'Publisher Agent' do
+        subject { described_class.new(current_user_agent, publisher_agent) }
+        let(:publisher_agent) { PublisherPolicyAgent.new(publisher_object) }
+        let(:publisher_object) { nil }
+        it { expect(subject.index?).to be false }
+        context 'Publisher Object' do
+          let(:publisher_object) { create(:publisher, users: publisher_users) }
+          let(:publisher_users) { [] }
+          it { expect(subject.index?).to be false }
+          context 'Publisher Object User' do
+            let(:publisher_users) { [current_user] }
+            let(:current_user) { create(:user) }
+            it { expect(subject.index?).to be true }
+          end
         end
       end
     end

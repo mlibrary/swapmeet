@@ -27,6 +27,10 @@ RSpec.describe PublishersPolicy, type: :policy do
           expect(subject.update?).to be false
           expect(subject.destroy?).to be false
         end
+        it do
+          expect(subject.add?).to be false
+          expect(subject.remove?).to be false
+        end
         context 'Grant' do
           before { PolicyMaker.permit!(entity_agent, PolicyMaker::ACTION_ANY, publisher_agent) }
           it do
@@ -35,6 +39,10 @@ RSpec.describe PublishersPolicy, type: :policy do
             expect(subject.create?).to be false
             expect(subject.update?).to be false
             expect(subject.destroy?).to be false
+          end
+          it do
+            expect(subject.add?).to be false
+            expect(subject.remove?).to be false
           end
         end
       end
@@ -66,6 +74,10 @@ RSpec.describe PublishersPolicy, type: :policy do
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
       end
+      it do
+        expect(subject.add?).to be false
+        expect(subject.remove?).to be false
+      end
       context 'Grant' do
         before { PolicyMaker.permit!(entity_agent, PolicyMaker::ACTION_ANY, publisher_agent) }
         it do
@@ -74,6 +86,10 @@ RSpec.describe PublishersPolicy, type: :policy do
           expect(subject.create?).to be false
           expect(subject.update?).to be false
           expect(subject.destroy?).to be false
+        end
+        it do
+          expect(subject.add?).to be false
+          expect(subject.remove?).to be false
         end
       end
     end
@@ -101,6 +117,10 @@ RSpec.describe PublishersPolicy, type: :policy do
           expect(subject.update?).to be false
           expect(subject.destroy?).to be false
         end
+        it do
+          expect(subject.add?).to be false
+          expect(subject.remove?).to be false
+        end
         context 'Grant' do
           before { PolicyMaker.permit!(entity_agent, PolicyMaker::ACTION_ANY, publisher_agent) }
           it do
@@ -109,6 +129,10 @@ RSpec.describe PublishersPolicy, type: :policy do
             expect(subject.create?).to be true
             expect(subject.update?).to be true
             expect(subject.destroy?).to be true
+          end
+          it do
+            expect(subject.add?).to be true
+            expect(subject.remove?).to be true
           end
         end
       end
@@ -127,16 +151,18 @@ RSpec.describe PublishersPolicy, type: :policy do
     end
   end
 
+
+
   # context 'administrator' do
   #   describe '#administrator?' do
   #     context 'platform administrator' do
-  #       before { allow(user_agent).to receive(:administrator?).and_return(true) }
+  #       before { allow(entity_agent).to receive(:administrator?).and_return(true) }
   #       it { expect(subject.administrator?).to be true }
   #     end
   #     context 'publisher administrator' do
   #       let(:policy_resolver) { double('policy resolver') }
   #       before do
-  #         allow(PolicyResolver).to receive(:new).with(user_agent, PolicyMaker::ROLE_ADMINISTRATOR, publisher_agent).and_return(policy_resolver)
+  #         allow(PolicyResolver).to receive(:new).with(entity_agent, PolicyMaker::ROLE_ADMINISTRATOR, publisher_agent).and_return(policy_resolver)
   #         allow(policy_resolver).to receive(:grant?).and_return(true)
   #       end
   #       it { expect(subject.administrator?).to be true }

@@ -5,12 +5,16 @@ class GroupsController < ApplicationController
     @policy.authorize! :index?
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
-      @publisher = PublisherPresenter.new(current_user,
-                                          PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(@publisher)),
-                                          @publisher)
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.subject, PublisherPolicyAgent.new(@publisher)), @publisher)
       @groups = Group.all
       @groups = GroupsPresenter.new(current_user, @policy, @groups)
       render "publishers/groups"
+    elsif params[:newspaper_id].present?
+      @newspaper = Newspaper.find(params[:newspaper_id])
+      @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new(@policy.subject, NewspaperPolicyAgent.new(@newspaper)), @newspaper)
+      @groups = Group.all
+      @groups = GroupsPresenter.new(current_user, @policy, @groups)
+      render "newspapers/groups"
     else
       @groups = Group.all
       @groups = GroupsPresenter.new(current_user, @policy, @groups)
@@ -84,6 +88,13 @@ class GroupsController < ApplicationController
         format.html { redirect_to publisher_groups_path(publisher), notice: 'Group was successfully added..' }
         format.json { head :no_content }
       end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      newspaper.groups << @group
+      respond_to do |format|
+        format.html { redirect_to newspaper_groups_path(newspaper), notice: 'Group was successfully added..' }
+        format.json { head :no_content }
+      end
     else
       respond_to do |format|
         format.html { redirect_to groups_path, notice: 'Group was not successfully added.' }
@@ -98,6 +109,13 @@ class GroupsController < ApplicationController
       publisher.groups.delete(@group)
       respond_to do |format|
         format.html { redirect_to publisher_groups_path(publisher), notice: 'Group was successfully removed.' }
+        format.json { head :no_content }
+      end
+    elsif params[:newspaper_id].present?
+      newspaper = Newspaper.find(params[:newspaper_id])
+      newspaper.groups.delete(@group)
+      respond_to do |format|
+        format.html { redirect_to newspaper_groups_path(newspaper), notice: 'Group was successfully removed.' }
         format.json { head :no_content }
       end
     else

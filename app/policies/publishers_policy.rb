@@ -29,21 +29,21 @@ class PublishersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), @object).grant?
   end
 
-  # def add?
-  #   return false unless @subject.client_type == :User.to_s
-  #   return false unless @subject.authenticated?
-  #   return true if @subject.administrator?
-  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
-  #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:add), @object).grant?
-  # end
-  #
-  # def remove?
-  #   return false unless @subject.client_type == :User.to_s
-  #   return false unless @subject.authenticated?
-  #   return true if @subject.administrator?
-  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
-  #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
-  # end
+  def add?(usr = nil)
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+    PolicyResolver.new(@subject, ActionPolicyAgent.new(:add), @object).grant?
+  end
+
+  def remove?(usr = nil)
+    return false unless @subject.client_type == :User.to_s
+    return false unless @subject.authenticated?
+    return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+    PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
+  end
 
   def administrator?
     return false unless subject_authenticated_user?
