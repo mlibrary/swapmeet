@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :listing do
     title "title"
-    body "body"
+    body  "body"
+    category
   end
 end
