@@ -56,6 +56,37 @@ RSpec.describe NewspaperPresenter do
     end
   end
 
+  describe '#newspaper?' do
+    subject { presenter.newspaper?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model', newspapers: object_newspapers) }
+    let(:object_newspapers) { double('object newspapers') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_newspapers).to receive(:exists?).with(policy.object.client.id).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
+  describe '#add?' do
+    subject { presenter.add?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:add?).with(policy.object).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
+  describe '#remove?' do
+    subject { presenter.remove?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:remove?).with(policy.object).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
   describe '#publisher?' do
     subject { presenter.publisher? }
     context 'blank' do
@@ -184,6 +215,45 @@ RSpec.describe NewspaperPresenter do
       end
     end
   end
+
+  describe '#user?' do
+    subject { presenter.user?(usr) }
+    let(:user) { build(:user) }
+    let(:model) { create(:newspaper, users: users) }
+    context 'subject' do
+      let(:usr) { nil }
+      let(:users) { [] }
+      it { is_expected.to be false }
+      context 'member' do
+        let(:users) { [user] }
+        it { is_expected.to be true }
+      end
+    end
+    context 'object' do
+      let(:usr) { UserPresenter.new(user, policy, member) }
+      let(:member) { build(:user) }
+      it { is_expected.to be false }
+      context 'member' do
+        let(:users) { [member] }
+        it { is_expected.to be true }
+      end
+    end
+  end
+
+  # describe '#usr' do
+  #   subject { presenter.usr }
+  #   let(:usr) { build(:user) }
+  #   it do
+  #     is_expected.to be_a(UserPresenter)
+  #     expect(subject.user).to be usr
+  #     expect(subject.policy).to be_a(UsersPolicy)
+  #     expect(subject.policy.subject).to be policy.subject
+  #     expect(subject.policy.object).to be_a(UserPolicyAgent)
+  #     expect(subject.policy.object.client_type).to eq :User.to_s
+  #     expect(subject.policy.object.client).to be usr
+  #     expect(subject.model).to be usr
+  #   end
+  # end
 
   describe '#users?' do
     subject { presenter.users? }

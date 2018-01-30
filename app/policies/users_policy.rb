@@ -2,8 +2,17 @@
 
 class UsersPolicy < ApplicationPolicy
   def index?
-    return false unless @subject.client_type == :User.to_s
-    true
+    case @object.client_type
+    when :Publisher.to_s
+      PublisherUsersPolicy.new(@subject, @object).index?
+    when :Newspaper.to_s
+      NewspaperUsersPolicy.new(@subject, @object).index?
+    when :User.to_s
+      return false unless @subject.client_type == :User.to_s
+      true
+    else
+      false
+    end
   end
 
   def show?
@@ -26,6 +35,7 @@ class UsersPolicy < ApplicationPolicy
     return false unless @subject.authenticated?
     return true if @subject.client == @object.client
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
 
@@ -79,15 +89,15 @@ class UsersPolicy < ApplicationPolicy
   #   PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
   # end
 
-  def administrator?
-    PolicyResolver.new(@object, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
-  end
-
-  def permit?
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
-  end
-
-  def revoke?
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
-  end
+  # def administrator?
+  #   PolicyResolver.new(@object, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
+  # end
+  #
+  # def permit?
+  #   PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
+  # end
+  #
+  # def revoke?
+  #   PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY).grant?
+  # end
 end

@@ -11,9 +11,9 @@ table
     - @newspapers.each do |newspaper|
       tr
         td = link_to_if newspaper.show?, newspaper.label, newspaper.model
-        - if @publisher.newspaper?(newspaper)
+        - if newspaper.newspaper?(@publisher)
           td Yes
-          td = link_to 'Remove', remove_publisher_newspaper_path(@publisher.model, newspaper.model), method: :delete if @publisher.remove?
+          td = link_to 'Remove', remove_publisher_newspaper_path(@publisher.model, newspaper.model), method: :delete if newspaper.remove?(@publisher)
         - else
           td No
-          td = link_to 'Add', add_publisher_newspaper_path(@publisher.model, newspaper.model), method: :patch if @publisher.add?
+          td = link_to 'Add', add_publisher_newspaper_path(@publisher.model, newspaper.model), method: :patch if newspaper.add?(@publisher)

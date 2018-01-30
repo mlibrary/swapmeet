@@ -24,6 +24,18 @@ class GroupPresenter < ApplicationPresenter
     @groups ||= Group.all.map { |group| [group.display_name, group.id] }
   end
 
+  def child?(object)
+    object.model.groups.exists?(policy.object.client.id)
+  end
+
+  def add?(object)
+    object.policy.add?(policy.object)
+  end
+
+  def remove?(object)
+    object.policy.remove?(policy.object)
+  end
+
   def children?
     !model.children.empty?
   end
@@ -48,9 +60,9 @@ class GroupPresenter < ApplicationPresenter
     NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
   end
 
-  def user?(user = nil)
-    return model.users.exists?(user.model.id) if user.present?
-    model.users.exists?(self.user.id)
+  def user?(usr = nil)
+    return model.users.exists?(usr.model.id) if usr.present?
+    model.users.exists?(user.id)
   end
 
   def users?

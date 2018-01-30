@@ -6,29 +6,37 @@ class ListingsController < ApplicationController
   def index
     @policy.authorize! :index?
 
-    if params[:f].present?
-      @filter.newspaper = params[:f][:newspaper]
-      @filter.owner = params[:f][:owner]
-      @filter.category = params[:f][:category]
-      template = []
-      values = []
-      if @filter.newspaper.present?
-        template << "newspaper_id = ?"
-        values << @filter.newspaper
+    if params[:category_id].present?
+      @category = Category.find(params[:category_id])
+      @category = CategoryPresenter.new(current_user, CategoriesPolicy.new(@policy.subject, CategoryPolicyAgent.new(@category)), @category)
+      @listings = Listing.where("category_id = ?", params[:category_id])
+      @listings = ListingsPresenter.new(current_user, @policy, @listings)
+      render "categories/listings"
+    else
+      if params[:f].present?
+        @filter.newspaper = params[:f][:newspaper]
+        @filter.owner = params[:f][:owner]
+        @filter.category = params[:f][:category]
+        template = []
+        values = []
+        if @filter.newspaper.present?
+          template << "newspaper_id = ?"
+          values << @filter.newspaper
+        end
+        if @filter.owner.present?
+          template << "owner_id = ?"
+          values << @filter.owner
+        end
+        if @filter.category.present?
+          template << "category_id = ?"
+          values << @filter.category
+        end
+        @listings = Listing.where(template.join(" AND "), *values) if values.any?
       end
-      if @filter.owner.present?
-        template << "owner_id = ?"
-        values << @filter.owner
-      end
-      if @filter.category.present?
-        template << "category_id = ?"
-        values << @filter.category
-      end
-      @listings = Listing.where(template.join(" AND "), *values) if values.any?
-    end
 
-    @listings ||= Listing.all
-    @listings = ListingsPresenter.new(current_user, @policy, @listings)
+      @listings ||= Listing.all
+      @listings = ListingsPresenter.new(current_user, @policy, @listings)
+    end
   end
 
   def show

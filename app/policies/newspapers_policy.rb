@@ -23,6 +23,7 @@ class NewspapersPolicy < ApplicationPolicy
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
+    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:update), @object).grant?
   end
 
@@ -33,38 +34,72 @@ class NewspapersPolicy < ApplicationPolicy
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:destroy), @object).grant?
   end
 
-  def add?
+  def add?(usr = nil)
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
-    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
     return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:add), @object).grant?
   end
 
-  def remove?
+  def remove?(usr = nil)
     return false unless @subject.client_type == :User.to_s
     return false unless @subject.authenticated?
     return true if @subject.administrator?
-    return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
     return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
     PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
   end
 
-  def administrator?
-    return true if @subject.administrator?
-    PolicyMaker.exist?(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object)
-  end
+  # def add?(usr)
+  #   # if usr.present?
+  #   return false unless @subject.client_type == :User.to_s
+  #   return false unless @subject.authenticated?
+  #   return true if @subject.administrator?
+  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
+  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:add), @object).grant?
+  #   # else
+  #   #   return false unless @subject.client_type == :User.to_s
+  #   #   return false unless @subject.authenticated?
+  #   #   return true if @subject.administrator?
+  #   #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
+  #   #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  #   #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:add), @object).grant?
+  #   # end
+  # end
 
-  def administrator_user?(user)
-    PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
-  end
+  # def remove?(usr)
+  #   # if usr.present?
+  #   return false unless @subject.client_type == :User.to_s
+  #   return false unless @subject.authenticated?
+  #   return true if @subject.administrator?
+  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
+  #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
+  #   # else
+  #   #   return false unless @subject.client_type == :User.to_s
+  #   #   return false unless @subject.authenticated?
+  #   #   return true if @subject.administrator?
+  #   #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, PublisherPolicyAgent.new(@object.client.publisher)).grant?
+  #   #   return true if PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  #   #   PolicyResolver.new(@subject, ActionPolicyAgent.new(:remove), @object).grant?
+  #   # end
+  # end
 
-  def permit_user?(user)
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
-  end
-
-  def revoke_user?(user)
-    PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
-  end
+  # def administrator?
+  #   return true if @subject.administrator?
+  #   super
+  # end
+  #
+  # def administrator_user?(user)
+  #   PolicyMaker.exist?(user, PolicyMaker::ROLE_ADMINISTRATOR, @object)
+  # end
+  #
+  # def permit_user?(user)
+  #   PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  # end
+  #
+  # def revoke_user?(user)
+  #   PolicyResolver.new(@subject, PolicyMaker::ROLE_ADMINISTRATOR, @object).grant?
+  # end
 end

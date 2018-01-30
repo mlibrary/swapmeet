@@ -84,6 +84,37 @@ RSpec.describe GroupPresenter do
     end
   end
 
+  describe '#child?' do
+    subject { presenter.child?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model', groups: object_groups) }
+    let(:object_groups) { double('object groups') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_groups).to receive(:exists?).with(policy.object.client.id).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
+  describe '#add?' do
+    subject { presenter.add?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:add?).with(policy.object).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
+  describe '#remove?' do
+    subject { presenter.remove?(object_presenter) }
+    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new(user, ObjectPolicyAgent.new(:Object, object_model)) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:remove?).with(policy.object).and_return(boolean) }
+    it { is_expected.to be boolean }
+  end
+
   describe '#children?' do
     subject { presenter.children? }
     context 'empty' do
@@ -223,6 +254,30 @@ RSpec.describe GroupPresenter do
         expect(newspaper.policy.object.client_type).to eq :Newspaper.to_s
         expect(newspaper.policy.object.client).to be newspapers[index]
         expect(newspaper.model).to be newspapers[index]
+      end
+    end
+  end
+
+  describe '#user?' do
+    subject { presenter.user?(usr) }
+    let(:user) { build(:user) }
+    let(:model) { create(:group, users: users) }
+    context 'subject' do
+      let(:usr) { nil }
+      let(:users) { [] }
+      it { is_expected.to be false }
+      context 'member' do
+        let(:users) { [user] }
+        it { is_expected.to be true }
+      end
+    end
+    context 'object' do
+      let(:usr) { UserPresenter.new(user, policy, member) }
+      let(:member) { build(:user) }
+      it { is_expected.to be false }
+      context 'member' do
+        let(:users) { [member] }
+        it { is_expected.to be true }
       end
     end
   end

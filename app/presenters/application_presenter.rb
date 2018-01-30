@@ -12,10 +12,5 @@ class ApplicationPresenter
 
   delegate :index?, :show?, :new?, :create?, :edit?, :update?, :destroy?, to: :policy
 
-  def administrator?(usr = nil)
-    return policy.administrator_user?(usr.policy.object) if usr.present?
-    policy.administrator?
-  end
-
-  delegate :to_model, :errors, :persisted?, to: :model
+  delegate :id, :to_model, :errors, :persisted?, to: :model
 end

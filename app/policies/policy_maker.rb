@@ -20,7 +20,7 @@ module PolicyMaker
   USER_ANY = UserPolicyAgent.new(nil)
   LISTING_ANY = ListingPolicyAgent.new(nil)
 
-  def self.exist?(subject, verb, object)
+  def self.exists?(subject, verb, object)
     gatekeepers = query(subject, verb, object)
     gatekeepers.each do |gatekeeper|
       next if gatekeeper.subject_type != subject.client_type
@@ -35,7 +35,7 @@ module PolicyMaker
   end
 
   def self.permit!(subject, verb, object)
-    return true if exist?(subject, verb, object)
+    return true if exists?(subject, verb, object)
     gatekeeper = Gatekeeper.new
     gatekeeper.subject_type = subject.client_type
     gatekeeper.subject_id = subject.client_id

@@ -103,6 +103,23 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#newspaper?' do
+    subject { presenter.newspaper?(newspaper_presenter) }
+    let(:newspaper_presenter) { nil }
+    it { is_expected.to be false }
+    context 'publisher' do
+      let(:model) { create(:publisher, newspapers: newspapers) }
+      let(:newspaper_presenter) { NewspaperPresenter.new(user, newspaper_policy, newspaper_model) }
+      let(:newspaper_policy) { double('newspaper policy') }
+      let(:newspaper_model) { build(:newspaper, id: 1) }
+      it { is_expected.to be false }
+      context 'publisher newspaper' do
+        let(:newspapers) { [newspaper_model] }
+        it { is_expected.to be true }
+      end
+    end
+  end
+
   describe '#newspapers?' do
     subject { presenter.newspapers? }
     context 'empty' do
@@ -144,6 +161,23 @@ RSpec.describe PublisherPresenter do
     end
   end
 
+  describe '#group?' do
+    subject { presenter.group?(group_presenter) }
+    let(:group_presenter) { nil }
+    it { is_expected.to be false }
+    context 'group' do
+      let(:model) { create(:publisher, groups: groups) }
+      let(:group_presenter) { GroupPresenter.new(user, group_policy, group_model) }
+      let(:group_policy) { double('group policy') }
+      let(:group_model) { build(:group, id: 1) }
+      it { is_expected.to be false }
+      context 'group member' do
+        let(:groups) { [group_model] }
+        it { is_expected.to be true }
+      end
+    end
+  end
+
   describe '#groups?' do
     subject { presenter.groups? }
     context 'empty' do
@@ -181,6 +215,23 @@ RSpec.describe PublisherPresenter do
         expect(group.policy.object.client_type).to eq :Group.to_s
         expect(group.policy.object.client).to be groups[index]
         expect(group.model).to be groups[index]
+      end
+    end
+  end
+
+  describe '#user?' do
+    subject { presenter.user?(user_presenter) }
+    let(:user_presenter) { nil }
+    it { is_expected.to be false }
+    context 'user' do
+      let(:model) { create(:publisher, users: users) }
+      let(:user_presenter) { UserPresenter.new(user, user_policy, user_model) }
+      let(:user_policy) { double('user policy') }
+      let(:user_model) { build(:user, id: 1) }
+      it { is_expected.to be false }
+      context 'user member' do
+        let(:users) { [user_model] }
+        it { is_expected.to be true }
       end
     end
   end

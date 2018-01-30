@@ -5,13 +5,13 @@ class PublisherPresenter < ApplicationPresenter
 
   delegate :add?, :remove?, to: :policy
 
-  def permit?(user)
-    policy.permit_user?(user.policy.object)
-  end
-
-  def revoke?(user)
-    policy.revoke_user?(user.policy.object)
-  end
+  # def permit?(user)
+  #   policy.permit_user?(user.policy.object)
+  # end
+  #
+  # def revoke?(user)
+  #   policy.revoke_user?(user.policy.object)
+  # end
 
   delegate :name, :display_name, to: :model
 
@@ -32,8 +32,8 @@ class PublisherPresenter < ApplicationPresenter
     @domains = Domain.all.map { |domain| [domain.display_name, domain.id] }
   end
 
-  def newspaper?(newspaper = nil)
-    model.newspapers.exists?(newspaper.model.id) if newspaper.present?
+  def newspaper?(newspaper)
+    return model.newspapers.exists?(newspaper.model.id) if newspaper.present?
     false
   end
 
@@ -45,9 +45,9 @@ class PublisherPresenter < ApplicationPresenter
     NewspapersPresenter.new(user, NewspapersPolicy.new(policy.subject, policy.object), model.newspapers)
   end
 
-  def group?(group = nil)
-    model.groups.exists?(group.model.id) if group.present?
-    model.groups.exists?(self.user.id)
+  def group?(group)
+    return model.groups.exists?(group.model.id) if group.present?
+    false
   end
 
   def groups?
@@ -59,9 +59,8 @@ class PublisherPresenter < ApplicationPresenter
   end
 
   def user?(usr = nil)
-    return true if administrator?(usr)
     return model.users.exists?(usr.model.id) if usr.present?
-    model.users.exists?(user.id)
+    false
   end
 
   def users?

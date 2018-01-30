@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe PrivilegesPolicy, type: :policy do
+RSpec.describe PublisherGroupsPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
-  let(:priviliege_agent) { ObjectPolicyAgent.new(:Priviliege, priviliege) }
-  let(:priviliege) { double('priviliege') }
+  let(:group_agent) { GroupPolicyAgent.new(group) }
+  let(:group) { double('group') }
 
   context 'Entity' do
-    subject { described_class.new(entity_agent, priviliege_agent) }
+    subject { described_class.new(entity_agent, group_agent) }
 
     let(:entity_agent) { SubjectPolicyAgent.new(:Entity, entity) }
     let(:entity) { double('entity') }
@@ -20,15 +20,13 @@ RSpec.describe PrivilegesPolicy, type: :policy do
       expect(subject.create?).to be false
       expect(subject.update?).to be false
       expect(subject.destroy?).to be false
-    end
-    it do
-      expect(subject.permit?).to be false
-      expect(subject.revoke?).to be false
+      expect(subject.add?).to be false
+      expect(subject.remove?).to be false
     end
   end
 
   context 'User' do
-    subject { described_class.new(user_agent, priviliege_agent) }
+    subject { described_class.new(user_agent, group_agent) }
 
     let(:user_agent) { SubjectPolicyAgent.new(:User, user) }
     let(:user) { double('user') }
@@ -40,10 +38,8 @@ RSpec.describe PrivilegesPolicy, type: :policy do
       expect(subject.create?).to be false
       expect(subject.update?).to be false
       expect(subject.destroy?).to be false
-    end
-    it do
-      expect(subject.permit?).to be false
-      expect(subject.revoke?).to be false
+      expect(subject.add?).to be false
+      expect(subject.remove?).to be false
     end
 
     context 'Authenticated' do
@@ -54,24 +50,37 @@ RSpec.describe PrivilegesPolicy, type: :policy do
         expect(subject.create?).to be false
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
-      end
-      it do
-        expect(subject.permit?).to be false
-        expect(subject.revoke?).to be false
+        expect(subject.add?).to be false
+        expect(subject.remove?).to be false
       end
 
       context 'Grant' do
         before { PolicyMaker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY) }
         it do
-          expect(subject.index?).to be true
+          expect(subject.index?).to be false
           expect(subject.show?).to be true
           expect(subject.create?).to be true
           expect(subject.update?).to be true
           expect(subject.destroy?).to be true
+          expect(subject.add?).to be true
+          expect(subject.remove?).to be true
         end
-        it do
-          expect(subject.permit?).to be true
-          expect(subject.revoke?).to be true
+      end
+
+      context 'Publisher Agent' do
+        subject { described_class.new(user_agent, publisher_agent) }
+        let(:publisher_agent) { PublisherPolicyAgent.new(publisher_object) }
+        let(:publisher_object) { nil }
+        it { expect(subject.index?).to be false }
+        context 'Publisher Object' do
+          let(:publisher_object) { create(:publisher, users: publisher_users) }
+          let(:publisher_users) { [] }
+          it { expect(subject.index?).to be false }
+          context 'Publisher Object User' do
+            let(:publisher_users) { [user] }
+            let(:user) { create(:user) }
+            it { expect(subject.index?).to be true }
+          end
         end
       end
     end
