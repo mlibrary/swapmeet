@@ -1,24 +1,14 @@
 # frozen_string_literal: true
 
 module ControllersHelper
-  class AuthorizePolicy
-    def create?; true; end
-    def edit?; true; end
-    def destroy?; true; end
-    def index?; true; end
-    def new?; true; end
-    def show?; true; end
-    def update?; true; end
+  class AuthorizePolicy < ApplicationPolicy
+    def method_missing(method_name, *args, &block)
+      return true if method_name[-1] == '?'
+      super
+    end
     def authorize!(action, message = nil); end
   end
-  class UnauthorizePolicy
-    def create?; false; end
-    def edit?; false; end
-    def destroy?; false; end
-    def index?; false; end
-    def new?; false; end
-    def show?; false; end
-    def update?; false; end
+  class UnauthorizePolicy < ApplicationPolicy
     def authorize!(action, message = nil); raise NotAuthorizedError.new(message); end
   end
 end
@@ -30,7 +20,7 @@ RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
   describe "#{model} unautorized" do
     controller do
       def set_policy
-        @policy = ControllersHelper::UnauthorizePolicy.new
+        @policy = ControllersHelper::UnauthorizePolicy.new(nil, nil)
       end
     end
 
@@ -80,7 +70,7 @@ RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
 
     controller do
       def set_policy
-        @policy = ControllersHelper::AuthorizePolicy.new
+        @policy = ControllersHelper::AuthorizePolicy.new(nil, nil)
       end
     end
 
@@ -109,14 +99,45 @@ RSpec.shared_examples 'policy enforcer' do |model, klass, attrs = nil |
       expect(response).to be_success
     end
 
-    it '#create' do
-      post :create, params: { model => attrs }
-      expect(response).to have_http_status(:found)
+    describe '#create' do
+      before do
+        allow(klass.to_s.classify.constantize).to receive(:new).and_return(target)
+        allow(target).to receive(:save).and_return(boolean)
+        post :create, params: { model => attrs }
+      end
+      context 'success' do
+        let(:boolean) { true }
+        it do
+          expect(response).to redirect_to(controller.instance_variable_get("@#{model}"))
+          expect(response).to have_http_status(:found)
+        end
+      end
+      context 'fail' do
+        let(:boolean) { false }
+        it do
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
 
-    it '#update' do
-      post :update, params: { id: '1', model => attrs }
-      expect(response).to have_http_status(:found)
+    describe '#update' do
+      before do
+        allow(target).to receive(:update).and_return(boolean)
+        post :update, params: { id: '1', model => attrs }
+      end
+      context 'success' do
+        let(:boolean) { true }
+        it do
+          expect(response).to redirect_to(controller.instance_variable_get("@#{model}"))
+          expect(response).to have_http_status(:found)
+        end
+      end
+      context 'fail' do
+        let(:boolean) { false }
+        it do
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
 
     it '#destroy' do

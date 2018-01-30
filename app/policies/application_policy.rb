@@ -8,14 +8,6 @@ class ApplicationPolicy
     @object = object
   end
 
-  # def administrator?
-  #   PolicyResolver.new(subject, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-  # end
-  #
-  # def administrator_agent?(agent)
-  #   PolicyResolver.new(agent, PolicyMaker::ROLE_ADMINISTRATOR, object).grant?
-  # end
-
   def new?
     create?
   end

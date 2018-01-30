@@ -82,6 +82,7 @@ class UsersController < ApplicationController
   end
 
   def add
+    @policy.authorize! :add?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(publisher))
@@ -100,18 +101,14 @@ class UsersController < ApplicationController
         format.html { redirect_to newspaper_users_path(newspaper), notice: 'User was successfully added..' }
         format.json { head :no_content }
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to users_path, notice: 'User was not successfully added.' }
-        format.json { head :no_content }
-      end
     end
   end
 
   def remove
+    @policy.authorize! :remove?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
-      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      publisher_policy = PublishersPolicy.new(SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(publisher))
       publisher_policy.authorize! :remove?, publisher
       publisher.users.delete(@user)
       respond_to do |format|
@@ -120,16 +117,11 @@ class UsersController < ApplicationController
       end
     elsif params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
-      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:User, @user))
+      newspaper_policy = NewspapersPolicy.new(SubjectPolicyAgent.new(:User, current_user), NewspaperPolicyAgent.new(newspaper))
       newspaper_policy.authorize! :remove?, newspaper
       newspaper.users.delete(@user)
       respond_to do |format|
         format.html { redirect_to newspaper_users_path(newspaper), notice: 'User was successfully added..' }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to users_path, notice: 'User was not successfully removed.' }
         format.json { head :no_content }
       end
     end

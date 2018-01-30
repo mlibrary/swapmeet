@@ -81,6 +81,7 @@ class GroupsController < ApplicationController
   end
 
   def add
+    @policy.authorize! :add?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher.groups << @group
@@ -104,6 +105,7 @@ class GroupsController < ApplicationController
   end
 
   def remove
+    @policy.authorize! :remove?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher.groups.delete(@group)

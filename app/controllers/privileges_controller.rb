@@ -5,8 +5,6 @@ class PrivilegesController < ApplicationController
   end
 
   def permit
-    # @policy.authorize! :permit?
-
     if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
@@ -55,17 +53,10 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         end
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to root_path, notice: 'Privilege was NOT successfully permitted.' }
-        format.json { head :no_content }
-      end
     end
   end
 
   def revoke
-    # @policy.authorize! :revoke?
-
     if params[:newspaper_id].present?
       newspaper = Newspaper.find(params[:newspaper_id])
       user = User.find(params[:user_id])
@@ -113,11 +104,6 @@ class PrivilegesController < ApplicationController
           format.json { head :no_content }
         end
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to root_path, notice: 'Privilege was NOT successfully revoked.' }
-        format.json { head :no_content }
-      end
     end
   end
 
@@ -128,8 +114,8 @@ class PrivilegesController < ApplicationController
       PrivilegesPolicy.new(SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege))
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def privilege_params
-      params.require(:privilege).permit(:subject_type, :subject_id, :verb_type, :verb_id, :object_type, :object_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  # def privilege_params
+  #   params.require(:privilege).permit(:subject_type, :subject_id, :verb_type, :verb_id, :object_type, :object_id)
+  # end
 end
