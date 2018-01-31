@@ -80,34 +80,20 @@ class NewspapersController < ApplicationController
   end
 
   def add
-    if params[:publisher_id].present?
-      publisher = Publisher.find(params[:publisher_id])
-      publisher.newspapers << @newspaper
-      respond_to do |format|
-        format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully added..' }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to newspapers_path, notice: 'Newspaper was not successfully added.' }
-        format.json { head :no_content }
-      end
+    publisher = Publisher.find(params[:publisher_id])
+    publisher.newspapers << @newspaper
+    respond_to do |format|
+      format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully added..' }
+      format.json { head :no_content }
     end
   end
 
   def remove
-    if params[:publisher_id].present?
-      publisher = Publisher.find(params[:publisher_id])
-      publisher.newspapers.delete(@newspaper)
-      respond_to do |format|
-        format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully removed.' }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to newspapers_path, notice: 'Newspaper was not successfully removed.' }
-        format.json { head :no_content }
-      end
+    publisher = Publisher.find(params[:publisher_id])
+    publisher.newspapers.delete(@newspaper)
+    respond_to do |format|
+      format.html { redirect_to publisher_newspapers_path(publisher), notice: 'Newspaper was successfully removed.' }
+      format.json { head :no_content }
     end
   end
 
