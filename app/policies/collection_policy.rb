@@ -29,7 +29,6 @@ class CollectionPolicy
   end
 
   private
-  
-  attr_reader :scope
-end
 
+    attr_reader :scope
+end

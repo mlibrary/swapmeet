@@ -19,5 +19,4 @@ class ListingPolicy < ResourcePolicy
     return true if user.root?
     user == resource.owner
   end
-
 end
