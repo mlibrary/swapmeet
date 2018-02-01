@@ -9,7 +9,7 @@ class ListingsPresenter
   end
 
   def each
-    listings.each {|l| yield l }
+    listings.each { |l| yield l }
   end
 
   def empty?
@@ -22,12 +22,11 @@ class ListingsPresenter
 
   private
 
-  def listings
-    @listings ||= policy.resolve.map do |listing|
-      ListingPresenter.new(listing, policy.for(listing), view)
+    def listings
+      @listings ||= policy.resolve.map do |listing|
+        ListingPresenter.new(listing, policy.for(listing), view)
+      end
     end
-  end
 
-  attr_reader :policy, :view
+    attr_reader :policy, :view
 end
-

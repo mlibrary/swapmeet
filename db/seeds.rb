@@ -20,5 +20,5 @@ categories = Category.create([
 listings = Listing.create([
   { title: '4-port USB Hub', body: 'Basic USB 2.0, 4-port hub', owner: users.first, category: categories[0] },
   { title: 'Small filing cabinet', body: 'Two-drawer wooden filing cabinet. Nice condition; maple veneer.', owner: users.first, category: categories[1] },
-  { title: 'Split keyboard', body:'Spare ergonomic keyboard; split design, USB or PS/2.', owner: users[1], category: categories[0] },
+  { title: 'Split keyboard', body: 'Spare ergonomic keyboard; split design, USB or PS/2.', owner: users[1], category: categories[0] },
 ])

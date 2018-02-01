@@ -43,5 +43,4 @@ class ApplicationController < ActionController::Base
         format.json { head :unauthorized }
       end
     end
-
 end

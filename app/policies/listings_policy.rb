@@ -13,4 +13,3 @@ class ListingsPolicy < CollectionPolicy
     ListingPolicy.new(user, listing)
   end
 end
-

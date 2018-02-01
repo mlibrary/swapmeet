@@ -26,5 +26,5 @@ class ListingPresenter < SimpleDelegator
 
   private
 
-  attr_reader :listing, :policy, :view
+    attr_reader :listing, :policy, :view
 end
