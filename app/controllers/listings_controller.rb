@@ -34,7 +34,7 @@ class ListingsController < ApplicationController
 
   def index
     @policy = ListingsPolicy.new(current_user)
-    @listings = @policy.scope
+    @listings = @policy.resolve
     @listing_presenters = @listings.map do |listing|
       ListingPresenter.new(listing, ListingPolicy.new(current_user, listing), view_context)
     end

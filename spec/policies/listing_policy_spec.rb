@@ -23,10 +23,6 @@ RSpec.describe ListingPolicy do
       expect(policy.destroy?).to be false
     end
 
-    it "allows index" do
-      expect(policy.index?).to be true
-    end
-
     it "allows show" do
       expect(policy.show?).to be true
     end
@@ -52,10 +48,6 @@ RSpec.describe ListingPolicy do
       expect(policy.destroy?).to be true
     end
 
-    it "allows index" do
-      expect(policy.index?).to be true
-    end
-
     it "allows show" do
       expect(policy.show?).to be true
     end
@@ -76,10 +68,6 @@ RSpec.describe ListingPolicy do
       expect(policy.destroy?).to be true
     end
 
-    it "allows index" do
-      expect(policy.index?).to be true
-    end
-
     it "allows show" do
       expect(policy.show?).to be true
     end
@@ -98,10 +86,6 @@ RSpec.describe ListingPolicy do
 
     it "denies destroy" do
       expect(policy.destroy?).to be false
-    end
-
-    it "allows index" do
-      expect(policy.index?).to be true
     end
 
     it "allows show" do

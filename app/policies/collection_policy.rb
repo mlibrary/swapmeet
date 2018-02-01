@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CollectionPolicy
-  attr_reader :user, :scope
+  attr_reader :user
 
   def initialize(user, scope = nil)
     @user  = user
@@ -10,6 +10,10 @@ class CollectionPolicy
 
   def base_scope
     ApplicationRecord.none
+  end
+
+  def resolve
+    scope
   end
 
   def index?
@@ -23,5 +27,9 @@ class CollectionPolicy
   def authorize!(action, message = nil)
     raise NotAuthorizedError.new(message) unless public_send(action)
   end
+
+  private
+  
+  attr_reader :scope
 end
 
