@@ -14,14 +14,14 @@ h1 Office Gear Swap Meet!
           th
 
       tbody
-        - @listing_presenters.each do |listing|
+        - @listings.each do |listing|
           tr
             td = listing.link_or_title
             td = user_display_name_link(listing.owner)
 
             td = listing.show_link
-            td = listing.edit_link
-            td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete if listing.policy.destroy?
+            td = link_to 'Edit', edit_listing_path(listing) if listing.edit?
+            td = link_to 'Destroy', listing, data: { confirm: 'Are you sure?' }, method: :delete if listing.destroy?
 
-- if @policy.new?
+- if @listings.new?
   = link_to 'Make a new listing', new_listing_path

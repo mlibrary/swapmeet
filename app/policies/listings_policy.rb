@@ -8,5 +8,9 @@ class ListingsPolicy < CollectionPolicy
   def new?
     user.known?
   end
+
+  def for(listing)
+    ListingPolicy.new(user, listing)
+  end
 end
 
