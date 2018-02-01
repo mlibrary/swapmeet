@@ -2,7 +2,7 @@
 
 class ListingsController < ApplicationController
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  before_action :set_policy
+  before_action :set_policy, except: [:index, :new]
 
   def create
     @policy.authorize! :create?
@@ -33,11 +33,15 @@ class ListingsController < ApplicationController
   end
 
   def index
-    @policy.authorize! :index?
-    @listings = Listing.all
+    @policy = ListingsPolicy.new(current_user)
+    @listings = @policy.scope
+    @listing_presenters = @listings.map do |listing|
+      ListingPresenter.new(listing, ListingPolicy.new(current_user, listing), view_context)
+    end
   end
 
   def new
+    @policy = ListingsPolicy.new(current_user)
     @policy.authorize! :new?
     @listing = Listing.new
   end
@@ -70,6 +74,6 @@ class ListingsController < ApplicationController
     end
 
     def listing_params
-      params.require(:listing).permit(:title, :body)
+      params.require(:listing).permit(:title, :body, :category_id)
     end
 end

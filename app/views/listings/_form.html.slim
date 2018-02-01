@@ -12,8 +12,8 @@
   .field
     = f.label :body
     = f.text_field :body, id: :listing_body
-/  .field
-/    = f.label :newspaper
-/    = f.collection_select :newspaper_id, Newspaper.all, :id, :name, prompt: "Select a Newspaper"
+  .field
+    = f.label :category
+    = f.collection_select :category_id, Category.all, :id, :title, prompt: "Select a Category"
   .actions
     = f.submit

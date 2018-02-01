@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave]
-  before_action :set_policy
+  before_action :set_policy, except: [:login, :logout]
 
   def create
     @policy.authorize! :create?
