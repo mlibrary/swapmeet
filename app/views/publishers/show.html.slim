@@ -59,12 +59,12 @@ p
         tr
           td = link_to_if user.show?, user.label, user.model
           td = user.email
-          - if user.privilege?(@publisher)
+          - if user.privilege?
             td Yes
-            td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :delete if user.privilege(@publisher).revoke?
+            td = link_to 'revoke', revoke_publisher_user_privilege_path(@publisher.model, user.model, user.privilege.model.id), method: :delete if user.privilege.revoke?
           - else
             td No
-            td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, 1), method: :patch if user.privilege(@publisher).permit?
+            td = link_to 'permit', permit_publisher_user_privilege_path(@publisher.model, user.model, user.privilege.model.id), method: :patch if user.privilege.permit?
     - else
       tr
         td

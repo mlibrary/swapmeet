@@ -2,17 +2,10 @@
 
 class UsersPolicy < ApplicationPolicy
   def index?
-    case object_agent.client_type
-    when :Publisher.to_s
-      PublisherUsersPolicy.new([subject_agent, object_agent]).index?
-    when :Newspaper.to_s
-      NewspaperUsersPolicy.new([subject_agent, object_agent]).index?
-    when :User.to_s
-      return false unless subject_agent.client_type == :User.to_s
-      true
-    else
-      false
-    end
+    return false unless subject_agent.client_type == :User.to_s
+    return false unless object_agent.client_type == :User.to_s
+    return true unless agents.count > 2
+    PolicyResolver.new(subject_agent, PolicyMaker::ROLE_ADMINISTRATOR, agents[-2]).grant?
   end
 
   def show?
@@ -45,6 +38,23 @@ class UsersPolicy < ApplicationPolicy
     # return true if subject_agent.client == object_agent.client
     return true if subject_agent.administrator?
     PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:destroy), object_agent).grant?
+  end
+
+  def add?
+    return false unless subject_agent.client_type == :User.to_s
+    return false unless subject_agent.authenticated?
+    return false unless object_agent.client_type == :User.to_s
+    return false unless agents.count > 2
+    return true if subject_agent.administrator?
+    PolicyResolver.new(subject_agent, PolicyMaker::ROLE_ADMINISTRATOR, agents[-2]).grant?
+  end
+
+  def remove?
+    return false unless subject_agent.authenticated?
+    return false unless object_agent.client_type == :User.to_s
+    return false unless agents.count > 2
+    return true if subject_agent.administrator?
+    PolicyResolver.new(subject_agent, PolicyMaker::ROLE_ADMINISTRATOR, agents[-2]).grant?
   end
 
   # def join?

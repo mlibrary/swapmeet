@@ -6,7 +6,8 @@ class UsersController < ApplicationController
 
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
-      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new([@policy.subject_agent, PublisherPolicyAgent.new(@publisher)]), @publisher)
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.agents.push(PublisherPolicyAgent.new(@publisher))), @publisher)
+      @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
       @users = User.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
       render "publishers/users"
@@ -82,7 +83,6 @@ class UsersController < ApplicationController
   end
 
   def add
-    @policy.authorize! :add?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher_policy = PublishersPolicy.new([SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(publisher)])

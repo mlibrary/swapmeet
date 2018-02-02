@@ -2,12 +2,16 @@
 
 require 'rails_helper'
 
-RSpec.describe UserPresenter do
+RSpec.describe PublisherUserPresenter do
   subject { presenter }
 
-  let(:presenter) { described_class.new(user, policy, model) }
-  let(:user) { build(:user) }
-  let(:policy) { UsersPolicy.new([SubjectPolicyAgent.new(:User, user), UserPolicyAgent.new(model)]) }
+  let(:presenter) { described_class.new(current_user, policy, model) }
+  let(:policy) { PublisherUsersPolicy.new([current_user_agent, publisher_agent, user_agent]) }
+  let(:current_user_agent) { SubjectPolicyAgent.new(:User, current_user) }
+  let(:current_user) { build(:user) }
+  let(:publisher_agent) { PublisherPolicyAgent.new(publisher) }
+  let(:publisher) { build(:publisher) }
+  let(:user_agent) { UserPolicyAgent.new(model) }
   let(:model) { build(:user, display_name: display_name, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
   let(:display_name) { nil }
   let(:listings) { [] }
@@ -21,7 +25,7 @@ RSpec.describe UserPresenter do
     before do
     end
     it do
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
     end
   end
 
@@ -30,6 +34,9 @@ RSpec.describe UserPresenter do
     end
     it do
       expect(subject.policy).to be policy
+      expect(subject.policy.subject_agent).to be current_user_agent
+      expect(subject.policy.publisher_agent).to be publisher_agent
+      expect(subject.policy.object_agent).to be user_agent
     end
   end
 
@@ -79,14 +86,14 @@ RSpec.describe UserPresenter do
     end
     it do
       is_expected.to be_a(ListingsPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(ListingPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)
-        expect(listing.user).to be user
+        expect(listing.user).to be current_user
         expect(listing.policy).to be_a(ListingPolicy)
         expect(listing.policy.subject_agent).to be policy.subject_agent
         expect(listing.policy.object_agent).to be_a(ListingPolicyAgent)
@@ -120,14 +127,14 @@ RSpec.describe UserPresenter do
     end
     it do
       is_expected.to be_a(PublishersPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(PublishersPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq publishers.count
       subject.each.with_index do |publisher, index|
         expect(publisher).to be_a(PublisherPresenter)
-        expect(publisher.user).to be user
+        expect(publisher.user).to be current_user
         expect(publisher.policy).to be_a(PublishersPolicy)
         expect(publisher.policy.subject_agent).to be policy.subject_agent
         expect(publisher.policy.object_agent).to be_a(PublisherPolicyAgent)
@@ -161,14 +168,14 @@ RSpec.describe UserPresenter do
     end
     it do
       is_expected.to be_a(NewspapersPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(NewspapersPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq newspapers.count
       subject.each.with_index do |newspaper, index|
         expect(newspaper).to be_a(NewspaperPresenter)
-        expect(newspaper.user).to be user
+        expect(newspaper.user).to be current_user
         expect(newspaper.policy).to be_a(NewspapersPolicy)
         expect(newspaper.policy.subject_agent).to be policy.subject_agent
         expect(newspaper.policy.object_agent).to be_a(NewspaperPolicyAgent)
@@ -202,14 +209,14 @@ RSpec.describe UserPresenter do
     end
     it do
       is_expected.to be_a(GroupsPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(GroupsPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq groups.count
       subject.each.with_index do |group, index|
         expect(group).to be_a(GroupPresenter)
-        expect(group.user).to be user
+        expect(group.user).to be current_user
         expect(group.policy).to be_a(GroupsPolicy)
         expect(group.policy.subject_agent).to be policy.subject_agent
         expect(group.policy.object_agent).to be_a(GroupPolicyAgent)
@@ -220,46 +227,58 @@ RSpec.describe UserPresenter do
     end
   end
 
-  # describe 'privilege' do
-  #   subject { presenter.privilege }
-  #   it do
-  #     expect(subject).to be_a(PrivilegePresenter)
-  #     expect(subject.user).to eq user
-  #     expect(subject.policy).to be_a(PrivilegesPolicy)
-  #     expect(subject.policy.subject_agent).to eq policy.subject_agent
-  #     expect(subject.policy.object_agent).to eq policy.object_agent
-  #     expect(subject.model).to eq model
-  #   end
-  # end
-  #
-  # describe '#user?' do
-  #   subject { presenter.user? }
-  #   let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-  #   let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-  #   let(:object_model) { double('object model', users: object_users) }
-  #   let(:object_users) { double('object users') }
-  #   let(:boolean) { double('boolean') }
-  #   before { allow(object_users).to receive(:exists?).with(policy.object_agent.client.id).and_return(boolean) }
-  #   it { is_expected.to be boolean }
-  # end
-  #
-  # describe '#add?' do
-  #   subject { presenter.add? }
-  #   let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-  #   let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-  #   let(:object_model) { double('object model') }
-  #   let(:boolean) { double('boolean') }
-  #   before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
-  #   it { is_expected.to be boolean }
-  # end
-  #
-  # describe '#remove?' do
-  #   subject { presenter.remove? }
-  #   let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-  #   let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-  #   let(:object_model) { double('object model') }
-  #   let(:boolean) { double('boolean') }
-  #   before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
-  #   it { is_expected.to be boolean }
-  # end
+  describe 'privilege?' do
+    subject { presenter.privilege? }
+    let(:object_presenter) { ApplicationPresenter.new(current_user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new([current_user_agent, ObjectPolicyAgent.new(:Object, object_model)]) }
+    let(:object_model) { double('object model') }
+    it { is_expected.to be false }
+    context 'privilege' do
+      before { PolicyMaker.permit!(policy.subject_agent, PolicyMaker::ROLE_ADMINISTRATOR, policy.object_agent) }
+      it { is_expected.to be false }
+    end
+  end
+
+  describe 'privilege' do
+    subject { presenter.privilege }
+    it do
+      expect(subject).to be_a(PublisherUserPrivilegePresenter)
+      expect(subject.user).to eq current_user
+      expect(subject.policy).to be_a(PublisherUserPrivilegesPolicy)
+      expect(subject.policy.subject_agent).to eq policy.subject_agent
+      expect(subject.policy.object_agent).not_to eq policy.object_agent
+      expect(subject.model).to eq model
+    end
+  end
+
+  describe '#user?' do
+    subject { presenter.user? }
+    let(:object_presenter) { ApplicationPresenter.new(current_user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new([current_user_agent, ObjectPolicyAgent.new(:Object, object_model)]) }
+    let(:object_model) { double('object model', users: object_users) }
+    let(:object_users) { double('object users') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_users).to receive(:exists?).with(policy.object_agent.client.id).and_return(boolean) }
+    it { is_expected.not_to be boolean }
+  end
+
+  describe '#add?' do
+    subject { presenter.add? }
+    let(:object_presenter) { ApplicationPresenter.new(current_user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new([current_user_agent, ObjectPolicyAgent.new(:Object, object_model)]) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
+    it { is_expected.not_to be boolean }
+  end
+
+  describe '#remove?' do
+    subject { presenter.remove? }
+    let(:object_presenter) { ApplicationPresenter.new(current_user, object_policy, object_model) }
+    let(:object_policy) { ApplicationPolicy.new([current_user_agent, ObjectPolicyAgent.new(:Object, object_model)]) }
+    let(:object_model) { double('object model') }
+    let(:boolean) { double('boolean') }
+    before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
+    it { is_expected.not_to be boolean }
+  end
 end

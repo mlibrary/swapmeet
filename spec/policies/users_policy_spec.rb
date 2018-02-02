@@ -33,6 +33,7 @@ RSpec.describe UsersPolicy, type: :policy do
         allow(user_agent).to receive(:client_type).and_return(client_type)
         allow(policy).to receive(:index?).and_return(boolean)
       end
+
       context 'Publisher' do
         let(:client_type) { :Publisher.to_s }
         before { allow(PublisherUsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }
@@ -48,6 +49,7 @@ RSpec.describe UsersPolicy, type: :policy do
           expect(subject.leave?).to be false
         end
       end
+
       context 'Newspaper' do
         let(:client_type) { :Newspaper.to_s }
         before { allow(NewspaperUsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }

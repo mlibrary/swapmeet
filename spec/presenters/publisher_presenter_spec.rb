@@ -258,17 +258,20 @@ RSpec.describe PublisherPresenter do
       ]
     end
     it do
-      is_expected.to be_a(UsersPresenter)
+      is_expected.to be_a(PublisherUsersPresenter)
       expect(subject.user).to be user
-      expect(subject.policy).to be_a(UsersPolicy)
+      expect(subject.policy).to be_a(PublisherUsersPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
-      expect(subject.policy.object_agent).to be policy.object_agent
+      expect(subject.policy.agents[1]).to be policy.object_agent
+      expect(subject.policy.object_agent).to be_a(UserPolicyAgent)
+      expect(subject.policy.object_agent.client).to be nil
       expect(subject.count).to eq users.count
       subject.each.with_index do |usr, index|
-        expect(usr).to be_a(UserPresenter)
+        expect(usr).to be_a(PublisherUserPresenter)
         expect(usr.user).to be user
-        expect(usr.policy).to be_a(UsersPolicy)
+        expect(usr.policy).to be_a(PublisherUsersPolicy)
         expect(usr.policy.subject_agent).to be policy.subject_agent
+        expect(usr.policy.publisher_agent).to be policy.agents[1]
         expect(usr.policy.object_agent).to be_a(UserPolicyAgent)
         expect(usr.policy.object_agent.client_type).to eq :User.to_s
         expect(usr.policy.object_agent.client).to be users[index]

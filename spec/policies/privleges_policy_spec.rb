@@ -63,7 +63,7 @@ RSpec.describe PrivilegesPolicy, type: :policy do
       context 'Grant' do
         before { PolicyMaker.permit!(PolicyMaker::USER_ANY, PolicyMaker::ACTION_ANY, PolicyMaker::OBJECT_ANY) }
         it do
-          expect(subject.index?).to be true
+          expect(subject.index?).to be false
           expect(subject.show?).to be true
           expect(subject.create?).to be true
           expect(subject.update?).to be true

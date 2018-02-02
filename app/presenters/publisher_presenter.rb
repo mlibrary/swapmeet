@@ -68,6 +68,6 @@ class PublisherPresenter < ApplicationPresenter
   end
 
   def users
-    UsersPresenter.new(user, UsersPolicy.new([policy.subject_agent, policy.object_agent]), model.users)
+    @users_presenter ||= UsersPresenter.new(user, UsersPolicy.new(policy.agents.push(UserPolicyAgent.new(nil))), model.users)
   end
 end

@@ -20,6 +20,21 @@ p
   '|
 =< link_to 'Back', users_path
 
+
+- if @user.privileges.index?
+  hr
+  h2 Privileges
+  ul
+    - if @user.privileges?
+      - @user.privileges.each do |privilege|
+        li
+          => link_to_if privilege.show?, privilege.label, privilege.model
+          - if privilege.revoke?
+            =<> ' '
+            =< link_to 'Revoke', revoke_user_privilege_path(privilege.model.subject_id, privilege.model.id), method: :delete
+    - else
+      li No Privileges
+
 - if @user.groups.index?
   hr
   h2 Groups
@@ -76,3 +91,4 @@ p
     - else
       li No Publishers
   = link_to 'Manage publishers', user_publishers_path(@user.model)
+

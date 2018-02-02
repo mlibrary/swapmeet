@@ -18,10 +18,10 @@ h1 Listing users
           td = user.email
           - if user.privilege?
             td Yes
-            td = link_to 'Revoke', revoke_user_privilege_path(user.model, 1), method: :delete if user.privilege.revoke?
+            td = link_to 'Revoke', revoke_user_privilege_path(user.model, user.privilege.model.id), method: :delete if user.privilege.revoke?
           - else
             td No
-            td = link_to 'Permit', permit_user_privilege_path(user.model, 1), method: :patch if user.privilege.permit?
+            td = link_to 'Permit', permit_user_privilege_path(user.model, user.privilege.model.id), method: :patch if user.privilege.permit?
           td = link_to 'Show', user.model if user.show?
           td = link_to 'Edit', edit_user_path(user.model) if user.edit?
           td = link_to 'Destroy', user.model, data: { confirm: 'Are you sure?' }, method: :delete if user.destroy?
