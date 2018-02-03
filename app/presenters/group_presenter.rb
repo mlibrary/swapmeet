@@ -3,7 +3,7 @@
 class GroupPresenter < ApplicationPresenter
   attr_reader :groups
 
-  delegate :join?, :leave?, to: :policy
+  delegate :add?, :remove?, :join?, :leave?, to: :policy
 
   delegate :name, :display_name, to: :model
 
@@ -24,16 +24,8 @@ class GroupPresenter < ApplicationPresenter
     @groups ||= Group.all.map { |group| [group.display_name, group.id] }
   end
 
-  def child?(object)
-    object.model.groups.exists?(policy.object_agent.client.id)
-  end
-
-  def add?(object)
-    object.policy.add?(policy.object_agent)
-  end
-
-  def remove?(object)
-    object.policy.remove?(policy.object_agent)
+  def child?
+    false
   end
 
   def children?
@@ -60,9 +52,8 @@ class GroupPresenter < ApplicationPresenter
     NewspapersPresenter.new(user, NewspapersPolicy.new([policy.subject_agent, policy.object_agent]), model.newspapers)
   end
 
-  def user?(usr = nil)
-    return model.users.exists?(usr.model.id) if usr.present?
-    model.users.exists?(user.id)
+  def user?
+    model.users.exists?(policy.subject_agent.client.id)
   end
 
   def users?

@@ -70,7 +70,7 @@ p
       - @user.newspapers.each do |newspaper|
         li
           => link_to_if newspaper.show?, newspaper.label, newspaper.model
-          - if newspaper.remove?(@user)
+          - if newspaper.remove?
             =<> ' '
             =< link_to 'Remove', remove_newspaper_user_path(newspaper.model, @user.model), method: :delete
     - else

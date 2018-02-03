@@ -15,7 +15,7 @@ class UserPresenter < ApplicationPresenter
   end
 
   def listings
-    ListingsPresenter.new(user, ListingPolicy.new([policy.subject_agent, policy.object_agent]), model.listings)
+    ListingsPresenter.new(user, ListingsPolicy.new([policy.subject_agent, policy.object_agent]), model.listings)
   end
 
   def publishers?
@@ -49,7 +49,8 @@ class UserPresenter < ApplicationPresenter
   end
 
   def privilege
-    a = Privilege.new(
+    return @privilege unless @privilege.blank?
+    administrator = Privilege.new(
       id: 0,
       subject_type: policy.object_agent.client_type,
       subject_id: policy.object_agent.client_id,
@@ -58,18 +59,18 @@ class UserPresenter < ApplicationPresenter
       object_type: PolicyMaker::OBJECT_ANY.client_type,
       object_id: PolicyMaker::OBJECT_ANY.client_id
     )
-    b = privileges
-    b.models.each do |model|
-      next unless model.subject_type == a.subject_type
-      next unless model.subject_id == a.subject_id
-      next unless model.verb_type == a.verb_type
-      next unless model.verb_id == a.verb_id
-      # next unless model.object_type == a.object_type
-      # next unless model.object_id == a.object_id
-      return PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents.push(PrivilegePolicyAgent.new(model))), model)
+    # agents = policy.agents.clone
+    privileges.models.each do |model|
+      next unless model.subject_type == administrator.subject_type
+      next unless model.subject_id == administrator.subject_id
+      next unless model.verb_type == administrator.verb_type
+      next unless model.verb_id == administrator.verb_id
+      next unless model.object_type == administrator.object_type
+      next unless model.object_id == administrator.object_id
+      @privilege = PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(model)]), model)
+      break
     end
-    # PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents.push(PrivilegePolicyAgent.new(administrator))), administrator)
-    nil
+    @privilege ||= PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(administrator)]), administrator)
   end
 
   def privileges?
@@ -77,8 +78,7 @@ class UserPresenter < ApplicationPresenter
   end
 
   def privileges
-    @privileges_presenter ||= PrivilegesPresenter.new(user, PrivilegesPolicy.new(policy.agents.push(PrivilegePolicyAgent.new(nil))), Privilege.all)
-    # PrivilegesPresenter.new(user, PrivilegesPolicy.new(policy.agents.push(PrivilegePolicyAgent.new(nil))), Privilege.all)
+    @privileges_presenter ||= PrivilegesPresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(nil)]), Privilege.all)
   end
 
   def user?

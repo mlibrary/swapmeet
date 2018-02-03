@@ -2,8 +2,7 @@
 
 class PrivilegesPresenter < ApplicationsPresenter
   def initialize(user, policy, privileges)
-    # presenters = privileges.select { |p| p.subject_id == policy.object_agent.client_id }.map do |privilege|
-    presenters = privileges.map do |privilege|
+    presenters = privileges.select { |p| p.subject_id == policy.agents[1].client_id }.map do |privilege|
       agents = policy.agents.dup
       agents[-1] = PrivilegePolicyAgent.new(privilege)
       PrivilegePresenter.new(user, PrivilegesPolicy.new(agents), privilege)

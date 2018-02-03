@@ -72,6 +72,10 @@ RSpec.describe UsersController, type: :controller do
         context 'publisher' do
           before { get :index, params: { publisher_id: publisher.id, id: user.id } }
           it { expect(response).to have_http_status(:unauthorized) }
+          context 'newspaper' do
+            before { get :index, params: { publisher_id: publisher.id, newspaper_id: newspaper.id, id: user.id } }
+            it { expect(response).to have_http_status(:unauthorized) }
+          end
         end
       end
 
@@ -122,9 +126,24 @@ RSpec.describe UsersController, type: :controller do
 
     context 'authorized' do
       let(:policy) { ControllersHelper::AuthorizePolicy.new([SubjectPolicyAgent.new(:User, current_user), UserPolicyAgent.new(user)]) }
-      it '#index' do
-        get :index
-        expect(response).to have_http_status(:ok)
+      describe '#index' do
+        before { allow(PolicyMaker).to receive(:permit!).and_return(boolean) }
+        context 'group' do
+          before { get :index, params: { group_id: group.id, id: user.id } }
+          it { expect(response).to have_http_status(:ok) }
+        end
+        context 'newspaper' do
+          before { get :index, params: { newspaper_id: newspaper.id, id: user.id } }
+          it { expect(response).to have_http_status(:ok) }
+        end
+        context 'publisher' do
+          before { get :index, params: { publisher_id: publisher.id, id: user.id } }
+          it { expect(response).to have_http_status(:ok) }
+          context 'newspaper' do
+            before { get :index, params: { publisher_id: publisher.id, newspaper_id: newspaper.id, id: user.id } }
+            it { expect(response).to have_http_status(:ok) }
+          end
+        end
       end
 
       it '#show' do

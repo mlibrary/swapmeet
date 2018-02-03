@@ -8,13 +8,13 @@ class GroupsController < ApplicationController
       @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new([@policy.subject_agent, PublisherPolicyAgent.new(@publisher)]), @publisher)
       @groups = Group.all
       @groups = GroupsPresenter.new(current_user, @policy, @groups)
-      render "publishers/groups"
+      render "publishers/groups/index"
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
       @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new([@policy.subject_agent, NewspaperPolicyAgent.new(@newspaper)]), @newspaper)
       @groups = Group.all
       @groups = GroupsPresenter.new(current_user, @policy, @groups)
-      render "newspapers/groups"
+      render "newspapers/groups/index"
     else
       @groups = Group.all
       @groups = GroupsPresenter.new(current_user, @policy, @groups)

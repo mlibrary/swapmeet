@@ -2,11 +2,10 @@
 
 FactoryBot.define do
   factory :gatekeeper do
-    domain nil
-    group nil
-    listing nil
-    newspaper nil
-    publisher nil
-    user nil
+    subject_type "Subject"
+    subject_id "1"
+    verb_type "Verb"
+    verb_id "1"
+    object_type "Object"
   end
 end

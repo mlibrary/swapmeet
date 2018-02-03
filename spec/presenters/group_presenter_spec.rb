@@ -85,34 +85,18 @@ RSpec.describe GroupPresenter do
   end
 
   describe '#child?' do
-    subject { presenter.child?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model', groups: object_groups) }
-    let(:object_groups) { double('object groups') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_groups).to receive(:exists?).with(policy.object_agent.client.id).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.child? }
+    it { is_expected.to be false }
   end
 
   describe '#add?' do
-    subject { presenter.add?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.add? }
+    it { is_expected.to be false }
   end
 
   describe '#remove?' do
-    subject { presenter.remove?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.remove? }
+    it { is_expected.to be false }
   end
 
   describe '#children?' do
@@ -259,24 +243,14 @@ RSpec.describe GroupPresenter do
   end
 
   describe '#user?' do
-    subject { presenter.user?(usr) }
+    subject { presenter.user? }
     let(:user) { build(:user) }
     let(:model) { create(:group, users: users) }
     context 'subject' do
-      let(:usr) { nil }
       let(:users) { [] }
       it { is_expected.to be false }
       context 'member' do
         let(:users) { [user] }
-        it { is_expected.to be true }
-      end
-    end
-    context 'object' do
-      let(:usr) { UserPresenter.new(user, policy, member) }
-      let(:member) { build(:user) }
-      it { is_expected.to be false }
-      context 'member' do
-        let(:users) { [member] }
         it { is_expected.to be true }
       end
     end

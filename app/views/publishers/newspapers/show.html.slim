@@ -70,6 +70,6 @@ p
         td
         td No Users
         td
-  - if @publisher.present? && (@newspaper.users.add? || @newspaper.users.remove?)
+  - if @newspaper.users.add? || @newspaper.users.remove?
     = link_to 'Manage users', publisher_newspaper_users_path(@publisher.model, @newspaper.model)
 

@@ -29,7 +29,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :domains
+  resources :domains do
+    resources :domains
+    resources :publishers
+  end
 
   resources :listings
 
@@ -56,7 +59,13 @@ Rails.application.routes.draw do
   end
 
   resources :publishers do
-    resources :newspapers, only: [:index] do
+    resources :newspapers, only: [:index, :show] do
+      resources :users, only: [:index] do
+        member do
+          patch :add
+          delete :remove
+        end
+      end
       member do
         patch :add
         delete :remove
