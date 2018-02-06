@@ -5,9 +5,11 @@ require 'rails_helper'
 RSpec.describe PublisherPresenter do
   subject { presenter }
 
-  let(:presenter) { described_class.new(user, policy, model) }
-  let(:user) { build(:user) }
-  let(:policy) { PublishersPolicy.new([SubjectPolicyAgent.new(:User, user), PublisherPolicyAgent.new(model)]) }
+  let(:presenter) { described_class.new(current_user, policy, model) }
+  let(:policy) { PublishersPolicy.new([subject_agent, publisher_agent]) }
+  let(:subject_agent) { SubjectPolicyAgent.new(:User, current_user) }
+  let(:current_user) { build(:user) }
+  let(:publisher_agent) { PublisherPolicyAgent.new(model) }
   let(:model) { build(:publisher, display_name: display_name, domain: domain, newspapers: newspapers, groups: groups, users: users) }
   let(:display_name) { nil }
   let(:domain) { nil }
@@ -21,7 +23,7 @@ RSpec.describe PublisherPresenter do
     before do
     end
     it do
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
     end
   end
 
@@ -73,7 +75,7 @@ RSpec.describe PublisherPresenter do
     let(:domain) { build(:domain) }
     it do
       is_expected.to be_a(DomainPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(DomainsPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be_a(DomainPolicyAgent)
@@ -104,7 +106,7 @@ RSpec.describe PublisherPresenter do
   end
 
   describe '#newspaper?' do
-    subject { presenter.newspaper?(newspaper_presenter) }
+    subject { presenter.newspaper? }
     let(:newspaper_presenter) { nil }
     it { is_expected.to be false }
     context 'publisher' do
@@ -115,7 +117,7 @@ RSpec.describe PublisherPresenter do
       it { is_expected.to be false }
       context 'publisher newspaper' do
         let(:newspapers) { [newspaper_model] }
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
   end
@@ -143,14 +145,14 @@ RSpec.describe PublisherPresenter do
     end
     it do
       is_expected.to be_a(NewspapersPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(NewspapersPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq newspapers.count
       subject.each.with_index do |newspaper, index|
         expect(newspaper).to be_a(NewspaperPresenter)
-        expect(newspaper.user).to be user
+        expect(newspaper.user).to be current_user
         expect(newspaper.policy).to be_a(NewspapersPolicy)
         expect(newspaper.policy.subject_agent).to be policy.subject_agent
         expect(newspaper.policy.object_agent).to be_a(NewspaperPolicyAgent)
@@ -162,7 +164,7 @@ RSpec.describe PublisherPresenter do
   end
 
   describe '#group?' do
-    subject { presenter.group?(group_presenter) }
+    subject { presenter.group? }
     let(:group_presenter) { nil }
     it { is_expected.to be false }
     context 'group' do
@@ -173,7 +175,7 @@ RSpec.describe PublisherPresenter do
       it { is_expected.to be false }
       context 'group member' do
         let(:groups) { [group_model] }
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
   end
@@ -201,14 +203,14 @@ RSpec.describe PublisherPresenter do
     end
     it do
       is_expected.to be_a(GroupsPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(GroupsPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq groups.count
       subject.each.with_index do |group, index|
         expect(group).to be_a(GroupPresenter)
-        expect(group.user).to be user
+        expect(group.user).to be current_user
         expect(group.policy).to be_a(GroupsPolicy)
         expect(group.policy.subject_agent).to be policy.subject_agent
         expect(group.policy.object_agent).to be_a(GroupPolicyAgent)
@@ -220,7 +222,7 @@ RSpec.describe PublisherPresenter do
   end
 
   describe '#user?' do
-    subject { presenter.user?(user_presenter) }
+    subject { presenter.user? }
     let(:user_presenter) { nil }
     it { is_expected.to be false }
     context 'user' do
@@ -231,7 +233,7 @@ RSpec.describe PublisherPresenter do
       it { is_expected.to be false }
       context 'user member' do
         let(:users) { [user_model] }
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
   end
@@ -259,20 +261,23 @@ RSpec.describe PublisherPresenter do
     end
     it do
       is_expected.to be_a(UsersPresenter)
-      expect(subject.user).to be user
+      expect(subject.user).to be current_user
       expect(subject.policy).to be_a(UsersPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
-      expect(subject.policy.object_agent).to be policy.object_agent
+      expect(subject.policy.agents[1]).to be_a(PublisherPolicyAgent)
+      expect(subject.policy.object_agent).to be_a(UserPolicyAgent)
+      expect(subject.policy.object_agent.client).to be nil
       expect(subject.count).to eq users.count
-      subject.each.with_index do |usr, index|
-        expect(usr).to be_a(UserPresenter)
-        expect(usr.user).to be user
-        expect(usr.policy).to be_a(UsersPolicy)
-        expect(usr.policy.subject_agent).to be policy.subject_agent
-        expect(usr.policy.object_agent).to be_a(UserPolicyAgent)
-        expect(usr.policy.object_agent.client_type).to eq :User.to_s
-        expect(usr.policy.object_agent.client).to be users[index]
-        expect(usr.model).to be users[index]
+      subject.each.with_index do |user, index|
+        expect(user).to be_a(UserPresenter)
+        expect(user.user).to be current_user
+        expect(user.policy).to be_a(UsersPolicy)
+        expect(user.policy.subject_agent).to be policy.subject_agent
+        expect(user.policy.agents[1]).to be policy.agents[1]
+        expect(user.policy.object_agent).to be_a(UserPolicyAgent)
+        expect(user.policy.object_agent.client_type).to eq :User.to_s
+        expect(user.policy.object_agent.client).to be users[index]
+        expect(user.model).to be users[index]
       end
     end
   end

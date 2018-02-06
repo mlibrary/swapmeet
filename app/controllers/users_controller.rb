@@ -6,20 +6,33 @@ class UsersController < ApplicationController
 
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
-      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new([@policy.subject_agent, PublisherPolicyAgent.new(@publisher)]), @publisher)
-      @users = User.order(email: :asc)
-      @users = UsersPresenter.new(current_user, @policy, @users)
-      render "publishers/users"
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.agents.push(PublisherPolicyAgent.new(@publisher))), @publisher)
+      @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
+      if params[:newspaper_id].present?
+        @newspaper = Newspaper.find(params[:newspaper_id])
+        @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new(@policy.agents.push(NewspaperPolicyAgent.new(@newspaper))), @newspaper)
+        @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
+        @users = @newspaper.model.users.order(email: :asc)
+        @users = @publisher.model.users.order(email: :asc) if @policy.add? || @policy.remove?
+        @users = UsersPresenter.new(current_user, @policy, @users)
+        render "publishers/newspapers/users/index"
+      else
+        @users = @publisher.model.users.order(email: :asc)
+        @users = User.order(email: :asc) if @policy.add? || @policy.remove?
+        @users = UsersPresenter.new(current_user, @policy, @users)
+        render "publishers/users/index"
+      end
     elsif params[:newspaper_id].present?
       @newspaper = Newspaper.find(params[:newspaper_id])
-      @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new([@policy.subject_agent, NewspaperPolicyAgent.new(@newspaper)]), @newspaper)
-      @users = User.order(email: :asc)
+      @newspaper = NewspaperPresenter.new(current_user, NewspapersPolicy.new(@policy.agents.push(NewspaperPolicyAgent.new(@newspaper))), @newspaper)
+      @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
+      @users = @newspaper.model.users.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
-      render "newspapers/users"
+      render "newspapers/users/index"
     else
       @users = User.order(email: :asc)
       @users = UsersPresenter.new(current_user, @policy, @users)
-      render
+      render "users/index"
     end
   end
 
@@ -82,7 +95,6 @@ class UsersController < ApplicationController
   end
 
   def add
-    @policy.authorize! :add?
     if params[:publisher_id].present?
       publisher = Publisher.find(params[:publisher_id])
       publisher_policy = PublishersPolicy.new([SubjectPolicyAgent.new(:User, current_user), PublisherPolicyAgent.new(publisher)])

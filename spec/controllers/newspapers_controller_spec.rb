@@ -35,6 +35,19 @@ RSpec.describe NewspapersController, type: :controller do
       end
     end
 
+    describe '#show' do
+      it do
+        get :show, params: { id: newspaper.id }
+        expect(response).to have_http_status(:ok)
+      end
+      context 'publisher' do
+        it do
+          get :show, params: { publisher_id: publisher.id, id: newspaper.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+    end
+
     describe '#add' do
       context 'publisher' do
         it do

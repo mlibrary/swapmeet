@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserPresenter < ApplicationPresenter
+  delegate :add?, :remove?, to: :policy
+
   delegate :username, :display_name, :email, to: :model
 
   def label
@@ -13,7 +15,7 @@ class UserPresenter < ApplicationPresenter
   end
 
   def listings
-    ListingsPresenter.new(user, ListingPolicy.new([policy.subject_agent, policy.object_agent]), model.listings)
+    ListingsPresenter.new(user, ListingsPolicy.new([policy.subject_agent, policy.object_agent]), model.listings)
   end
 
   def publishers?
@@ -40,31 +42,47 @@ class UserPresenter < ApplicationPresenter
     GroupsPresenter.new(user, GroupsPolicy.new([policy.subject_agent, policy.object_agent]), model.groups)
   end
 
-  def privilege?(object = nil)
-    if object.present?
-      PolicyMaker.exists?(policy.object_agent, PolicyMaker::ROLE_ADMINISTRATOR, object.policy.object_agent)
-    else
-      PolicyMaker.exists?(policy.object_agent, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY)
+  def privilege?
+    object_agent = PolicyMaker::OBJECT_ANY
+    object_agent = policy.agents[-2] if policy.agents.count > 2
+    PolicyMaker.exists?(policy.object_agent, PolicyMaker::ROLE_ADMINISTRATOR, object_agent)
+  end
+
+  def privilege
+    return @privilege unless @privilege.blank?
+    administrator = Privilege.new(
+      id: 0,
+      subject_type: policy.object_agent.client_type,
+      subject_id: policy.object_agent.client_id,
+      verb_type: PolicyMaker::ROLE_ADMINISTRATOR.client_type,
+      verb_id: PolicyMaker::ROLE_ADMINISTRATOR.client_id,
+      object_type: PolicyMaker::OBJECT_ANY.client_type,
+      object_id: PolicyMaker::OBJECT_ANY.client_id
+    )
+    # agents = policy.agents.clone
+    privileges.models.each do |model|
+      next unless model.subject_type == administrator.subject_type
+      next unless model.subject_id == administrator.subject_id
+      next unless model.verb_type == administrator.verb_type
+      next unless model.verb_id == administrator.verb_id
+      next unless model.object_type == administrator.object_type
+      next unless model.object_id == administrator.object_id
+      @privilege = PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(model)]), model)
+      break
     end
+    @privilege ||= PrivilegePresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(administrator)]), administrator)
   end
 
-  def privilege(object = nil)
-    if object.present?
-      PrivilegePresenter.new(user, PrivilegesPolicy.new([policy.subject_agent, object.policy.object_agent]), object.model)
-    else
-      PrivilegePresenter.new(user, PrivilegesPolicy.new([policy.subject_agent, policy.object_agent]), model)
-    end
+  def privileges?
+    !privileges.empty?
   end
 
-  def user?(object)
-    object.model.users.exists?(policy.object_agent.client.id)
+  def privileges
+    @privileges_presenter ||= PrivilegesPresenter.new(user, PrivilegesPolicy.new(policy.agents + [PrivilegePolicyAgent.new(nil)]), Privilege.all)
   end
 
-  def add?(object)
-    object.policy.add?(policy.object_agent)
-  end
-
-  def remove?(object)
-    object.policy.remove?(policy.object_agent)
+  def user?
+    return false unless policy.agents.count > 2
+    policy.agents[-2].client.users.exists?(policy.object_agent.client.id)
   end
 end

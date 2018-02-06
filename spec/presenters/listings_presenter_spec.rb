@@ -7,7 +7,7 @@ RSpec.describe ListingsPresenter do
 
   let(:presenter) { described_class.new(user, policy, models) }
   let(:user) { build(:user) }
-  let(:policy) { ListingPolicy.new([SubjectPolicyAgent.new(:User, user), nil]) }
+  let(:policy) { ListingsPolicy.new([SubjectPolicyAgent.new(:User, user), nil]) }
   let(:models) { listings }
   let(:listings) do
     [
@@ -27,7 +27,7 @@ RSpec.describe ListingsPresenter do
       subject.each.with_index do |model_presenter, index|
         expect(model_presenter).to be_a(ListingPresenter)
         expect(model_presenter.user).to be user
-        expect(model_presenter.policy).to be_a(ListingPolicy)
+        expect(model_presenter.policy).to be_a(ListingsPolicy)
         expect(model_presenter.policy.subject_agent).to be policy.subject_agent
         expect(model_presenter.policy.object_agent).to be_a(ListingPolicyAgent)
         expect(model_presenter.policy.object_agent.client_type).to eq :Listing.to_s

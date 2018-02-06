@@ -110,8 +110,8 @@ class PrivilegesController < ApplicationController
   private
     # Authorization Policy
     def new_policy
-      @privilege = Privilege.new(id: params[:id], requestor: current_user)
-      PrivilegesPolicy.new([SubjectPolicyAgent.new(:User, current_user), ObjectPolicyAgent.new(:Privilege, @privilege)])
+      @privilege = Privilege.new(id: params[:id]) if params[:id].present?
+      PrivilegesPolicy.new([SubjectPolicyAgent.new(:User, current_user), PrivilegePolicyAgent.new(@privilege)])
     end
 
   # Never trust parameters from the scary internet, only allow the white list through.

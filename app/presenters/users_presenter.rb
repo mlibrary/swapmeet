@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class UsersPresenter < ApplicationsPresenter
+  delegate :add?, :remove?, to: :policy
+
   def initialize(user, policy, users)
+    agents = policy.agents
     presenters = users.map do |usr|
-      UserPresenter.new(user, UsersPolicy.new([policy.subject_agent, UserPolicyAgent.new(usr)]), usr)
+      agents_dup = agents.dup
+      agents_dup[-1] = UserPolicyAgent.new(usr)
+      UserPresenter.new(user, UsersPolicy.new(agents_dup), usr)
     end
     super(user, policy, users, presenters)
   end

@@ -21,10 +21,6 @@ RSpec.describe UsersPolicy, type: :policy do
       expect(subject.update?).to be false
       expect(subject.destroy?).to be false
     end
-    xit do
-      expect(subject.join?).to be false
-      expect(subject.leave?).to be false
-    end
 
     context 'Objects expect User' do
       let(:policy) { double('policy') }
@@ -32,35 +28,33 @@ RSpec.describe UsersPolicy, type: :policy do
       before do
         allow(user_agent).to receive(:client_type).and_return(client_type)
         allow(policy).to receive(:index?).and_return(boolean)
+        allow(policy).to receive(:show?).and_return(boolean)
+        allow(policy).to receive(:create?).and_return(boolean)
+        allow(policy).to receive(:update?).and_return(boolean)
+        allow(policy).to receive(:destroy?).and_return(boolean)
       end
+
       context 'Publisher' do
         let(:client_type) { :Publisher.to_s }
-        before { allow(PublisherUsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }
+        before { allow(UsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }
         it do
           expect(subject.index?).to be boolean
-          expect(subject.show?).to be false
-          expect(subject.create?).to be false
-          expect(subject.update?).to be false
-          expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
+          expect(subject.show?).to be boolean
+          expect(subject.create?).to be boolean
+          expect(subject.update?).to be boolean
+          expect(subject.destroy?).to be boolean
         end
       end
+
       context 'Newspaper' do
         let(:client_type) { :Newspaper.to_s }
-        before { allow(NewspaperUsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }
+        before { allow(UsersPolicy).to receive(:new).with([entity_agent, user_agent]).and_return(policy) }
         it do
           expect(subject.index?).to be boolean
-          expect(subject.show?).to be false
-          expect(subject.create?).to be false
-          expect(subject.update?).to be false
-          expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
+          expect(subject.show?).to be boolean
+          expect(subject.create?).to be boolean
+          expect(subject.update?).to be boolean
+          expect(subject.destroy?).to be boolean
         end
       end
       context 'Entity' do
@@ -71,10 +65,6 @@ RSpec.describe UsersPolicy, type: :policy do
           expect(subject.create?).to be false
           expect(subject.update?).to be false
           expect(subject.destroy?).to be false
-        end
-        xit do
-          expect(subject.join?).to be false
-          expect(subject.leave?).to be false
         end
       end
     end
@@ -94,10 +84,8 @@ RSpec.describe UsersPolicy, type: :policy do
       expect(subject.create?).to be false
       expect(subject.update?).to be false
       expect(subject.destroy?).to be false
-    end
-    xit do
-      expect(subject.join?).to be false
-      expect(subject.leave?).to be false
+      expect(subject.add?).to be false
+      expect(subject.remove?).to be false
     end
 
     context 'Authenticated' do
@@ -108,10 +96,8 @@ RSpec.describe UsersPolicy, type: :policy do
         expect(subject.create?).to be false
         expect(subject.update?).to be false
         expect(subject.destroy?).to be false
-      end
-      xit do
-        expect(subject.join?).to be false
-        expect(subject.leave?).to be false
+        expect(subject.add?).to be false
+        expect(subject.remove?).to be false
       end
 
       context 'Grant' do
@@ -122,10 +108,40 @@ RSpec.describe UsersPolicy, type: :policy do
           expect(subject.create?).to be true
           expect(subject.update?).to be true
           expect(subject.destroy?).to be true
+          expect(subject.add?).to be false
+          expect(subject.remove?).to be false
         end
-        xit do
-          expect(subject.join?).to be true
-          expect(subject.leave?).to be true
+      end
+
+      context 'Administrator' do
+        context 'Subject' do
+          before { allow(current_user_agent).to receive(:administrator?).and_return(true) }
+          it do
+            expect(subject.index?).to be true
+            expect(subject.show?).to be true
+            expect(subject.add?).to be false
+            expect(subject.remove?).to be false
+          end
+        end
+        context 'Object' do
+          context 'three agents' do
+            subject { described_class.new([current_user_agent, user_agent, user_agent]) }
+            it do
+              expect(subject.index?).to be false
+              expect(subject.show?).to be false
+              expect(subject.add?).to be false
+              expect(subject.remove?).to be false
+            end
+          end
+          context 'four agents' do
+            subject { described_class.new([current_user_agent, user_agent, user_agent, user_agent]) }
+            it do
+              expect(subject.index?).to be false
+              expect(subject.show?).to be false
+              expect(subject.add?).to be true
+              expect(subject.remove?).to be true
+            end
+          end
         end
       end
     end

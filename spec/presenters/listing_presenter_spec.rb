@@ -7,7 +7,7 @@ RSpec.describe ListingPresenter do
 
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
-  let(:policy) { ListingPolicy.new([SubjectPolicyAgent.new(:User, user), ListingPolicyAgent.new(model)]) }
+  let(:policy) { ListingsPolicy.new([SubjectPolicyAgent.new(:User, user), ListingPolicyAgent.new(model)]) }
   let(:model) { build(:listing, title: title, owner: owner, category: category, newspaper: newspaper) }
   let(:title) { nil }
   let(:owner) { nil }

@@ -8,7 +8,8 @@ RSpec.describe UserPresenter do
   let(:presenter) { described_class.new(user, policy, model) }
   let(:user) { build(:user) }
   let(:policy) { UsersPolicy.new([SubjectPolicyAgent.new(:User, user), UserPolicyAgent.new(model)]) }
-  let(:model) { build(:user, display_name: display_name, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
+  let(:model) { build(:user, id: id, display_name: display_name, listings: listings, newspapers: newspapers, publishers: publishers, groups: groups) }
+  let(:id) { :id }
   let(:display_name) { nil }
   let(:listings) { [] }
   let(:publishers) { [] }
@@ -80,14 +81,14 @@ RSpec.describe UserPresenter do
     it do
       is_expected.to be_a(ListingsPresenter)
       expect(subject.user).to be user
-      expect(subject.policy).to be_a(ListingPolicy)
+      expect(subject.policy).to be_a(ListingsPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)
         expect(listing.user).to be user
-        expect(listing.policy).to be_a(ListingPolicy)
+        expect(listing.policy).to be_a(ListingsPolicy)
         expect(listing.policy.subject_agent).to be policy.subject_agent
         expect(listing.policy.object_agent).to be_a(ListingPolicyAgent)
         expect(listing.policy.object_agent.client_type).to eq :Listing.to_s
@@ -220,84 +221,110 @@ RSpec.describe UserPresenter do
     end
   end
 
-  describe 'privilege?' do
-    subject { presenter.privilege?(object_presenter) }
-    context 'subject' do
-      let(:object_presenter) { nil }
-      it { is_expected.to be false }
-      context 'privilege' do
-        before { PolicyMaker.permit!(policy.object_agent, PolicyMaker::ROLE_ADMINISTRATOR, PolicyMaker::OBJECT_ANY) }
-        it { is_expected.to be true }
-      end
+  describe '#privilege?' do
+    subject { presenter.privilege? }
+    it { is_expected.to be false }
+  end
+
+  describe '#privilege' do
+    subject { presenter.privilege }
+    let(:id) { 22 }
+    let(:privileges) do
+      [
+          build(:privilege,
+                subject_type: policy.object_agent.client_type,
+                subject_id: policy.object_agent.client_id,
+                verb_type: PolicyMaker::ROLE_ADMINISTRATOR.client_type,
+                verb_id: PolicyMaker::ROLE_ADMINISTRATOR.client_id,
+                object_type: PolicyMaker::OBJECT_ANY.client_type,
+                object_id: PolicyMaker::OBJECT_ANY.client_id)
+      ]
     end
-    context 'object' do
-      let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-      let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-      let(:object_model) { double('object model') }
-      it { is_expected.to be false }
-      context 'privilege' do
-        before { PolicyMaker.permit!(policy.object_agent, PolicyMaker::ROLE_ADMINISTRATOR, object_presenter.policy.object_agent) }
-        it { is_expected.to be true }
-      end
+    before { allow(Privilege).to receive(:all).and_return(privileges) }
+    it do
+      expect(subject).to be_a(PrivilegePresenter)
+      expect(subject.user).to eq user
+      expect(subject.policy).to be_a(PrivilegesPolicy)
+      expect(subject.policy.subject_agent).to eq policy.subject_agent
+      expect(subject.policy.agents[1]).to eq policy.object_agent
+      expect(subject.policy.object_agent).to be_a(PrivilegePolicyAgent)
+      expect(subject.policy.object_agent.client).to eq privileges[0]
+      expect(subject.model).to eq privileges[0]
     end
   end
 
-  describe 'privilege' do
-    subject { presenter.privilege(object_presenter) }
-    context 'subject' do
-      let(:object_presenter) { nil }
-      it do
-        expect(subject).to be_a(PrivilegePresenter)
-        expect(subject.user).to eq user
-        expect(subject.policy).to be_a(PrivilegesPolicy)
-        expect(subject.policy.subject_agent).to eq policy.subject_agent
-        expect(subject.policy.object_agent).to eq policy.object_agent
-        expect(subject.model).to eq model
-      end
+  describe '#privileges?' do
+    subject { presenter.privileges? }
+    it { is_expected.to be false }
+  end
+
+  describe '#privileges' do
+    subject { presenter.privileges }
+    let(:id) { 22 }
+    let(:privileges) do
+      [
+          build(:privilege, subject_id: id.to_s),
+          build(:privilege, subject_id: id.to_s),
+          build(:privilege, subject_id: id.to_s)
+      ]
     end
-    context 'object' do
-      let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-      let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-      let(:object_model) { double('object model') }
-      it do
-        expect(subject).to be_a(PrivilegePresenter)
-        expect(subject.user).to eq user
-        expect(subject.policy).to be_a(PrivilegesPolicy)
-        expect(subject.policy.subject_agent).to eq policy.subject_agent
-        expect(subject.policy.object_agent).to eq object_policy.object_agent
-        expect(subject.model).to eq object_model
+    before { allow(Privilege).to receive(:all).and_return(privileges) }
+    it do
+      is_expected.to be_a(PrivilegesPresenter)
+      expect(subject.user).to be user
+      expect(subject.policy).to be_a(PrivilegesPolicy)
+      expect(subject.policy.agents.count).to be 3
+      expect(subject.policy.subject_agent).to be policy.subject_agent
+      expect(subject.policy.agents[1]).to be policy.agents[1]
+      expect(subject.policy.object_agent).to be_a(PrivilegePolicyAgent)
+      expect(subject.policy.object_agent.client).to be nil
+      expect(subject.count).to eq privileges.count
+      subject.each.with_index do |privilege, index|
+        expect(privilege).to be_a(PrivilegePresenter)
+        expect(privilege.user).to be user
+        expect(privilege.policy).to be_a(PrivilegesPolicy)
+        expect(privilege.policy.subject_agent).to be policy.subject_agent
+        expect(privilege.policy.object_agent).to be_a(PrivilegePolicyAgent)
+        expect(privilege.policy.object_agent.client_type).to eq :Privilege.to_s
+        expect(privilege.policy.object_agent.client).to be privileges[index]
+        expect(privilege.model).to be privileges[index]
       end
     end
   end
 
   describe '#user?' do
-    subject { presenter.user?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model', users: object_users) }
-    let(:object_users) { double('object users') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_users).to receive(:exists?).with(policy.object_agent.client.id).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.user? }
+    it { is_expected.to be false }
+    context 'users' do
+      let(:policy) { ApplicationPolicy.new([SubjectPolicyAgent.new(:User, user), PolicyAgent.new(:Entity, entity), UserPolicyAgent.new(model)]) }
+      let(:entity) { double('entity') }
+      let(:users) { double('users') }
+      let(:id) { 23 }
+      before do
+        allow(entity).to receive(:users).and_return(users)
+        allow(users).to receive(:exists?).with(model.id).and_return(true)
+      end
+      it { is_expected.to be true }
+    end
   end
 
-  describe '#add?' do
-    subject { presenter.add?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
-  end
-
-  describe '#remove?' do
-    subject { presenter.remove?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
-  end
+  # describe '#add?' do
+  #   subject { presenter.add? }
+  #   let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+  #   let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
+  #   let(:object_model) { double('object model') }
+  #   let(:boolean) { double('boolean') }
+  #   before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
+  #   it { is_expected.to be boolean }
+  # end
+  #
+  # describe '#remove?' do
+  #   subject { presenter.remove? }
+  #   let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
+  #   let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
+  #   let(:object_model) { double('object model') }
+  #   let(:boolean) { double('boolean') }
+  #   before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
+  #   it { is_expected.to be boolean }
+  # end
 end

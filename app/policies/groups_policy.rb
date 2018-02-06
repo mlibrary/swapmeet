@@ -35,17 +35,17 @@ class GroupsPolicy < ApplicationPolicy
     PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:destroy), object_agent).grant?
   end
 
-  # def add?
-  #   return false unless subject_agent.client_type == :User.to_s
-  #   return false unless subject_agent.authenticated?
-  #   return true if subject_agent.administrator?
-  #   PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:update), object_agent).grant?
-  # end
-  #
-  # def remove?
-  #   return false unless subject_agent.client_type == :User.to_s
-  #   return false unless subject_agent.authenticated?
-  #   return true if subject_agent.administrator?
-  #   PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:update), object_agent).grant?
-  # end
+  def add?
+    return false unless subject_agent.client_type == :User.to_s
+    return false unless subject_agent.authenticated?
+    return true if subject_agent.administrator?
+    PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:update), object_agent).grant?
+  end
+
+  def remove?
+    return false unless subject_agent.client_type == :User.to_s
+    return false unless subject_agent.authenticated?
+    return true if subject_agent.administrator?
+    PolicyResolver.new(subject_agent, ActionPolicyAgent.new(:update), object_agent).grant?
+  end
 end

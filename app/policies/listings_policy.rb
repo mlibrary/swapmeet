@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ListingPolicy < ApplicationPolicy
+class ListingsPolicy < ApplicationPolicy
   def index?
     return false unless subject_agent.client_type == :User.to_s
     true

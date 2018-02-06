@@ -25,19 +25,4 @@ RSpec.describe Newspaper, type: :model do
       end
     end
   end
-
-  xdescribe '#has_user?' do
-    subject { newspaper.has_user?(user) }
-    let(:newspaper) { described_class.new }
-    let(:user) { double('user') }
-    let(:users) { double('users') }
-    let(:id) { double('id') }
-    let(:boolean) { double('boolean') }
-    before do
-      allow(newspaper).to receive(:users).and_return(users)
-      allow(user).to receive(:id).and_return(id)
-      allow(users).to receive(:exists?).with(id).and_return(boolean)
-    end
-    it { is_expected.to be boolean }
-  end
 end

@@ -5,12 +5,11 @@ class NewspapersController < ApplicationController
     @policy.authorize! :index?
     if params[:publisher_id].present?
       @publisher = Publisher.find(params[:publisher_id])
-      @publisher = PublisherPresenter.new(current_user,
-                                          PublishersPolicy.new([@policy.subject_agent, PublisherPolicyAgent.new(@publisher)]),
-                                          @publisher)
-      @newspapers = Newspaper.all
+      @newspapers = @publisher.newspapers.all
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.agents.push(PublisherPolicyAgent.new(@publisher))), @publisher)
+      @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
       @newspapers = NewspapersPresenter.new(current_user, @policy, @newspapers)
-      render "publishers/newspapers"
+      render "publishers/newspapers/index"
     else
       @newspapers = Newspaper.all
       @newspapers = NewspapersPresenter.new(current_user, @policy, @newspapers)
@@ -20,7 +19,15 @@ class NewspapersController < ApplicationController
 
   def show
     @policy.authorize! :show?
-    @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+    if params[:publisher_id].present?
+      @publisher = Publisher.find(params[:publisher_id])
+      @publisher = PublisherPresenter.new(current_user, PublishersPolicy.new(@policy.agents.push(PublisherPolicyAgent.new(@publisher))), @publisher)
+      @policy.agents[-1], @policy.agents[-2] = @policy.agents[-2], @policy.agents[-1]
+      @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+      render "publishers/newspapers/show"
+    else
+      @newspaper = NewspaperPresenter.new(current_user, @policy, @newspaper)
+    end
   end
 
   def new

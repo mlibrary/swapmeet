@@ -18,7 +18,7 @@ RSpec.describe ListingsController, type: :controller do
   end
 
   describe '#new_policy' do
-    it { expect(subject.send(:new_policy)).to be_a(ListingPolicy) }
+    it { expect(subject.send(:new_policy)).to be_a(ListingsPolicy) }
   end
 
   context 'actions' do

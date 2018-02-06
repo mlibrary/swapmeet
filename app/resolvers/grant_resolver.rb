@@ -3,7 +3,6 @@
 require 'subject_resolver'
 require 'credential_resolver'
 require 'resource_resolver'
-require 'grant_repository'
 
 class GrantResolver
   attr_reader :user, :action, :target, :grants

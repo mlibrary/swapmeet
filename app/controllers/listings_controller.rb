@@ -107,7 +107,7 @@ class ListingsController < ApplicationController
     # Authorization Policy
     def new_policy
       @listing = Listing.find(params[:id]) if params[:id].present?
-      ListingPolicy.new([SubjectPolicyAgent.new(:User, current_user), ListingPolicyAgent.new(@listing)])
+      ListingsPolicy.new([SubjectPolicyAgent.new(:User, current_user), ListingPolicyAgent.new(@listing)])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

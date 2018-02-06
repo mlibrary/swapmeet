@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ListingPolicy, type: :policy do
+RSpec.describe ListingsPolicy, type: :policy do
   it_should_behave_like 'an application policy'
 
   let(:listing_agent) { ListingPolicyAgent.new(listing) }
@@ -30,8 +30,8 @@ RSpec.describe ListingPolicy, type: :policy do
       before do
         allow(ListingPolicyAgent).to receive(:new).with(listing).and_call_original
         allow(ListingPolicyAgent).to receive(:new).with(entity).and_return(agent)
-        allow(ListingPolicy).to receive(:new).with(entity_agent, listing_agent).and_call_original
-        allow(ListingPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
+        allow(ListingsPolicy).to receive(:new).with(entity_agent, listing_agent).and_call_original
+        allow(ListingsPolicy).to receive(:new).with(entity_agent, agent).and_return(policy)
       end
     end
   end

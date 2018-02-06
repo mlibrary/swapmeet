@@ -57,34 +57,18 @@ RSpec.describe NewspaperPresenter do
   end
 
   describe '#newspaper?' do
-    subject { presenter.newspaper?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model', newspapers: object_newspapers) }
-    let(:object_newspapers) { double('object newspapers') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_newspapers).to receive(:exists?).with(policy.object_agent.client.id).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.newspaper? }
+    it { is_expected.to be false }
   end
 
   describe '#add?' do
-    subject { presenter.add?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:add?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.add? }
+    it { is_expected.to be false }
   end
 
   describe '#remove?' do
-    subject { presenter.remove?(object_presenter) }
-    let(:object_presenter) { ApplicationPresenter.new(user, object_policy, object_model) }
-    let(:object_policy) { ApplicationPolicy.new([user, ObjectPolicyAgent.new(:Object, object_model)]) }
-    let(:object_model) { double('object model') }
-    let(:boolean) { double('boolean') }
-    before { allow(object_policy).to receive(:remove?).with(policy.object_agent).and_return(boolean) }
-    it { is_expected.to be boolean }
+    subject { presenter.remove? }
+    it { is_expected.to be false }
   end
 
   describe '#publisher?' do
@@ -158,14 +142,14 @@ RSpec.describe NewspaperPresenter do
     it do
       is_expected.to be_a(ListingsPresenter)
       expect(subject.user).to be user
-      expect(subject.policy).to be_a(ListingPolicy)
+      expect(subject.policy).to be_a(ListingsPolicy)
       expect(subject.policy.subject_agent).to be policy.subject_agent
       expect(subject.policy.object_agent).to be policy.object_agent
       expect(subject.count).to eq listings.count
       subject.each.with_index do |listing, index|
         expect(listing).to be_a(ListingPresenter)
         expect(listing.user).to be user
-        expect(listing.policy).to be_a(ListingPolicy)
+        expect(listing.policy).to be_a(ListingsPolicy)
         expect(listing.policy.subject_agent).to be policy.subject_agent
         expect(listing.policy.object_agent).to be_a(ListingPolicyAgent)
         expect(listing.policy.object_agent.client_type).to eq :Listing.to_s
@@ -217,7 +201,7 @@ RSpec.describe NewspaperPresenter do
   end
 
   describe '#user?' do
-    subject { presenter.user?(usr) }
+    subject { presenter.user? }
     let(:user) { build(:user) }
     let(:model) { create(:newspaper, users: users) }
     context 'subject' do
@@ -226,7 +210,7 @@ RSpec.describe NewspaperPresenter do
       it { is_expected.to be false }
       context 'member' do
         let(:users) { [user] }
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
     context 'object' do
@@ -235,25 +219,10 @@ RSpec.describe NewspaperPresenter do
       it { is_expected.to be false }
       context 'member' do
         let(:users) { [member] }
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
     end
   end
-
-  # describe '#usr' do
-  #   subject { presenter.usr }
-  #   let(:usr) { build(:user) }
-  #   it do
-  #     is_expected.to be_a(UserPresenter)
-  #     expect(subject.user).to be usr
-  #     expect(subject.policy).to be_a(UsersPolicy)
-  #     expect(subject.policy.subject_agent).to be policy.subject_agent
-  #     expect(subject.policy.object_agent).to be_a(UserPolicyAgent)
-  #     expect(subject.policy.object_agent.client_type).to eq :User.to_s
-  #     expect(subject.policy.object_agent.client).to be usr
-  #     expect(subject.model).to be usr
-  #   end
-  # end
 
   describe '#users?' do
     subject { presenter.users? }
