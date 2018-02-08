@@ -17,7 +17,7 @@ h1 Office Gear Swap Meet!
         - @listings.each do |listing|
           tr
             td = listing.link_or_title
-            td = user_display_name_link(listing.owner)
+            td = listing.owner.display_name_link
 
             td = listing.show_link
             td = link_to 'Edit', edit_listing_path(listing) if listing.edit?

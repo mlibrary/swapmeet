@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
-class ListingPresenter < SimpleDelegator
-  extend Forwardable
-
+class ListingPresenter < ResourcePresenter
   delegate [:edit?, :destroy?] => :policy
-
-  def initialize(listing, policy, view)
-    @listing = listing
-    @policy  = policy
-    @view    = view
-    __setobj__ @listing
-  end
 
   def link_or_title
     if policy.show?
@@ -24,7 +15,11 @@ class ListingPresenter < SimpleDelegator
     view.link_to 'Show', listing if policy.show?
   end
 
+  def owner
+    present(listing.owner)
+  end
+
   private
 
-    attr_reader :listing, :policy, :view
+    alias_method :listing, :resource
 end
