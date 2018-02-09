@@ -18,6 +18,8 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require_relative '../app/vizier/vizier'
+
 module Swapmeet
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -31,6 +33,8 @@ module Swapmeet
     config.generators.system_tests = nil
 
     # Add presenters to autoload paths
-    config.autoload_paths += %W[#{config.root}/app/presenters]
+    config.autoload_paths += %W[#{config.root}/app/presenters #{config.root}/app/vizier]
+
+    config.presenter_config = ::Vizier::PresenterConfig
   end
 end
