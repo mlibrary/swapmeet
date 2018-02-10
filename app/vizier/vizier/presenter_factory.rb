@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'presenter_config'
+require_relative 'default_presenter_config'
+
 # Factory for locating and creating a presenter based on an object's type
 module Vizier
   class PresenterFactory
@@ -12,7 +15,7 @@ module Vizier
       @default_config = default_config
 
       @configs = Hash.new do |configs, type|
-        default_config.for(type, config_type)
+        default_config.for(type)
       end
 
       presenter_map.each do |type, config|

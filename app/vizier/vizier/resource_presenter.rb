@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'presenter_factory'
+
 module Vizier
   class ResourcePresenter < SimpleDelegator
     extend Forwardable
@@ -11,7 +13,7 @@ module Vizier
       __setobj__ policy.resource
     end
 
-    private
+    protected
 
       def resource
         policy.resource

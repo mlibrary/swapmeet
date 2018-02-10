@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'presenter_config'
+
 # A presenter configuration that caches the type lookup
 #
 # For development use reloading is convenient, but in production
