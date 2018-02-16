@@ -17,7 +17,6 @@ app_root = Pathname.new(File.dirname(__FILE__)).parent
 %w[
   app/models
   app/resolvers
-  app/vizier
 ].each do |path|
   $LOAD_PATH.unshift app_root + path
 end
