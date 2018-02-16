@@ -10,15 +10,15 @@ p
   = @listing.body
 p
   strong Owner:&nbsp
-  = user_display_name_link(@listing.owner)
+  = @listing.owner.display_name_link
 p
-/  strong Newspaper:&nbsp
-/  = link_to @listing.newspaper&.display_name, newspaper_path(@listing.newspaper) if @listing.newspaper
+  strong Category:&nbsp
+  = @listing.category.title
 
-- if @policy.edit?
+- if @listing.edit?
   =<> link_to 'Edit', edit_listing_path(@listing)
   '|
-- if @policy.destroy?
+- if @listing.destroy?
   =<> link_to 'Delete', @listing, data: { confirm: 'Are you sure?' }, method: :delete
   '|
 =<> link_to 'Back', listings_path

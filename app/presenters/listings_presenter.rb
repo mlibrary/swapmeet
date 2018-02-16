@@ -1,32 +1,18 @@
 # frozen_string_literal: true
 
-class ListingsPresenter
-  include Enumerable
-
-  def initialize(policy, view)
-    @policy   = policy
-    @view     = view
-  end
-
-  def each
-    listings.each { |l| yield l }
-  end
-
-  def empty?
-    listings.empty?
-  end
-
+class ListingsPresenter < CollectionPresenter
   def new?
     policy.new?
   end
 
   private
 
-    def listings
-      @listings ||= policy.resolve.map do |listing|
-        ListingPresenter.new(listing, policy.for(listing), view)
-      end
-    end
+    # `present` can be implemented to use something other than the default
+    # presenter and policy resolution.
+    #
+    # def present(resource)
+    #   SpecializedListingPresenter.new(policy.for(listing), view)
+    # end
 
-    attr_reader :policy, :view
+    alias_method :listings, :resources
 end

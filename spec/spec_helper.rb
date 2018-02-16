@@ -7,8 +7,8 @@ end
 if coverage_needed?
   require 'coveralls'
   Coveralls.wear!('rails') do
-    add_filter 'config'
-    add_filter 'spec'
+    # add_filter 'config'
+    # add_filter 'spec'
   end
 end
 
@@ -17,6 +17,7 @@ app_root = Pathname.new(File.dirname(__FILE__)).parent
 %w[
   app/models
   app/resolvers
+  app/vizier
 ].each do |path|
   $LOAD_PATH.unshift app_root + path
 end

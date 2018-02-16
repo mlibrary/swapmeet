@@ -34,7 +34,8 @@ class ListingsController < ApplicationController
 
   def index
     policy = ListingsPolicy.new(current_user)
-    @listings = ListingsPresenter.new(policy, view_context)
+    # @listings = ListingsPresenter.new(policy, view_context)
+    @listings = present(policy.base_scope)
   end
 
   def new
@@ -45,6 +46,8 @@ class ListingsController < ApplicationController
 
   def show
     @policy.authorize! :show?
+    # @listing = ListingPresenter.new(@policy, view_context)
+    @listing = present(@policy.resource)
   end
 
   def update

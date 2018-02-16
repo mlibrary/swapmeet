@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+    def present(object)
+      Services.presenters[object, current_user, view_context]
+    end
+
     def auto_login(user)
       session[:user_id] = user.id
     end
