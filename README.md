@@ -1,27 +1,31 @@
 [![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg?branch=master)](https://coveralls.io/github/gkostin1966/swapmeet?branch=master)
 [![Floobits Status](https://floobits.com/gkostin/swapmeet.svg)](https://floobits.com/gkostin/swapmeet/redirect)
 
-# README
+# Swapmeet
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Swapmeet is a sample application for demonstrating how to build Rails
+applications with policies and presenters. It relies on three libraries for
+support:
 
-Things you may want to cover:
+- [Keycard](https://github.com/mlibrary/keycard) for authentication and user/request attributes
+- [Checkpoint](https://github.com/mlibrary/checkpoint) for policy-based authorization
+- [Vizier](https://github.com/mlibrary/vizier) for policy-aware presenters
 
-* Ruby version
 
-* System dependencies
+## Development
 
-* Configuration
+To make it convenient to co-develop Swapmeet and the above libraries, you
+should clone those repositories and configure Bundler to use your local copies
+rather than caching them itself. This is done with `bundle.config`; for example:
 
-* Database creation
+```
+bundle config disable_local_branch_check true
+bundle config local.keycard ~/dev/keycard`
+```
 
-* Database initialization
+When running `rails server` in development mode, the gems are auto-reloaded, so
+changes should apply immediately on new requests.
 
-* How to run the test suite
+## License
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Swapmeet is licensed under the BSD-3-Clause license. See [LICENSE.md](LICENSE.md).

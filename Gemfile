@@ -46,3 +46,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 ###
 
 gem 'canister'
+
+gem 'keycard',    github: 'mlibrary/keycard'
+gem 'checkpoint', github: 'mlibrary/checkpoint'
+gem 'vizier',     github: 'mlibrary/vizier'
