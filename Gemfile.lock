@@ -3,6 +3,9 @@ GIT
   revision: 0d5cd639116a18d2740888c3b645fbc7897781c7
   specs:
     checkpoint (0.1.0)
+      ettin (~> 1.1)
+      mysql2 (~> 0.4.10)
+      sequel (~> 5.5)
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
@@ -12,7 +15,7 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/vizier.git
-  revision: 0a310003719a5e6f896378b7151720da430372b1
+  revision: 922c44053e0102fac5dd5533bdc637d038ccf18c
   specs:
     vizier (0.1.0)
 
@@ -217,6 +220,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    sequel (5.5.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)

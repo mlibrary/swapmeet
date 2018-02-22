@@ -24,8 +24,6 @@ spec/examples.txt
 # Ignore coverall's files
 /coverage
 
-/docs/_build/*
-
 # Ignore config yml files
 /config/cable.yml
 /config/database.yml
