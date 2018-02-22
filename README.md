@@ -1,5 +1,5 @@
-[![Coverage Status](https://coveralls.io/repos/github/gkostin1966/swapmeet/badge.svg?branch=master)](https://coveralls.io/github/gkostin1966/swapmeet?branch=master)
-[![Floobits Status](https://floobits.com/gkostin/swapmeet.svg)](https://floobits.com/gkostin/swapmeet/redirect)
+[![Build Status](https://travis-ci.org/mlibrary/swapmeet.svg?branch=master)](https://travis-ci.org/mlibrary/swapmeet)
+[![Coverage Status](https://coveralls.io/repos/github/mlibrary/swapmeet/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/swapmeet?branch=master)
 
 # Swapmeet
 
