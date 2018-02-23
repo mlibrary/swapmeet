@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: 0d5cd639116a18d2740888c3b645fbc7897781c7
+  revision: 5616565002fbcbcd762fc58d0c0dda9a9c7514a7
   specs:
     checkpoint (0.1.0)
       ettin (~> 1.1)
@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: d80600985edc81e6934dca53911cb4e3491db45b
+  revision: 03cab3d6caa69eda20e286ff9341a147c9bfa7a4
   specs:
     keycard (0.1.0)
 
