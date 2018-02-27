@@ -32,12 +32,13 @@ RSpec.describe ListingPolicy do
     end
   end
 
-  context "when user is root" do
+  context "when user is an admin" do
     let(:listing_owner) { other_user }
 
     before do
       allow(user).to receive(:persisted?).and_return(true)
-      allow(user).to receive(:id).and_return(1)
+      allow(user).to receive(:username).and_return('userid')
+      new_permit(agent(id: 'userid'), make_role('admin'), all_resources).save
     end
 
     it "allows create" do
@@ -54,6 +55,9 @@ RSpec.describe ListingPolicy do
 
     it "allows update" do
       expect(policy.update?).to be true
+    end
+    after do
+      Checkpoint::DB::db[:permits].delete
     end
   end
 
@@ -97,4 +101,29 @@ RSpec.describe ListingPolicy do
     end
   end
 
+  def new_permit(agent, credential, resource, zone: 'system')
+    Checkpoint::DB::Permit.from(agent, credential, resource, zone: zone)
+  end
+
+  def agent(type: 'user', id: 'userid')
+    actor = double('actor', agent_type: type, id: id)
+    Checkpoint::Agent.new(actor)
+  end
+
+  def make_role(name)
+    Checkpoint::Credential::Role.new(name)
+  end
+
+  def make_permission(name)
+    Checkpoint::Credential::Permission.new(name)
+  end
+
+  def all_resources
+    Checkpoint::Resource.all
+  end
+
+  def resource(type: 'resource', id: 1)
+    entity = double('entity', resource_type: type, id: id)
+    Checkpoint::Resource.from(entity)
+  end
 end

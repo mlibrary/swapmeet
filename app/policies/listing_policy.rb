@@ -6,17 +6,17 @@ class ListingPolicy < ResourcePolicy
   end
 
   def create?
-    return true if user.root?
+    return true if user.has_role?(:admin)
     user.known?
   end
 
   def update?
-    return true if user.root?
+    return true if user.has_role?(:admin)
     user == resource.owner
   end
 
   def destroy?
-    return true if user.root?
+    return true if user.has_role?(:admin)
     user == resource.owner
   end
 end

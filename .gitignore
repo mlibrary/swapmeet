@@ -28,3 +28,7 @@ spec/examples.txt
 /config/cable.yml
 /config/database.yml
 /config/secrets.yml
+
+# Checkpoint logs and sqlite files
+/db/permits.log
+/db/*.sqlite

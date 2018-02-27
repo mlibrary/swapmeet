@@ -15,7 +15,31 @@ class User < ApplicationRecord
     persisted?
   end
 
+  def has_role?(role, resource: nil)
+    # This is a little ugly -- probably want to set up named params on the query classes
+    # and pass ours along.. Alternatively, we could extra-specify that it's Resource.all... yuck.
+    if resource
+      Checkpoint::Query::RoleGranted.new(self, role, resource, authority: authority).true?
+    else
+      Checkpoint::Query::RoleGranted.new(self, role, authority: authority).true?
+    end
+  end
+
   def root?
     id == 1
   end
+
+  def agent_type
+    'user'
+  end
+
+  def agent_id
+    username
+  end
+
+  private
+
+    def authority
+      Services.checkpoint
+    end
 end

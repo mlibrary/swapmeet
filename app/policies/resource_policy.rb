@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ResourcePolicy
+  include PolicyHelpers
+
   attr_reader :user, :resource
 
   def initialize(user, resource)

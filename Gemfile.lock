@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: 5616565002fbcbcd762fc58d0c0dda9a9c7514a7
+  revision: aff3da957a8bd59e40bc27b3976d428819ab7f1a
   specs:
     checkpoint (0.1.0)
       ettin (~> 1.1)
