@@ -11,4 +11,8 @@ Rails.application.load_tasks
 task default: []
 Rake::Task[:default].clear
 
+Rake::Task["db:migrate"].enhance do
+  Rake::Task["checkpoint:migrate"].invoke
+end
+
 task default: :ci

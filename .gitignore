@@ -30,5 +30,6 @@ spec/examples.txt
 /config/secrets.yml
 
 # Checkpoint logs and sqlite files
+/db/checkpoint.log
 /db/permits.log
 /db/*.sqlite
