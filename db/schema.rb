@@ -30,6 +30,23 @@ ActiveRecord::Schema.define(version: 20180122200003) do
     t.index ["owner_id"], name: "index_listings_on_owner_id"
   end
 
+  create_table "permits", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "agent_type", limit: 100, null: false
+    t.string "agent_id", limit: 100, null: false
+    t.string "agent_token", limit: 201, null: false
+    t.string "credential_type", limit: 100, null: false
+    t.string "credential_id", limit: 100, null: false
+    t.string "credential_token", limit: 201, null: false
+    t.string "resource_type", limit: 100, null: false
+    t.string "resource_id", limit: 100, null: false
+    t.string "resource_token", limit: 201, null: false
+    t.string "zone_id", limit: 100, null: false
+  end
+
+  create_table "schema_info", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "version", default: 0, null: false
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "username"
     t.string "display_name"
