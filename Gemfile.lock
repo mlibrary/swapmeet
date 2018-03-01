@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: ba8b56cb1bb39aba6994283c3b439a086af4213d
+  revision: 5df8b330a33d0993b32391dc9928e7a9dbf61ccd
   specs:
     checkpoint (0.1.0)
       ettin (~> 1.1)
@@ -220,7 +220,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sequel (5.5.0)
+    sequel (5.6.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
