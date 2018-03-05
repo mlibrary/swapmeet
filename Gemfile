@@ -19,13 +19,11 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # test coverage with coveralls
   gem 'coveralls', require: false
-  gem 'debase'
   gem 'factory_bot_rails', '~> 4.8.2'
   gem 'faker', '~> 1.8.4'
+  gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.52.0', require: false
