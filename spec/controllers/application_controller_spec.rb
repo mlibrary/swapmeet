@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationController do
+RSpec.describe ApplicationController, type: :controller do
   context 'rescue_from exception' do
     controller do
       attr_accessor :the_exception
@@ -22,16 +22,10 @@ RSpec.describe ApplicationController do
 
   context 'user identity' do
 
-    INST_ID = 1
-    NETWORK = "10.0.0.0/16"
-
-    before(:all) do
-      range = IPAddr.new(NETWORK).to_range
-    end
-
+    # because testing rails controllers is messy, ApplicationController even
+    # more so
     controller do
       def something
-        request.set_header('X-Forwarded-For',"10.0.0.1")
         render body: nil
       end
 
@@ -41,26 +35,13 @@ RSpec.describe ApplicationController do
     end
 
     before do
-      range = IPAddr.new(NETWORK).to_range
-      Keycard::DB[:aa_network].insert([1, nil, NETWORK, range.first.to_i, range.last.to_i,
-                                       'allow', nil, INST_ID, Time.now.utc, 'test', 'f'])
       routes.draw { get "something" => "anonymous#something" }
     end
 
-    after do
-      Keycard::DB[:aa_network].delete
-    end
-
-    it "adds institutional identity when constructing the current_user" do
+    it "adds identity that responds to #all when constructing the current_user" do
       get :something
 
-      expect(controller.identity["dlpsInstitutionIds"]).to contain_exactly(INST_ID)
-    end
-
-    it "adds identity when constructing the current_user" do
-      get :something
-
-      expect(controller.identity).not_to be_nil
+      expect(controller.identity).to respond_to(:all)
     end
 
   end
