@@ -12,11 +12,42 @@
 
 ActiveRecord::Schema.define(version: 20180122200003) do
 
+  create_table "aa_inst", primary_key: "uniqueIdentifier", id: :integer, default: nil, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "organizationName", limit: 128, null: false
+    t.integer "manager"
+    t.timestamp "lastModifiedTime", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "lastModifiedBy", limit: 64, null: false
+    t.string "dlpsDeleted", limit: 1, null: false
+  end
+
+  create_table "aa_network", primary_key: "uniqueIdentifier", id: :integer, default: nil, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "dlpsDNSName", limit: 128
+    t.string "dlpsCIDRAddress", limit: 18
+    t.bigint "dlpsAddressStart"
+    t.bigint "dlpsAddressEnd"
+    t.string "dlpsAccessSwitch", limit: 5, null: false
+    t.string "coll", limit: 32
+    t.integer "inst"
+    t.timestamp "lastModifiedTime", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "lastModifiedBy", limit: 64, null: false
+    t.string "dlpsDeleted", limit: 1, null: false
+    t.index ["dlpsAddressEnd"], name: "network_dlpsAddressEnd_index"
+    t.index ["dlpsAddressStart"], name: "network_dlpsAddressStart_index"
+  end
+
   create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "title"
     t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "checkpoint_schema", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "version", default: 0, null: false
+  end
+
+  create_table "keycard_schema", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "version", default: 0, null: false
   end
 
   create_table "listings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -41,10 +72,6 @@ ActiveRecord::Schema.define(version: 20180122200003) do
     t.string "resource_id", limit: 100, null: false
     t.string "resource_token", limit: 201, null: false
     t.string "zone_id", limit: 100, null: false
-  end
-
-  create_table "schema_info", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "version", default: 0, null: false
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

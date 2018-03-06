@@ -29,7 +29,8 @@ spec/examples.txt
 /config/database.yml
 /config/secrets.yml
 
-# Checkpoint logs and sqlite files
+# Keycard & Checkpoint logs and sqlite files
 /db/checkpoint.log
+/db/keycard.log
 /db/permits.log
 /db/*.sqlite
