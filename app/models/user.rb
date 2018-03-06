@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   has_many :listings, foreign_key: :owner
 
+  attr_accessor :identity
+
   def self.nobody
     new(username: '<nobody>', display_name: '(No one)', email: '').tap(&:readonly!)
   end
