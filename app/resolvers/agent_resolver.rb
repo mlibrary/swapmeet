@@ -1,4 +1,6 @@
-require 'checkpoint/agent' 
+# frozen_string_literal: true
+
+require 'checkpoint/agent'
 require 'ostruct'
 
 class AgentResolver < Checkpoint::Agent::Resolver
@@ -7,8 +9,8 @@ class AgentResolver < Checkpoint::Agent::Resolver
   end
 
   def resolve(actor)
-    super + actor.identity.all.map { |k,v| agents_for(k,v) }.flatten
-  end 
+    super + actor.identity.all.map { |k, v| agents_for(k, v) }.flatten
+  end
 
   def agents_for(attribute, values)
     [ values ].flatten.map do |value|
@@ -18,6 +20,5 @@ class AgentResolver < Checkpoint::Agent::Resolver
 
   private
 
-  attr_reader :agent_factory
-
+    attr_reader :agent_factory
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "agent_resolver"
 
 module Swapmeet
@@ -6,7 +8,7 @@ module Swapmeet
       described_class.new()
     end
 
-    def fake_attrs(attrs) 
+    def fake_attrs(attrs)
       double(:attrs, all: attrs)
     end
 
@@ -15,7 +17,7 @@ module Swapmeet
     end
 
     describe "#resolve" do
-      let(:actor) { double(:user, identity: attrs ) }
+      let(:actor) { double(:user, identity: attrs) }
       let(:base_agent) { Checkpoint::Agent.from(actor) }
 
       context "with some attributes" do
@@ -28,7 +30,7 @@ module Swapmeet
 
         it "turns the attributes into agents" do
           resolved_agents = agent_resolver.resolve(actor)
-          expect(resolved_agents).to contain_exactly(base_agent,agent)
+          expect(resolved_agents).to contain_exactly(base_agent, agent)
         end
       end
 
@@ -38,7 +40,7 @@ module Swapmeet
 
         it "turns the attributes into agents" do
           resolved_agents = agent_resolver.resolve(actor)
-          expect(resolved_agents).to contain_exactly(base_agent,agent)
+          expect(resolved_agents).to contain_exactly(base_agent, agent)
         end
       end
 
@@ -47,7 +49,7 @@ module Swapmeet
         let(:agents) do
           [ base_agent,
             agent_from(type: 'foo', id: 'bar'),
-            agent_from(type: 'foo', id: 'baz') ] 
+            agent_from(type: 'foo', id: 'baz') ]
         end
 
         it "returns two agents" do

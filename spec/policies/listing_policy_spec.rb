@@ -12,7 +12,7 @@ RSpec.describe ListingPolicy do
   let(:listing)       { create(:listing, owner: listing_owner) }
   let(:listing_owner) { double('Listing Owner') }
 
-  before(:each) do 
+  before(:each) do
     user.identity = double(:identity, all: {})
   end
 
@@ -62,7 +62,7 @@ RSpec.describe ListingPolicy do
       expect(policy.update?).to be true
     end
     after do
-      Checkpoint::DB::db[:permits].delete
+      Checkpoint::DB.db[:permits].delete
     end
   end
 

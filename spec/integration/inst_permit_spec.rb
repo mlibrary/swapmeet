@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require_relative '../support/checkpoint_helpers'
 
 RSpec.describe "permitting an institution to a resource" do
 
-  def checkpoint_permits?(user,action)
-    Checkpoint::Query::ActionPermitted.new(user, action, Checkpoint::Resource.all, 
+  def checkpoint_permits?(user, action)
+    Checkpoint::Query::ActionPermitted.new(user, action, Checkpoint::Resource.all,
                                            authority: Services.checkpoint).true?
   end
 
@@ -14,18 +16,17 @@ RSpec.describe "permitting an institution to a resource" do
     range = IPAddr.new(network).to_range
     Keycard::DB[:aa_network].insert([@unique_id, nil, network, range.first.to_i, range.last.to_i,
                                      access.to_s, nil, inst, Time.now.utc, 'test', 'f'])
-
   end
 
   let(:request) { double(:request) }
   let(:action) { "view" }
-  let(:user) { User.guest } 
+  let(:user) { User.guest }
 
-  before(:each) do 
+  before(:each) do
     add_inst_network(inst: 1, network: '10.0.1.0/24', access: "allow")
     add_inst_network(inst: 2, network: '10.0.2.0/24', access: "allow")
     new_permit(agent(type: 'dlpsInstitutionId', id: '1'),
-               make_permission(action), 
+               make_permission(action),
                all_resources).save
 
     allow(request).to receive(:get_header)
