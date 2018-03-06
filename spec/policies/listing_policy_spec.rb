@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../support/checkpoint_helpers'
 
 RSpec.describe ListingPolicy do
   subject { policy }
@@ -10,6 +11,10 @@ RSpec.describe ListingPolicy do
   let(:other_user)    { User.new }
   let(:listing)       { create(:listing, owner: listing_owner) }
   let(:listing_owner) { double('Listing Owner') }
+
+  before(:each) do
+    user.identity = double(:identity, all: {})
+  end
 
   context "when user is a guest" do
     let(:user) { User.guest }
@@ -57,7 +62,7 @@ RSpec.describe ListingPolicy do
       expect(policy.update?).to be true
     end
     after do
-      Checkpoint::DB::db[:permits].delete
+      Checkpoint::DB.db[:permits].delete
     end
   end
 
@@ -101,29 +106,4 @@ RSpec.describe ListingPolicy do
     end
   end
 
-  def new_permit(agent, credential, resource, zone: Checkpoint::DB::Permit.default_zone)
-    Checkpoint::DB::Permit.from(agent, credential, resource, zone: zone)
-  end
-
-  def agent(type: 'user', id: 'userid')
-    actor = double('actor', agent_type: type, id: id)
-    Checkpoint::Agent.new(actor)
-  end
-
-  def make_role(name)
-    Checkpoint::Credential::Role.new(name)
-  end
-
-  def make_permission(name)
-    Checkpoint::Credential::Permission.new(name)
-  end
-
-  def all_resources
-    Checkpoint::Resource.all
-  end
-
-  def resource(type: 'resource', id: 1)
-    entity = double('entity', resource_type: type, id: id)
-    Checkpoint::Resource.from(entity)
-  end
 end

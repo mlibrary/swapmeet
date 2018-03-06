@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationController do
+RSpec.describe ApplicationController, type: :controller do
   context 'rescue_from exception' do
     controller do
       attr_accessor :the_exception
@@ -18,5 +18,31 @@ RSpec.describe ApplicationController do
       expect { get :trigger }.not_to raise_error
       expect(response).to be_unauthorized
     end
+  end
+
+  context 'user identity' do
+
+    # because testing rails controllers is messy, ApplicationController even
+    # more so
+    controller do
+      def something
+        render body: nil
+      end
+
+      def identity
+        current_user.identity
+      end
+    end
+
+    before do
+      routes.draw { get "something" => "anonymous#something" }
+    end
+
+    it "adds identity that responds to #all when constructing the current_user" do
+      get :something
+
+      expect(controller.identity).to respond_to(:all)
+    end
+
   end
 end

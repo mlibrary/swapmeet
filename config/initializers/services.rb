@@ -17,4 +17,4 @@ Services.register(:presenters) {
   Vizier::PresenterFactory.new(PRESENTERS, config_type: config_class)
 }
 
-Services.register(:checkpoint) { Checkpoint::Authority.new }
+Services.register(:checkpoint) { Checkpoint::Authority.new(agent_resolver: AgentResolver.new) }
