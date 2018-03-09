@@ -29,9 +29,8 @@ RSpec.describe "permitting an institution to a resource" do
                make_permission(action),
                all_resources).save
 
-    allow(request).to receive(:get_header)
-      .with('X-Forwarded-For')
-      .and_return(client_ip)
+    allow(request).to receive(:remote_ip)
+      .and_return(remote_ip)
 
     user.identity = Keycard::RequestAttributes.new(request)
   end
@@ -41,7 +40,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address mapping to an allowed institution" do
-    let(:client_ip) { "10.0.1.1" }
+    let(:remote_ip) { "10.0.1.1" }
 
     it "permits the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(true)
@@ -49,7 +48,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address that does not map to an institution" do
-    let(:client_ip) { "10.0.3.1" }
+    let(:remote_ip) { "10.0.3.1" }
 
     it "does not permit the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(false)
@@ -57,7 +56,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address that maps to an institution that is not allowed" do
-    let(:client_ip) { "10.0.2.1" }
+    let(:remote_ip) { "10.0.2.1" }
 
     it "does not permit the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(false)
