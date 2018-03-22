@@ -20,6 +20,10 @@ if Swapmeet.config.keycard&.database
   Keycard::DB.config.opts = Swapmeet.config.keycard.database
 end
 
+if Swapmeet.config.keycard&.readonly
+  Keycard::DB.config.readonly = true
+end
+
 Services = Canister.new
 Services.register(:presenters) {
   Vizier::PresenterFactory.new(PRESENTERS, config_type: config_class)
