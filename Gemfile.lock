@@ -9,9 +9,9 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: fb369144f118c2aafdceb967c344c589181447e6
+  revision: 49baa7f6509f103e2a8f6b4df24ae2741188d987
   specs:
-    keycard (0.1.0)
+    keycard (0.1.1)
       mysql2
       sequel
 
