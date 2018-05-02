@@ -11,6 +11,8 @@ Rails.application.load_tasks
 task default: []
 Rake::Task[:default].clear
 
-Rake::Task[:ci].enhance ['checkpoint:migrate']
+if Rake::Task.task_defined?(:ci)
+  Rake::Task[:ci].enhance ['checkpoint:migrate']
 
-task default: :ci
+  task default: :ci
+end
