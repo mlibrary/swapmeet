@@ -26,7 +26,6 @@ spec/examples.txt
 
 # Ignore config yml files
 /config/cable.yml
-/config/database.yml
 /config/secrets.yml
 
 /config/settings.local.yml
