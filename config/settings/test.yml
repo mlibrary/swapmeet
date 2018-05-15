@@ -1,0 +1,11 @@
+# Set things up for zero-config test runs
+keycard:
+  database:
+    adapter: sqlite
+    database: db/keycard_test.sqlite3
+
+checkpoint:
+  database:
+    adapter: sqlite
+    database: db/checkpoint_test.sqlite3
+
