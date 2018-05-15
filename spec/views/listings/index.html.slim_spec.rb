@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "/listings/index.html.slim" do
@@ -35,7 +37,7 @@ RSpec.describe "/listings/index.html.slim" do
   end
 
   before(:each) do
-    assign(:listings,FakeListings.new(listings))
+    assign(:listings, FakeListings.new(listings))
   end
 
   it "renders a thumbnail for each event" do

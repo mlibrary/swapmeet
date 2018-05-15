@@ -24,16 +24,16 @@ RSpec.describe Listing do
   end
 
   describe "#add_image!" do
-    let(:old_file) { Rails.root.join("public","images","oldfile.png") }
+    let(:old_file) { Rails.root.join("public", "images", "oldfile.png") }
 
     around(:each) do |example|
-      Tempfile.open(['tempfile','.gif']) do |tempfile|
+      Tempfile.open(['tempfile', '.gif']) do |tempfile|
         @src_path = tempfile
         example.run
       end
     end
 
-    after(:each) do 
+    after(:each) do
       FileUtils.rm(listing.image_path) if File.exist?(listing.image_path)
     end
 

@@ -53,7 +53,7 @@ class ListingsController < ApplicationController
   def update
     @policy.authorize! :update?
     respond_to do |format|
-      if update_listing 
+      if update_listing
         format.html { redirect_to @listing, notice: 'Listing was successfully updated.' }
         format.json { render :show, status: :ok, location: @listing }
       else
@@ -86,7 +86,7 @@ class ListingsController < ApplicationController
       end
 
       @listing.add_image!(image.tempfile.path) if image
-      return true
+      true
     end
 
 
