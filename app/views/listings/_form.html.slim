@@ -15,5 +15,10 @@
   .field
     = f.label :category
     = f.collection_select :category_id, Category.all, :id, :title, prompt: "Select a Category"
+  .field
+    = f.label :image
+    = f.file_field :image, id: :listing_image
+  - if @listing.image
+    img src="/images/#{@listing.image}" style="max-width: 200px"
   .actions
     = f.submit

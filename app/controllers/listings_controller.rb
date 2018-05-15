@@ -9,11 +9,11 @@ class ListingsController < ApplicationController
     @listing = Listing.new(listing_params)
     @listing.owner = current_user
     respond_to do |format|
-      if @listing.save
+      if save_listing
         format.html { redirect_to @listing, notice: 'Listing was successfully created.' }
         format.json { render :show, status: :created, location: @listing }
       else
-        format.html { render :new }
+        format.html { render :new, errors: @listing.errors  }
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
@@ -53,11 +53,11 @@ class ListingsController < ApplicationController
   def update
     @policy.authorize! :update?
     respond_to do |format|
-      if @listing.update(listing_params)
+      if update_listing 
         format.html { redirect_to @listing, notice: 'Listing was successfully updated.' }
         format.json { render :show, status: :ok, location: @listing }
       else
-        format.html { render :edit }
+        format.html { render :edit, errors: @listing.errors  }
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
@@ -75,5 +75,26 @@ class ListingsController < ApplicationController
 
     def listing_params
       params.require(:listing).permit(:title, :body, :category_id)
+    end
+
+    def handle_image
+      image = params[:listing][:image]
+      return true unless image
+      unless %w(image/png image/gif image/jpeg).include?(image.content_type)
+        @listing.errors.add(:image, "must be a gif, jpeg, or png")
+        return false
+      end
+
+      @listing.add_image!(image.tempfile.path) if image
+      return true
+    end
+
+
+    def save_listing
+      handle_image && @listing.save
+    end
+
+    def update_listing
+      handle_image && @listing.update(listing_params)
     end
 end

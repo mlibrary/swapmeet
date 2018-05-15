@@ -2,6 +2,9 @@ h1 Listing
 
 p#notice = notice
 
+- if @listing.image
+  img src="/images/#{@listing.image}" style="max-width: 400px"
+
 p
   strong Title:&nbsp
   = @listing.title

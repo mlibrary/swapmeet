@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180122200003) do
+ActiveRecord::Schema.define(version: 20180515154144) do
 
   create_table "aa_inst", primary_key: "uniqueIdentifier", id: :integer, default: nil, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "organizationName", limit: 128, null: false
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(version: 20180122200003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "category_id"
+    t.string "image"
     t.index ["category_id"], name: "index_listings_on_category_id"
     t.index ["owner_id"], name: "index_listings_on_owner_id"
   end

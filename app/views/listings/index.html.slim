@@ -6,6 +6,7 @@ h1 Office Gear Swap Meet!
     table
       thead
         tr
+          th
           th Title
           / th Newspaper
           th Owner
@@ -16,6 +17,9 @@ h1 Office Gear Swap Meet!
       tbody
         - @listings.each do |listing|
           tr
+            td
+              - if listing.image
+                img src="/images/#{listing.image}" style="max-width: 32px"
             td = listing.link_or_title
             td = listing.owner.display_name_link
 
