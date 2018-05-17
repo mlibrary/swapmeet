@@ -36,3 +36,6 @@ spec/examples.txt
 /db/permits.log
 /db/*.sqlite
 /db/*.sqlite3
+
+
+/public/images/*
