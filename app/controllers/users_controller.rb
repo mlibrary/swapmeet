@@ -2,10 +2,10 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :show, :update, :destroy, :login, :join, :leave]
-  before_action :set_policy, except: [:login, :logout]
+  # before_action :set_policy, except: [:login, :logout]
 
   def create
-    @policy.authorize! :create?
+    # @policy.authorize! :create?
     @user = User.new(user_params)
     respond_to do |format|
       if @user.save
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @policy.authorize! :destroy?
+    # @policy.authorize! :destroy?
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
@@ -28,16 +28,16 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @policy.authorize! :edit?
+    # @policy.authorize! :edit?
   end
 
   def index
-    @policy.authorize! :index?
+    # @policy.authorize! :index?
     @users = User.all
   end
 
   def join
-    @policy.authorize! :join?
+    # @policy.authorize! :join?
     group_id = params[:group_id]
     group = Group.find(group_id)
     group.users << @user
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   end
 
   def leave
-    @policy.authorize! :leave?
+    # @policy.authorize! :leave?
     group_id = params[:group_id]
     group = Group.find(group_id)
     group.users.delete(@user)
@@ -69,16 +69,16 @@ class UsersController < ApplicationController
   end
 
   def new
-    @policy.authorize! :new?
+    # @policy.authorize! :new?
     @user = User.new
   end
 
   def show
-    @policy.authorize! :show?
+    # @policy.authorize! :show?
   end
 
   def update
-    @policy.authorize! :update?
+    # @policy.authorize! :update?
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
@@ -97,7 +97,7 @@ class UsersController < ApplicationController
     end
 
     def set_policy
-      @policy ||= UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, @user))
+      # @policy ||= UsersPolicy.new(PolicyAgent.new(:User, current_user), PolicyAgent.new(:User, @user))
     end
 
     def user_params

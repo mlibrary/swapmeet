@@ -35,3 +35,4 @@ spec/examples.txt
 /db/keycard.log
 /db/permits.log
 /db/*.sqlite
+/db/*.sqlite3

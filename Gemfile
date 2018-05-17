@@ -10,7 +10,6 @@ end
 
 gem 'rails', '~> 5.1.4'
 gem 'rails-html-sanitizer', '~> 1.0.4'
-gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'slim-rails', '~> 3.1'
@@ -30,6 +29,7 @@ group :development, :test do
   gem 'rubocop-rails', '~> 1.1.1', require: false
   gem 'rubocop-rspec', '~> 1.16.0', require: false
   gem 'puma', '~> 3.7'
+  gem 'sqlite3'
 end
 
 group :development do
@@ -45,6 +45,9 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+group :production do
+  gem 'mysql2', '>= 0.3.18', '< 0.5'
+end
 
 ###
 

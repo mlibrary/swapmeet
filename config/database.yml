@@ -1,5 +1,5 @@
 default: &default
-  adapter: mysql2
+  adapter: sqlite3
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
@@ -9,12 +9,12 @@ development:
 <% if Swapmeet.config.db&.url %>
   url: <%= Swapmeet.config.db.url %>
 <% else %>
-  database: swapmeet_development
+  database: db/development.sqlite3
 <% end %>
 
 test:
   <<: *default
-  database: swapmeet_test
+  database: db/test.sqlite3
 
 production:
   url: <%= Swapmeet.config.db&.url %>
