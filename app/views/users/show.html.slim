@@ -9,10 +9,10 @@ p
   strong Display name:&nbsp
   = @user.display_name
 
-- if @policy.edit?
+- if true # @policy.edit?
   => link_to 'Edit', edit_user_path(@user)
   '|
-- if @policy.destroy?
+- if true # @policy.destroy?
   =<> link_to 'Delete', @user, data: { confirm: 'Are you sure?' }, method: :delete
   '|
 =< link_to 'Back', users_path
