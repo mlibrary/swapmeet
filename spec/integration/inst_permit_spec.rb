@@ -18,7 +18,8 @@ RSpec.describe "permitting an institution to a resource" do
                                      access.to_s, nil, inst, Time.now.utc, 'test', 'f'])
   end
 
-  let(:request) { double(:request) }
+  let(:request) { double(:request, username: nil) }
+  let(:factory) { double('factory', for: request) }
   let(:action) { "view" }
   let(:user) { User.guest }
 
@@ -29,10 +30,10 @@ RSpec.describe "permitting an institution to a resource" do
                make_permission(action),
                all_resources).save
 
-    allow(request).to receive(:remote_ip)
-      .and_return(remote_ip)
+    allow(request).to receive(:client_ip)
+      .and_return(client_ip)
 
-    user.identity = Keycard::RequestAttributes.new(request)
+    user.identity = Keycard::RequestAttributes.new(request, request_factory: factory)
   end
 
   after(:each) do
@@ -40,7 +41,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address mapping to an allowed institution" do
-    let(:remote_ip) { "10.0.1.1" }
+    let(:client_ip) { "10.0.1.1" }
 
     it "permits the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(true)
@@ -48,7 +49,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address that does not map to an institution" do
-    let(:remote_ip) { "10.0.3.1" }
+    let(:client_ip) { "10.0.3.1" }
 
     it "does not permit the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(false)
@@ -56,7 +57,7 @@ RSpec.describe "permitting an institution to a resource" do
   end
 
   context "with an ip address that maps to an institution that is not allowed" do
-    let(:remote_ip) { "10.0.2.1" }
+    let(:client_ip) { "10.0.2.1" }
 
     it "does not permit the user to view anything" do
       expect(checkpoint_permits?(user, action)).to be(false)

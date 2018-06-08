@@ -1,26 +1,3 @@
-GIT
-  remote: https://github.com/mlibrary/checkpoint.git
-  revision: cd60e319a9a2ca72ce7cc9e7d226b24cc67bbb46
-  specs:
-    checkpoint (1.0.0)
-      ettin (~> 1.1)
-      mysql2 (~> 0.4.10)
-      sequel (~> 5.6)
-
-GIT
-  remote: https://github.com/mlibrary/keycard.git
-  revision: 49baa7f6509f103e2a8f6b4df24ae2741188d987
-  specs:
-    keycard (0.1.1)
-      mysql2
-      sequel
-
-GIT
-  remote: https://github.com/mlibrary/vizier.git
-  revision: 0fd2eda16aec9d5b045bd43ccf7f6bda7d22df23
-  specs:
-    vizier (0.1.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -67,6 +44,10 @@ GEM
     builder (3.2.3)
     byebug (10.0.0)
     canister (0.9.0)
+    checkpoint (1.0.1)
+      ettin (~> 1.1)
+      mysql2 (~> 0.4.10)
+      sequel (~> 5.6)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     concurrent-ruby (1.0.5-java)
@@ -81,7 +62,7 @@ GEM
     diff-lcs (1.3)
     docile (1.1.5)
     erubi (1.7.0)
-    ettin (1.1.0)
+    ettin (1.1.5)
       deep_merge
     execjs (2.7.0)
     factory_bot (4.8.2)
@@ -104,6 +85,12 @@ GEM
       multi_json (>= 1.2)
     json (2.1.0)
     json (2.1.0-java)
+    kcv (0.1.1)
+      checkpoint (~> 1.0.1)
+      keycard (~> 0.1.2)
+      vizier (~> 0.1.0)
+    keycard (0.1.2)
+      sequel
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -219,7 +206,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sequel (5.6.0)
+    sequel (5.9.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -242,6 +229,9 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
+    sqlite3 (1.3.13-x64-mingw32)
+    sqlite3 (1.3.13-x86-mingw32)
+    sqlite3 (1.3.13-x86-mswin32-60)
     temple (0.8.0)
     term-ansicolor (1.6.0)
       tins (~> 1.0)
@@ -260,6 +250,7 @@ GEM
     uglifier (4.1.6)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.3.0)
+    vizier (0.1.0)
     web-console (3.5.1)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -280,13 +271,14 @@ PLATFORMS
 
 DEPENDENCIES
   canister
-  checkpoint!
+  checkpoint (~> 1.0)
   coveralls
   ettin
   factory_bot_rails (~> 4.8.2)
   faker (~> 1.8.4)
   jbuilder (~> 2.5)
-  keycard!
+  kcv (~> 0.1.1)
+  keycard (~> 0.1)
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.3.18, < 0.5)
   pry
@@ -304,7 +296,7 @@ DEPENDENCIES
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
-  vizier!
+  vizier (~> 0.1)
   web-console (>= 3.3.0)
 
 BUNDLED WITH
