@@ -50,6 +50,9 @@ end
 gem 'canister'
 gem 'ettin'
 
-gem 'keycard',    github: 'mlibrary/keycard'
-gem 'checkpoint', github: 'mlibrary/checkpoint'
-gem 'vizier',     github: 'mlibrary/vizier'
+# Even though KCV requires these gems, if they are not in the Gemfile, we can't
+# use the bundle config local.GEMNAME mechanism for testing from local disk.
+gem 'keycard',    '~> 0.1'
+gem 'checkpoint', '~> 1.0'
+gem 'vizier',     '~> 0.1'
+gem 'kcv',        '~> 0.1.1'
