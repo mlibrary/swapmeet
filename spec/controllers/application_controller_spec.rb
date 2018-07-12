@@ -38,10 +38,10 @@ RSpec.describe ApplicationController, type: :controller do
       routes.draw { get "something" => "anonymous#something" }
     end
 
-    it "adds identity that responds to #all when constructing the current_user" do
+    it "adds identity hash constructing the current_user" do
       get :something
 
-      expect(controller.identity).to respond_to(:all)
+      expect(controller.identity).to be_a Hash
     end
 
   end

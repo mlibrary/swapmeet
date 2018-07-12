@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     def current_user
       unless defined?(@current_user)
         @current_user = user_from_session || User.guest
-        @current_user.identity = Keycard::RequestAttributes.new(request)
+        @current_user.identity = Services.request_attributes.for(request).identity
       end
       @current_user
     end

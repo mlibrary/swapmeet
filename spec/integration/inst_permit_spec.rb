@@ -18,8 +18,9 @@ RSpec.describe "permitting an institution to a resource" do
                                      access.to_s, nil, inst, Time.now.utc, 'test', 'f'])
   end
 
-  let(:request) { double(:request, username: nil) }
-  let(:factory) { double('factory', for: request) }
+  let(:request) { double(:request, env: {}) }
+  let(:factory) { Keycard::Request::AttributesFactory.new }
+  let(:attrs)   { factory.for(request) }
   let(:action) { "view" }
   let(:user) { User.guest }
 
@@ -30,10 +31,11 @@ RSpec.describe "permitting an institution to a resource" do
                make_permission(action),
                all_resources).save
 
-    allow(request).to receive(:client_ip)
+    allow(Keycard.config).to receive(:access).and_return(:direct)
+    allow(attrs).to receive(:client_ip)
       .and_return(client_ip)
 
-    user.identity = Keycard::RequestAttributes.new(request, request_factory: factory)
+    user.identity = attrs.identity
   end
 
   after(:each) do

@@ -13,7 +13,7 @@ RSpec.describe ListingPolicy do
   let(:listing_owner) { double('Listing Owner') }
 
   before(:each) do
-    user.identity = double(:identity, all: {})
+    user.identity = {}
   end
 
   context "when user is a guest" do

@@ -30,3 +30,4 @@ Services.register(:presenters) {
 }
 
 Services.register(:checkpoint) { Checkpoint::Authority.new(agent_resolver: KCV::AgentResolver.new) }
+Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new }
