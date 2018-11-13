@@ -1,25 +1,25 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: e94e08bf173d79f6ff893fae2167cc3e99eaf2dc
+  revision: 40a295b142c4fd4fad2e901f46eae044af8c8283
   specs:
-    checkpoint (1.0.2)
+    checkpoint (1.0.3)
       ettin (~> 1.1)
       sequel (~> 5.6)
 
 GIT
   remote: https://github.com/mlibrary/kcv.git
-  revision: 6032c0cbea3501fb755958a874a37a40be5108d9
+  revision: c32afc18e7074708a9c9f8c56761c86ef76af3c3
   specs:
-    kcv (0.2.2)
-      checkpoint (~> 1.0.1)
-      keycard (~> 0.2.2)
+    kcv (0.2.4)
+      checkpoint (~> 1.0.3)
+      keycard (~> 0.2.4)
       vizier (~> 0.1.0)
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: b16de957e59aff37130b8ec92c9037b462c75a12
+  revision: 7f32572648d86abf6ed88d654d6e04a09ffd7014
   specs:
-    keycard (0.2.2)
+    keycard (0.2.4)
       sequel
 
 GIT
@@ -226,7 +226,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sequel (5.10.0)
+    sequel (5.14.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -319,4 +319,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.16.0
+   1.16.3
