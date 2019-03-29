@@ -52,7 +52,7 @@ gem 'ettin'
 
 # Even though KCV requires these gems, if they are not in the Gemfile, we can't
 # use the bundle config local.GEMNAME mechanism for testing from local disk.
-gem 'keycard',    '~> 0.2', github: 'mlibrary/keycard'
-gem 'checkpoint', '~> 1.0', github: 'mlibrary/checkpoint'
+gem 'keycard',    '~> 0.3', github: 'mlibrary/keycard'
+gem 'checkpoint', '~> 1.1', github: 'mlibrary/checkpoint'
 gem 'vizier',     '~> 0.1', github: 'mlibrary/vizier'
-gem 'kcv',        '~> 0.2.2', github: 'mlibrary/kcv'
+gem 'kcv',        '~> 0.4.1', github: 'mlibrary/kcv'

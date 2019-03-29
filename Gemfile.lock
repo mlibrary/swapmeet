@@ -1,25 +1,25 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: 40a295b142c4fd4fad2e901f46eae044af8c8283
+  revision: e62a72910c3b4088944074bd4dab21e307d1be6b
   specs:
-    checkpoint (1.0.3)
+    checkpoint (1.1.0)
       ettin (~> 1.1)
       sequel (~> 5.6)
 
 GIT
   remote: https://github.com/mlibrary/kcv.git
-  revision: c32afc18e7074708a9c9f8c56761c86ef76af3c3
+  revision: 247f37bd5b4fa535f97d943c3c08919ed931c1ea
   specs:
-    kcv (0.2.4)
-      checkpoint (~> 1.0.3)
-      keycard (~> 0.2.4)
+    kcv (0.4.1)
+      checkpoint (~> 1.1.0)
+      keycard (~> 0.3.0)
       vizier (~> 0.1.0)
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: 7f32572648d86abf6ed88d654d6e04a09ffd7014
+  revision: 06cb1e7c5900670e44acbf00321a61f2ee69a72e
   specs:
-    keycard (0.2.4)
+    keycard (0.3.1)
       sequel
 
 GIT
@@ -88,7 +88,7 @@ GEM
     diff-lcs (1.3)
     docile (1.1.5)
     erubi (1.7.0)
-    ettin (1.1.5)
+    ettin (1.2.1)
       deep_merge
     execjs (2.7.0)
     factory_bot (4.8.2)
@@ -226,7 +226,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sequel (5.14.0)
+    sequel (5.18.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -290,14 +290,14 @@ PLATFORMS
 
 DEPENDENCIES
   canister
-  checkpoint (~> 1.0)!
+  checkpoint (~> 1.1)!
   coveralls
   ettin
   factory_bot_rails (~> 4.8.2)
   faker (~> 1.8.4)
   jbuilder (~> 2.5)
-  kcv (~> 0.2.2)!
-  keycard (~> 0.2)!
+  kcv (~> 0.4.1)!
+  keycard (~> 0.3)!
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.3.18, < 0.5)
   pry
@@ -319,4 +319,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.16.3
+   1.17.3
