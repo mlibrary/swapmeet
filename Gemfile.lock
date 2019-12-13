@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/mlibrary/checkpoint.git
-  revision: e62a72910c3b4088944074bd4dab21e307d1be6b
+  revision: 7a0480dd4dc7b1918e4d8619c2fdf42275871fb5
   specs:
-    checkpoint (1.1.0)
+    checkpoint (1.1.3)
       ettin (~> 1.1)
       sequel (~> 5.6)
 
@@ -17,9 +17,9 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: 06cb1e7c5900670e44acbf00321a61f2ee69a72e
+  revision: 7606502fb3116251286a12655b34ce8dc104f474
   specs:
-    keycard (0.3.1)
+    keycard (0.3.4)
       sequel
 
 GIT
@@ -209,8 +209,6 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    rubocop-rails (1.1.2)
-      rubocop (~> 0.49)
     rubocop-rspec (1.16.0)
       rubocop (>= 0.49.0)
     ruby-progressbar (1.9.0)
@@ -226,7 +224,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sequel (5.18.0)
+    sequel (5.27.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -307,7 +305,6 @@ DEPENDENCIES
   rails-html-sanitizer (~> 1.0.4)
   rspec-rails (~> 3.7)
   rubocop (~> 0.52.0)
-  rubocop-rails (~> 1.1.1)
   rubocop-rspec (~> 1.16.0)
   sass-rails (~> 5.0)
   slim-rails (~> 3.1)

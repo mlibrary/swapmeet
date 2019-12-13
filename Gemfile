@@ -26,7 +26,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.52.0', require: false
-  gem 'rubocop-rails', '~> 1.1.1', require: false
+  # gem 'rubocop-rails', '~> 1.1.1', require: false
   gem 'rubocop-rspec', '~> 1.16.0', require: false
   gem 'puma', '~> 3.7'
   gem 'sqlite3'
