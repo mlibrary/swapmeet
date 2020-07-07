@@ -28,7 +28,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.52.0', require: false
   # gem 'rubocop-rails', '~> 1.1.1', require: false
   gem 'rubocop-rspec', '~> 1.16.0', require: false
-  gem 'puma', '~> 3.7'
+  gem 'puma', '~> 3.12'
   gem 'sqlite3'
 end
 
