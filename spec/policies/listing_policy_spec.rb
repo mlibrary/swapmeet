@@ -62,7 +62,7 @@ RSpec.describe ListingPolicy do
       expect(policy.update?).to be true
     end
     after do
-      Checkpoint::DB.db[:permits].delete
+      Checkpoint::DB.db[:grants].delete
     end
   end
 

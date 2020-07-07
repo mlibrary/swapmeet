@@ -39,6 +39,8 @@ module Swapmeet
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    config.active_record.sqlite3.represent_boolean_as_integer = true
+
     # Add presenters to autoload paths
     config.autoload_paths += %W[#{config.root}/app/presenters]
   end

@@ -1,8 +1,8 @@
 
 # frozen_string_literal: true
 
-def new_permit(agent, credential, resource, zone: Checkpoint::DB::Permit.default_zone)
-  Checkpoint::DB::Permit.from(agent, credential, resource, zone: zone)
+def new_permit(agent, credential, resource, zone: Checkpoint::DB::Grant.default_zone)
+  Checkpoint::DB::Grant.from(agent, credential, resource, zone: zone)
 end
 
 def agent(type: 'user', id: 'userid')
