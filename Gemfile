@@ -28,7 +28,6 @@ group :development, :test do
   gem 'rubocop', '~> 0.52.0', require: false
   # gem 'rubocop-rails', '~> 1.1.1', require: false
   gem 'rubocop-rspec', '~> 1.16.0', require: false
-  gem 'puma', '4.3.3'
   gem 'sqlite3'
 end
 
@@ -56,3 +55,5 @@ gem 'keycard',    '~> 0.3', github: 'mlibrary/keycard'
 gem 'checkpoint', '~> 1.1', github: 'mlibrary/checkpoint'
 gem 'vizier',     '~> 0.1', github: 'mlibrary/vizier'
 gem 'kcv',        '~> 0.4.1', github: 'mlibrary/kcv'
+
+gem 'puma', '~> 4.3.5'
