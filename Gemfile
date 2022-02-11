@@ -56,4 +56,4 @@ gem 'checkpoint', '~> 1.1', github: 'mlibrary/checkpoint'
 gem 'vizier',     '~> 0.1', github: 'mlibrary/vizier'
 gem 'kcv',        '~> 0.4.1', github: 'mlibrary/kcv'
 
-gem 'puma', '~> 4.3.8'
+gem 'puma', '~> 4.3.11'
